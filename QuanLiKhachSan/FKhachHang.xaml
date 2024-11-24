@@ -1,0 +1,237 @@
+﻿<UserControl x:Class="QuanLiKhachSan.FKhachHang"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLiKhachSan"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </UserControl.Resources>
+    <TabControl Margin="0" Background="Transparent">
+        <TabItem Style="{StaticResource tab}" Header="Khách hàng" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Mã khách hàng"/>
+                        <Label Content="Ngày sinh"/>
+                        <Label Content="Email"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbMaKhachHang" 
+                                 Style="{StaticResource lbNoiDung}" />
+                        <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                            <DatePicker x:Name="dtpNgaySinh"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                        </Border>
+                        <TextBox x:Name="txtEmail" Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Tên khách hàng"/>
+                        <Label Content="Địa chỉ"/>
+                        <Label Content="Trạng thái"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBox x:Name="txtTenKhachHang" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                        <TextBox x:Name="txtDiaChi" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                        <CheckBox x:Name="chbTrangThai" Style="{StaticResource MyCheckBox}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Giới tính"/>
+                        <Label Content="Căn cước"/>
+                        <Label Content="Số điện thoại"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <ComboBox x:Name="cbGioiTinh" SelectedValuePath="Content" Style="{StaticResource cbLuaChon}">
+                            <ComboBoxItem Content="Nam"/>
+                            <ComboBoxItem Content="Nữ"/>
+                        </ComboBox>
+                        <TextBox x:Name="txtIdentifyCard" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                        <TextBox x:Name="txtPhoneNumber" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemKhachHang" Style="{StaticResource btnThem}" Click="BtnThemKhachHang_Click"/>
+                    <Button x:Name="btnSuaKhachHang" Style="{StaticResource btnSua}" Click="BtnSuaKhachHang_Click"  Grid.Column="1"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
+                         x:Name="txtLocTheoThongTinKH"
+                         Style="{StaticResource tbxNoiDungMacDinh}"
+                         ToolTip="Tìm kiếm theo" 
+                         Tag="Tìm kiếm theo thông tin khách hàng có"/>  
+                    <Button x:Name="btnTimKiemTheoThongTinKH" Click="btnTimKiemTheoThongTinKH_Click" Style="{StaticResource btnTimKiem}" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <Label Content="Ngày sinh từ"
+                           Grid.Column="2"/>
+                    <Border Background="White" BorderThickness="1" Grid.Column="3"
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                        <DatePicker x:Name="dtpFromDoB"
+                                Margin="0" Height="30" 
+                                Background="Transparent" 
+                                BorderBrush="Transparent"/>
+                    </Border>
+                    <Label Content="đến"
+                           Grid.Column="4"/>
+                    <Border Background="White" BorderThickness="1" Grid.Column="5"
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                        <DatePicker x:Name="dtpToDoB"
+                                Margin="0" Height="30" 
+                                Background="Transparent" 
+                                BorderBrush="Transparent"/>
+                    </Border>
+                    
+                    <Button x:Name="btnTimKiemTheoNgaySinh" Click="btnTimKiemTheoNgaySinh_Click" Style="{StaticResource btnTimKiem}" Grid.Column="6" HorizontalAlignment="Left"/>
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachKhachHang" Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinKhachHang" 
+                                                Click="BtnThongTinKhachHang_Click"
+                                                Style="{StaticResource btnChinhSua}"/>
+                                        <Button x:Name="btnXoaKhachHang" 
+                                                Click="BtnXoaKhachHang_Click"
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Mã khách hàng" 
+                                            Binding="{Binding customer_id}"/>
+                        <DataGridTextColumn Header="Tên khách hàng" 
+                                            Binding="{Binding customer_name}"/>
+                        <DataGridCheckBoxColumn Header="Trạng thái" Binding="{Binding status}"/>
+                        <DataGridTextColumn Header="Giới tính" 
+                                            Binding="{Binding gender}"/>
+                        <DataGridTextColumn Header="Ngày sinh" 
+                                            Binding="{Binding birthday, StringFormat=dd/MM/yyyy}"/>
+                        <DataGridTextColumn Header="Địa chỉ" 
+                                            Binding="{Binding address}"/>
+                        <DataGridTextColumn Header="CCCD" 
+                                            Binding="{Binding identify_card}"/>
+                        <DataGridTextColumn Header="Email" 
+                                            Binding="{Binding email}"/>
+                        
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem Style="{StaticResource tab}" Header="SDT của khách" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="grThongTinKhachHangDatPhong">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Khách hàng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <ComboBox x:Name="cbKhachHangCuaSDT" Style="{StaticResource cbLuaChon}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Số điện thoại"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBox x:Name="txtSDT" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemSdtKhach" Style="{StaticResource btnThem}" Click="btnThemSdtKhach_Click"/>
+                    <Button x:Name="btnSuaSdtKhach" Style="{StaticResource btnSua}" Click="BtnSuaSdtKhach_Click"  Grid.Column="1" IsEnabled="False"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
+                             x:Name="jj"
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                            
+                             Tag="Tìm kiếm theo theo tên khách hàng hoặc số điện thoại"
+                             TextChanged="TextBox_TextChanged"/>
+
+                    <Button Style="{StaticResource btnInExcel}" Grid.Column="2" RenderTransformOrigin="7.014,0.681" Margin="427,5,10,0"/>
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachSdtCuaKhach" 
+                          ItemsSource="{Binding dsKhachDatPhong}" Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinSdtKhach" 
+                                                Click="btnThongTinSdtKhach_Click"
+                                                Style="{StaticResource btnChinhSua}"/>
+                                        <Button x:Name="btnXoaSdtKhach" 
+                                                Click="btnXoaSdtKhach_Click"
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Tên khách hàng" 
+                                            Binding="{Binding customer_name}"/>
+                        <DataGridTextColumn Header="Số điện thoại" 
+                                            Binding="{Binding phone_number}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

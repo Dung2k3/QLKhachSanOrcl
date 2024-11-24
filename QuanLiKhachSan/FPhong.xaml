@@ -1,0 +1,579 @@
+﻿<UserControl x:Class="QuanLiKhachSan.FPhong"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLiKhachSan"
+             mc:Ignorable="d" 
+             xmlns:class="clr-namespace:QuanLiKhachSan.Class"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </UserControl.Resources>
+    <TabControl Margin="0" Background="Transparent">
+        <TabControl.Resources>
+            <class:ChuyenHinhAnh x:Key="imageConverter"/>
+            <BitmapImage x:Key="HinhMacDinh" UriSource="/HinhAnh/ImagePhongMacDinh.png"/>
+        </TabControl.Resources>
+        <TabItem x:Name="tabDatPhong" Header="Đặt phòng" Width="100" Style="{StaticResource tab}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="143*"/>
+                    <ColumnDefinition Width="31*"/>
+                    <ColumnDefinition Width="86*"/>
+                    <ColumnDefinition Width="106*"/>
+                    <ColumnDefinition Width="29*"/>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="592*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="grThongTinDatPhong" Grid.ColumnSpan="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Mã đặt phòng"/>
+                        <Label Content="Tiền cọc"/>
+                        <Label Content="Phụ phí"/>
+                        <Label Content="Trạng thái"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbMaDatPhong" Style="{StaticResource lbNoiDung}" />
+                        <TextBox x:Name="txtTienCoc" Grid.Column="1" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                        <TextBox x:Name="txtPhuPhi" Grid.Column="1" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                        <ComboBox x:Name="cbTrangThaiDatPhong" Style="{StaticResource cbLuaChon}" SelectedValuePath="Content">
+                            <ComboBoxItem Content="Chờ xác nhận"/>
+                            <ComboBoxItem Content="Đã xác nhận"/>
+                            <ComboBoxItem Content="Đã hủy"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Thời gian checkin"/>
+                        <Label Content="Ghi chú"/>
+                        <Label Content="Khách hàng"/>
+                        <Label Content="Loại dịch vụ"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                            <DatePicker x:Name="dtpNgayCheckinDuKien"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                        </Border>
+                        
+                        <TextBox x:Name="txtGhiChu" Style="{StaticResource tbxNoiDung}"/>
+                        <ComboBox x:Name="cbNguoiDaiDienDatPhong" Style="{StaticResource cbLuaChon}"/>
+                        <ComboBox x:Name="cbDichVu" Style="{StaticResource cbLuaChon}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Thời gian checkout"/>
+                        <Label Content="Ngày đặt phòng"/>
+                        <Label Content="Phòng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                            <DatePicker x:Name="dtpNgayCheckoutDuKien"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                        </Border>
+                        <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                            <DatePicker x:Name="dtpNgayDatPhong"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                        </Border>
+                        <ComboBox x:Name="cbPhongCuaDatPhong" Style="{StaticResource cbLuaChon}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Grid.ColumnSpan="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemDatPhong" Click="Them_Click"  
+                            Style="{StaticResource btnThem}"/>
+                    <Button x:Name="btnSuaDatPhong" Click="btnSuaDatPhong_Click"  
+                            Grid.Column="1" Style="{StaticResource btnSua}"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}" Grid.ColumnSpan="7" Margin="20,5,20,5"/>
+                <Grid Grid.Row="3" Grid.ColumnSpan="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtLocTenKhachHang"
+          Grid.Column="0"
+               Style="{StaticResource tbxNoiDungMacDinh}"
+               ToolTip="Tìm kiếm theo" 
+               Tag="Tìm kiếm theo tên khách hàng"/>
+                    <Button x:Name="btnTimKiemTheoTenKhachHang" Click="btnTimKiemTheoTenKhachHang_Click" Style="{StaticResource btnTimKiem}" Grid.Column="1" HorizontalAlignment="Left"/>
+
+                    <TextBox x:Name="txtLocTenPhong"
+Grid.Column="2"
+     Style="{StaticResource tbxNoiDungMacDinh}"
+     ToolTip="Tìm kiếm theo" 
+     Tag="Tìm kiếm theo tên phòng"/>
+                    <Button x:Name="btnTimKiemTheoTenPhong" Click="btnTimKiemTheoTenPhong_Click" Style="{StaticResource btnTimKiem}" Grid.Column="3" HorizontalAlignment="Left"/>
+
+
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachDatPhong" ItemsSource="{Binding dsDatPhong}" Grid.Row="4" Grid.ColumnSpan="7" Margin="20,10,20,10">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinDatPhong" Click="btnThongTinDatPhong_Click"
+                                                Style="{StaticResource btnChinhSua}" />
+                                        <Button x:Name="btnXoaDatPhong" Click="btnXoaDatPhong_Click"
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Mã đặt phòng" Binding="{Binding booking_record_id}"/>
+                        <DataGridTextColumn Header="Ngày đặt phòng" Binding="{Binding booking_time}"/>
+                        <DataGridTextColumn Header="Ngày checkin dự kiến" Binding="{Binding expected_checkin_date,StringFormat=dd/MM/yyyy}"/>
+                        <DataGridTextColumn Header="Ngày checkout dự kiến" Binding="{Binding expected_checkout_date,StringFormat=dd/MM/yyyy}"/>
+                        <DataGridTextColumn Header="Tiền cọc" Binding="{Binding deposit}"/>
+                        <DataGridTextColumn Header="Phụ phí" Binding="{Binding surcharge}"/>
+                        <DataGridTextColumn Header="Ghi chú" Binding="{Binding note}"/>
+                        <DataGridTextColumn Header="Trạng thái" Binding="{Binding status}"/>
+                        <DataGridTextColumn Header="Tên phòng" Binding="{Binding room_name}"/>
+                        <DataGridTextColumn Header="Tên người đại diện" Binding="{Binding customer_name}"/>
+                        <DataGridTextColumn Header="Ngày checkin thực tế" Binding="{Binding actual_checkin_date,StringFormat=dd/MM/yyyy}"/>
+                        <DataGridTextColumn Header="Ngày checkout thực tế" Binding="{Binding actual_checkout_date,StringFormat=dd/MM/yyyy}"/>
+                        <DataGridTextColumn Header="Mã khách hàng" Binding="{Binding customer_id}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="tabPhong" Style="{StaticResource tab}" Header="Phòng" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="grThongTinPhong">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Mã phòng"/>
+                        <Label Content="Tên phòng"/>
+                        <Label Content="Sức chứa"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbMaPhong" 
+                                 Style="{StaticResource lbNoiDung}"/>
+                        <TextBox x:Name="txtTenPhong" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                        <TextBox x:Name="txtSucChua" Style="{StaticResource tbxNoiDung}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Trạng thái"/>
+                        <Label Content="Mô tả"/>
+                        <Label Content="Loại phòng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <ComboBox x:Name="cbTrangThaiPhong" SelectedValuePath="Content" Style="{StaticResource cbLuaChon}">
+                            <ComboBoxItem Content="Đang cho thuê"/>
+                            <ComboBoxItem Content="Trống"/>
+                            <ComboBoxItem Content="Đang sửa"/>
+                        </ComboBox>
+                        <TextBox x:Name="txtMoTaPhong" Style="{StaticResource tbxNoiDung}" />
+                        <ComboBox x:Name="cbLoaiPhongCuaPhong" Style="{StaticResource cbLuaChon}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Ngày cập nhật"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                            <DatePicker x:Name="dtpNgayCapNhatPhong"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="imgPhong" VerticalAlignment="Top" Height="80" Width="80" Margin="20 5 10 5"
+                                   Source="{Binding HinhAnh,Converter={StaticResource imageConverter},TargetNullValue={StaticResource HinhMacDinh}}">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="LayoutTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Trigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="0:0:0.5" To="1.5" Storyboard.TargetProperty="(Image.LayoutTransform).(ScaleTransform.ScaleX)"/>
+                                                            <DoubleAnimation Duration="0:0:0.5" To="1.5" Storyboard.TargetProperty="(Image.LayoutTransform).(ScaleTransform.ScaleY)"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </Trigger.EnterActions>
+                                                <Trigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="0:0:0.5" To="1" Storyboard.TargetProperty="(Image.LayoutTransform).(ScaleTransform.ScaleX)"/>
+                                                            <DoubleAnimation Duration="0:0:0.5" To="1" Storyboard.TargetProperty="(Image.LayoutTransform).(ScaleTransform.ScaleY)"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </Trigger.ExitActions>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <Button Grid.Column="5" x:Name="btnChonAnh" Click="btnChonAnh_Click"
+                                    VerticalAlignment="Top" Margin="0 20 20 5" ToolTip="Chọn hình ảnh"
+                                    Width="30" Height="30">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FFB79EC3"/>
+                                                    <GradientStop Color="#FF73269A" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Tag">
+                                            <Setter.Value>
+                                                <BitmapImage UriSource="/HinhAnh/ChonHinhAnh.png"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF3956E3"/>
+                                                            <GradientStop Color="#FF352B80" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemPhong" Style="{StaticResource btnThem}" Click="btnThemPhong_Click"/>
+                    <Button x:Name="btnSuaPhong" Style="{StaticResource btnSua}" Click="btnSuaPhong_Click" Grid.Column="1"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                             ToolTip="Tìm kiếm theo" 
+                             Tag="Tìm kiếm theo g"/>
+                    <TextBox Grid.Column="1" 
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                             Tag="Tìm kiếm theo" 
+                             ToolTip="Tìm kiếm theo" />
+                    <Button Style="{StaticResource btnInExcel}" Grid.Column="2"/>
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachPhong"
+                          ItemsSource="{Binding dsPhong}" Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinPhong" 
+                                                Click="btnThongTinPhong_Click"
+                                                Style="{StaticResource btnChinhSua}"/>
+                                        <Button x:Name="btnXoaPhong" 
+                                                Click="btnXoaPhong_Click"  
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Mã phòng">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_id}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Tên phòng">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Sức chứa">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_capacity}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Trạng thái">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_status}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Mô tả" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_description}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Hình ảnh">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="2">
+                                        <Image x:Name="imgPhong" VerticalAlignment="Top" Height="50" Width="50" Margin="2"
+                                               Source="{Binding room_image,Converter={StaticResource imageConverter},TargetNullValue={StaticResource HinhMacDinh}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Ngày cập nhật">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_update,StringFormat={}{0:dd/MM/yyyy}}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Tên loại phòng">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding room_type_name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="tabLoaiPhong" Style="{StaticResource tab}" Header="Loại phòng" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="grThongTinLoaiPhong">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Mã loại phòng"/>
+                        <Label Content="Giảm giá"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbMaLoaiPhong" 
+                                 Style="{StaticResource lbNoiDung}" />
+                        <TextBox x:Name="txtGiamGiaLoaiPhong" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Tên loại phòng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBox x:Name="txtTenLoaiPhong" 
+                                 Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Giá"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <TextBox x:Name="txtGiaLoaiPhong" Style="{StaticResource tbxNoiDung}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemLoaiPhong" Style="{StaticResource btnThem}" Click="btnThemLoaiPhong_Click"/>
+                    <Button x:Name="btnSuaLoaiPhong" Style="{StaticResource btnSua}" Click="btnSuaLoaiPhong_Click"  Grid.Column="1"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtLocThongTinPhong"
+                        Grid.Column="0"
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                             ToolTip="Tìm kiếm theo" 
+                             Tag="Tìm kiếm theo thông tin loại phòng"/>
+                    <Button x:Name="btnTimKiemTheoThongTinLoaiPhong" Click="btnTimKiemTheoThongTinLoaiPhong_Click" Style="{StaticResource btnTimKiem}" Grid.Column="1" HorizontalAlignment="Left"/>
+
+                    <TextBox  x:Name="txtLocGiaLoaiPhongThap"
+                        Grid.Column="2" 
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                             Tag="Từ giá thấp nhất" 
+                             ToolTip="Tìm kiếm theo" />
+                    <TextBox x:Name="txtLocGiaLoaiPhongCao"
+                         Grid.Column="3" 
+                         Style="{StaticResource tbxNoiDungMacDinh}"
+                         Tag="Đến giá cao nhất" 
+                         ToolTip="Tìm kiếm theo"/>
+                    <Button x:Name="btnTimKiemTheoKhoangGiaLoaiPhong" Click="btnTimKiemTheoKhoangGiaLoaiPhong_Click" Style="{StaticResource btnTimKiem}" Grid.Column="4" HorizontalAlignment="Left"/>
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachLoaiPhong" 
+                          ItemsSource="{Binding dsPhong}" Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinLoaiPhong" 
+                                                Click="btnThongTinLoaiPhong_Click"
+                                                Style="{StaticResource btnChinhSua}"/>
+                                        <Button x:Name="btnXoaLoaiPhong" 
+                                                Click="btnXoaLoaiPhong_Click"
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Mã loại phòng" 
+                                            Binding="{Binding room_type_id}"/>
+                        <DataGridTextColumn Header="Tên loại phòng" 
+                                            Binding="{Binding room_type_name}"/>
+                        <DataGridTextColumn Header="Giá" 
+                                            Binding="{Binding price}"/>
+                        <DataGridTextColumn Header="Giảm giá" 
+                                            Binding="{Binding discount_room}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="tabKhachHangDatPhong" Style="{StaticResource tab}" Header="Khách đặt phòng" Width="150">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="grThongTinKhachHangDatPhong">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Khách hàng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <ComboBox x:Name="cbKhachHangCuaKhachDatPhong" Style="{StaticResource cbLuaChon}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Mã đặt phòng"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBox x:Name="txtMaDatPhongKhachHang" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemKhachHangDatPhong" Style="{StaticResource btnThem}" Click="btnThemKhachHangDatPhong_Click"/>
+                    <Button x:Name="btnSuaKhachHangDatPhong" Style="{StaticResource btnSua}" Click="btnSuaKhachHangDatPhong_Click"  Grid.Column="1"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+          
+                    <Button Style="{StaticResource btnInExcel}" Grid.Column="2"/>
+                </Grid>
+                <DataGrid x:Name="dtgDanhSachKhachHangDatPhong" 
+                          ItemsSource="{Binding dsKhachDatPhong}" Grid.Row="4">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnThongTinKhachDatPhong" 
+                                                Click="btnThongTinKhachDatPhong_Click"
+                                                Style="{StaticResource btnChinhSua}"/>
+                                        <Button x:Name="btnXoaKhachDatPhong" 
+                                                Click="btnXoaKhachDatPhong_Click"  
+                                                Style="{StaticResource btnXoa}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Mã đặt phòng" 
+                                            Binding="{Binding booking_record_id}"/>
+                        <DataGridTextColumn Header="Tên phòng" 
+                                            Binding="{Binding room_name}"/>
+                        <DataGridTextColumn Header="Tên khách hàng" 
+                                            Binding="{Binding customer_name}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

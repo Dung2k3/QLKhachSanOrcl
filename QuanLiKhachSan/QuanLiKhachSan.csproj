@@ -1,0 +1,215 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="HinhAnh\AnManHinh.png" />
+    <None Remove="HinhAnh\AnManHinhCam.png" />
+    <None Remove="HinhAnh\AnManHinhTrang.png" />
+    <None Remove="HinhAnh\AnMatKhau.png" />
+    <None Remove="HinhAnh\CCCDXam.png" />
+    <None Remove="HinhAnh\ChonHinhAnh.png" />
+    <None Remove="HinhAnh\CuTruCam.png" />
+    <None Remove="HinhAnh\CuTruTim.png" />
+    <None Remove="HinhAnh\CuTruTrang.png" />
+    <None Remove="HinhAnh\DangNhapDen.png" />
+    <None Remove="HinhAnh\DangNhapTim.png" />
+    <None Remove="HinhAnh\DangXuatCam.png" />
+    <None Remove="HinhAnh\DangXuatTim.png" />
+    <None Remove="HinhAnh\DangXuatTrang.png" />
+    <None Remove="HinhAnh\DanhSach.png" />
+    <None Remove="HinhAnh\DichVuCam.png" />
+    <None Remove="HinhAnh\DichVuTim.png" />
+    <None Remove="HinhAnh\DichVuTrang.png" />
+    <None Remove="HinhAnh\DoanhThuCam.png" />
+    <None Remove="HinhAnh\DoanhThuTim.png" />
+    <None Remove="HinhAnh\DoanhThuTrang.png" />
+    <None Remove="HinhAnh\HaiMuiTenLen.png" />
+    <None Remove="HinhAnh\HaiMuiTenXuong.png" />
+    <None Remove="HinhAnh\HienMatKhau.png" />
+    <None Remove="HinhAnh\HienMatKhauTim.png" />
+    <None Remove="HinhAnh\HinhCCCD.png" />
+    <None Remove="HinhAnh\HonNhanCam.png" />
+    <None Remove="HinhAnh\HonNhanTim.png" />
+    <None Remove="HinhAnh\HonNhanTrang.png" />
+    <None Remove="HinhAnh\ImagePhongMacDinh.png" />
+    <None Remove="HinhAnh\In.png" />
+    <None Remove="HinhAnh\InExcel.png" />
+    <None Remove="HinhAnh\KhachHangCam.png" />
+    <None Remove="HinhAnh\KhachHangTim.png" />
+    <None Remove="HinhAnh\KhachHangTrang.png" />
+    <None Remove="HinhAnh\KhaiSinhCam.png" />
+    <None Remove="HinhAnh\KhaiSinhTim.png" />
+    <None Remove="HinhAnh\KhaiSinhTrang.png" />
+    <None Remove="HinhAnh\KhaiTu.png" />
+    <None Remove="HinhAnh\KhaiTuCam.png" />
+    <None Remove="HinhAnh\KhaiTuTim.png" />
+    <None Remove="HinhAnh\KhaiTuTrang.png" />
+    <None Remove="HinhAnh\LuaChonDen.png" />
+    <None Remove="HinhAnh\LuaChonTrang.png" />
+    <None Remove="HinhAnh\MacDinhCCCD.jpg" />
+    <None Remove="HinhAnh\MoRongMenuDen.png" />
+    <None Remove="HinhAnh\MoRongMenuTim.png" />
+    <None Remove="HinhAnh\MuiTen.png" />
+    <None Remove="HinhAnh\MuiTenLen.png" />
+    <None Remove="HinhAnh\MuiTenXuong.png" />
+    <None Remove="HinhAnh\NhanVienCam.png" />
+    <None Remove="HinhAnh\NhanVienTim.png" />
+    <None Remove="HinhAnh\NhanVienTrang.png" />
+    <None Remove="HinhAnh\PhongCam.png" />
+    <None Remove="HinhAnh\PhongTim.png" />
+    <None Remove="HinhAnh\PhongTo.png" />
+    <None Remove="HinhAnh\PhongToCam.png" />
+    <None Remove="HinhAnh\PhongTrang.png" />
+    <None Remove="HinhAnh\SoHoKhau.png" />
+    <None Remove="HinhAnh\SoLuong.png" />
+    <None Remove="HinhAnh\Sua.png" />
+    <None Remove="HinhAnh\TamTruTamVang.png" />
+    <None Remove="HinhAnh\TatManHinh.png" />
+    <None Remove="HinhAnh\TatManHinhCam.png" />
+    <None Remove="HinhAnh\TatManHinhTrang.png" />
+    <None Remove="HinhAnh\ThanhToanCam.png" />
+    <None Remove="HinhAnh\ThanhToanTim.png" />
+    <None Remove="HinhAnh\ThanhToanTrang.png" />
+    <None Remove="HinhAnh\Them.png" />
+    <None Remove="HinhAnh\ThongKeCam.png" />
+    <None Remove="HinhAnh\ThongKeTim.png" />
+    <None Remove="HinhAnh\ThongKeTrang.png" />
+    <None Remove="HinhAnh\ThuGonMenuCam.png" />
+    <None Remove="HinhAnh\ThungRac.png" />
+    <None Remove="HinhAnh\ThuNho.png" />
+    <None Remove="HinhAnh\ThuNhoCam.png" />
+    <None Remove="HinhAnh\TimKiem.png" />
+    <None Remove="HinhAnh\TimKiemTrang.png" />
+    <None Remove="HinhAnh\VaoSo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\AnMatKhau.png" />
+    <Resource Include="HinhAnh\DichVuCam.png" />
+    <Resource Include="HinhAnh\DichVuTim.png" />
+    <Resource Include="HinhAnh\DichVuTrang.png" />
+    <Resource Include="HinhAnh\ImagePhongMacDinh.png" />
+    <Resource Include="HinhAnh\KhachHangCam.png" />
+    <Resource Include="HinhAnh\KhachHangTim.png" />
+    <Resource Include="HinhAnh\KhachHangTrang.png" />
+    <Resource Include="HinhAnh\PhongTim.png" />
+    <Resource Include="HinhAnh\ThanhToanCam.png" />
+    <Resource Include="HinhAnh\ThanhToanTim.png" />
+    <Resource Include="HinhAnh\ThanhToanTrang.png" />
+    <Resource Include="HinhAnh\TimKiem.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\MuiTenLen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\MuiTen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\DangXuatTim.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\CuTruTim.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\NhanVienTrang.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\AnManHinhCam.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\AnManHinh.png" />
+    <Resource Include="HinhAnh\AnManHinhTrang.png" />
+    <Resource Include="HinhAnh\NhanVienCam.png" />
+    <Resource Include="HinhAnh\NhanVienTim.png" />
+    <Resource Include="HinhAnh\CCCDXam.png" />
+    <Resource Include="HinhAnh\ChonHinhAnh.png" />
+    <Resource Include="HinhAnh\CuTruCam.png" />
+    <Resource Include="HinhAnh\CuTruTrang.png" />
+    <Resource Include="HinhAnh\DangNhapDen.png" />
+    <Resource Include="HinhAnh\DangNhapTim.png" />
+    <Resource Include="HinhAnh\DangXuatCam.png" />
+    <Resource Include="HinhAnh\DangXuatTrang.png" />
+    <Resource Include="HinhAnh\DanhSach.png" />
+    <Resource Include="HinhAnh\HaiMuiTenLen.png" />
+    <Resource Include="HinhAnh\HaiMuiTenXuong.png" />
+    <Resource Include="HinhAnh\HienMatKhau.png" />
+    <Resource Include="HinhAnh\HienMatKhauTim.png" />
+    <Resource Include="HinhAnh\HinhCCCD.png" />
+    <Resource Include="HinhAnh\HonNhanCam.png" />
+    <Resource Include="HinhAnh\HonNhanTim.png" />
+    <Resource Include="HinhAnh\HonNhanTrang.png" />
+    <Resource Include="HinhAnh\In.png" />
+    <Resource Include="HinhAnh\InExcel.png" />
+    <Resource Include="HinhAnh\KhaiSinhCam.png" />
+    <Resource Include="HinhAnh\KhaiSinhTim.png" />
+    <Resource Include="HinhAnh\KhaiSinhTrang.png" />
+    <Resource Include="HinhAnh\KhaiTu.png" />
+    <Resource Include="HinhAnh\KhaiTuCam.png" />
+    <Resource Include="HinhAnh\KhaiTuTim.png" />
+    <Resource Include="HinhAnh\KhaiTuTrang.png" />
+    <Resource Include="HinhAnh\LuaChonDen.png" />
+    <Resource Include="HinhAnh\LuaChonTrang.png" />
+    <Resource Include="HinhAnh\MacDinhCCCD.jpg" />
+    <Resource Include="HinhAnh\MoRongMenuDen.png" />
+    <Resource Include="HinhAnh\MoRongMenuTim.png" />
+    <Resource Include="HinhAnh\MuiTenXuong.png" />
+    <Resource Include="HinhAnh\PhongCam.png" />
+    <Resource Include="HinhAnh\PhongTo.png" />
+    <Resource Include="HinhAnh\PhongToCam.png" />
+    <Resource Include="HinhAnh\PhongTrang.png" />
+    <Resource Include="HinhAnh\SoHoKhau.png" />
+    <Resource Include="HinhAnh\SoLuong.png" />
+    <Resource Include="HinhAnh\Sua.png" />
+    <Resource Include="HinhAnh\TamTruTamVang.png" />
+    <Resource Include="HinhAnh\TatManHinh.png" />
+    <Resource Include="HinhAnh\TatManHinhCam.png" />
+    <Resource Include="HinhAnh\TatManHinhTrang.png" />
+    <Resource Include="HinhAnh\Them.png" />
+    <Resource Include="HinhAnh\ThongKeCam.png" />
+    <Resource Include="HinhAnh\ThongKeTim.png" />
+    <Resource Include="HinhAnh\ThongKeTrang.png" />
+    <Resource Include="HinhAnh\DoanhThuCam.png" />
+    <Resource Include="HinhAnh\DoanhThuTim.png" />
+    <Resource Include="HinhAnh\DoanhThuTrang.png" />
+    <Resource Include="HinhAnh\ThuGonMenuCam.png" />
+    <Resource Include="HinhAnh\ThungRac.png" />
+    <Resource Include="HinhAnh\ThuNho.png" />
+    <Resource Include="HinhAnh\ThuNhoCam.png" />
+    <Resource Include="HinhAnh\TimKiemTrang.png" />
+    <Resource Include="HinhAnh\VaoSo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

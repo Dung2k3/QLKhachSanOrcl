@@ -1,0 +1,330 @@
+﻿<Window x:Class="QuanLiKhachSan.fUngDung"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuanLiKhachSan"
+        mc:Ignorable="d" MinHeight="700" MinWidth="1200" 
+        Title="fManHinhChinh" Height="700" Width="1200" AllowsTransparency="True"
+        WindowStyle="None" ResizeMode="CanResize"  WindowStartupLocation="CenterScreen" MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </Window.Resources>
+    <Grid>
+        <Border Background="#EAE7D6" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#5D7B6F" CornerRadius="10 10 0 0">
+                    <Border.Resources>
+                        <BitmapImage x:Key="imgAnManHinhTrang" UriSource="/HinhAnh/AnManHinhTrang.png"/>
+                        <BitmapImage x:Key="imgAnManHinhCam" UriSource="/HinhAnh/AnManHinhCam.png"/>
+                        <BitmapImage x:Key="imgTatManHinhTrang" UriSource="/HinhAnh/TatManHinhTrang.png"/>
+                        <BitmapImage x:Key="imgTatManHinhCam" UriSource="/HinhAnh/TatManHinhCam.png"/>
+                        <BitmapImage x:Key="imgThuNhoManHinhTrang" UriSource="/HinhAnh/ThuNho.png"/>
+                        <BitmapImage x:Key="imgThuNhoManHinhCam" UriSource="/HinhAnh/ThuNhoCam.png"/>
+                        <BitmapImage x:Key="imgPhongToManHinhTrang" UriSource="/HinhAnh/PhongTo.png"/>
+                        <BitmapImage x:Key="imgPhongToManHinhCam" UriSource="/HinhAnh/PhongToCam.png"/>
+                    </Border.Resources>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0">
+                        <Button x:Name="btnAnManHinh" Click="btnAnManHinh_Click"  Background="Transparent"
+                                Width="30" Height="30" Margin="5 0 5 0">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+                                    <Setter Property="Tag" Value="{StaticResource imgAnManHinhTrang}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Tag" Value="{StaticResource imgAnManHinhCam}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <ToggleButton x:Name="toggleBtnKichCo" Click="toggleBtnKichCo_Click"
+                                      Background="Transparent" Margin="10 0 10 0">
+                            <ToggleButton.Style>
+                                <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnKichThuocMenu}">
+                                    <Setter Property="Image.Source" Value="{StaticResource imgThuNhoManHinhTrang}"/>
+                                    <Setter Property="Tag" Value="{StaticResource imgThuNhoManHinhCam}"/>
+                                    <Setter Property="DataContext" Value="{StaticResource imgPhongToManHinhTrang}"/>
+                                    <Style.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="ToggleButton.IsMouseOver" Value="True"/>
+                                                <Condition Property="ToggleButton.IsChecked" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="DataContext" Value="{StaticResource imgPhongToManHinhCam}"/>
+                                        </MultiTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <Button x:Name="btnThoat" Click="btnThoat_Click"  Background="Transparent"
+                                Height="30" Width="30" Margin="5 0 10 0">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+                                    <Setter Property="Tag" Value="{StaticResource imgTatManHinhTrang}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Tag" Value="{StaticResource imgTatManHinhCam}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </WrapPanel>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Border x:Name="col1" Width="200" Margin="0" CornerRadius="0 0 0 0" Background="Transparent">
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="ToggleButton.Checked" SourceName="btnMenu">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Width" To="60" Duration="0:0:0.5">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseInOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="ToggleButton.Unchecked" SourceName="btnMenu">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Width" To="200" Duration="0:0:0.5">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <QuadraticEase EasingMode="EaseInOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <ToggleButton x:Name="btnMenu" Background="#EAE7D6">
+                                    <ToggleButton.Resources>
+                                        <BitmapImage x:Key="imgThuGon" UriSource="/HinhAnh/ThuGonMenuCam.png"/>
+                                        <BitmapImage x:Key="imgMoRongTim" UriSource="/HinhAnh/MoRongMenuTim.png"/>
+                                        <BitmapImage x:Key="imgMoRongDen" UriSource="/HinhAnh/MoRongMenuDen.png"/>
+                                    </ToggleButton.Resources>
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnKichThuocMenu}">
+                                            <Setter Property="Image.Source" Value="{StaticResource imgMoRongDen}"/>
+                                            <Setter Property="Tag" Value="{StaticResource imgMoRongTim}"/>
+                                            <Setter Property="DataContext" Value="{StaticResource imgThuGon}"/>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                                <Border Background="#5D7B6F" Grid.Row="1" CornerRadius="0 20 0 10">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <ListBox Background="Transparent" VerticalAlignment="Top" SelectionMode="Single" Cursor="Hand">
+                                            <ListBox.Resources>
+                                                <Style TargetType="ListBox">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                                                <Border>
+                                                                    <ScrollViewer Focusable="False" HorizontalScrollBarVisibility="Disabled" 
+                                                                                  VerticalScrollBarVisibility="Disabled">
+                                                                        <ItemsPresenter />
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgPhongCam" UriSource="/HinhAnh/PhongCam.png"/>
+                                                <BitmapImage x:Key="imgPhongTrang" UriSource="/HinhAnh/PhongTrang.png"/>
+                                                <BitmapImage x:Key="imgPhongTim" UriSource="/HinhAnh/PhongTim.png"/>
+                                                <Style x:Key="itemPhong" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="PHÒNG"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Phòng"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgPhongTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgPhongTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgPhongCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgNhanVienCam" UriSource="/HinhAnh/NhanVienCam.png"/>
+                                                <BitmapImage x:Key="imgNhanVienTrang" UriSource="/HinhAnh/NhanVienTrang.png"/>
+                                                <BitmapImage x:Key="imgNhanVienTim" UriSource="/HinhAnh/NhanVienTim.png"/>
+                                                <Style x:Key="itemNhanVien" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="NHÂN VIÊN"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Nhân viên"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgNhanVienTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgNhanVienTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgNhanVienCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgDichVuCam" UriSource="/HinhAnh/DichVuCam.png"/>
+                                                <BitmapImage x:Key="imgDichVuTrang" UriSource="/HinhAnh/DichVuTrang.png"/>
+                                                <BitmapImage x:Key="imgDichVuTim" UriSource="/HinhAnh/DichVuTim.png"/>
+                                                <Style x:Key="itemDichVu" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="DỊCH VỤ"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Dịch vụ"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgDichVuTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgDichVuTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgDichVuCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgThanhToanCam" UriSource="/HinhAnh/ThanhToanCam.png"/>
+                                                <BitmapImage x:Key="imgThanhToanTrang" UriSource="/HinhAnh/ThanhToanTrang.png"/>
+                                                <BitmapImage x:Key="imgThanhToanTim" UriSource="/HinhAnh/ThanhToanTim.png"/>
+                                                <Style x:Key="itemThanhToan" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="THANH TOÁN"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Thanh toán"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgThanhToanTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgThanhToanTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgThanhToanCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgDoanhThuCam" UriSource="/HinhAnh/DoanhThuCam.png"/>
+                                                <BitmapImage x:Key="imgDoanhThuTrang" UriSource="/HinhAnh/DoanhThuTrang.png"/>
+                                                <BitmapImage x:Key="imgDoanhThuTim" UriSource="/HinhAnh/DoanhThuTim.png"/>
+                                                <Style x:Key="itemDoanhThu" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="DOANH THU"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Doanh thu"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgDoanhThuTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgDoanhThuTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgDoanhThuCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                <BitmapImage x:Key="imgKhachHangCam" UriSource="/HinhAnh/KhachHangCam.png"/>
+                                                <BitmapImage x:Key="imgKhachHangTrang" UriSource="/HinhAnh/KhachHangTrang.png"/>
+                                                <BitmapImage x:Key="imgKhachHangTim" UriSource="/HinhAnh/KhachHangTim.png"/>
+                                                <Style x:Key="itemKhachHang" TargetType="ListBoxItem">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
+                                                                    <ToggleButton.Style>
+                                                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                                            <Setter Property="Content" Value="KHÁCH HÀNG"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Khách hàng"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgKhachHangTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgKhachHangTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgKhachHangCam}"/>
+                                                                        </Style>
+                                                                    </ToggleButton.Style>
+                                                                </ToggleButton>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                                
+                                            </ListBox.Resources>
+                                            <ListBoxItem x:Name="itemPhong" Margin="0 20 0 0" Style="{StaticResource itemPhong}" Selected="itemPhong_Selected"/>
+                                            <ListBoxItem x:Name="itemNhanVien" Style="{StaticResource itemNhanVien}" Selected="itemNhanVien_Selected"/>
+                                            <ListBoxItem x:Name="itemDichVu" Style="{StaticResource itemDichVu}" Selected="itemDichVu_Selected"/>
+                                            <ListBoxItem x:Name="itemKhachHang" Style="{StaticResource itemKhachHang}" Selected="itemKhachHang_Selected"/>
+                                            <ListBoxItem x:Name="itemThanhToan" Style="{StaticResource itemThanhToan}" Selected="itemThanhToan_Selected"/>
+                                            <ListBoxItem x:Name="itemDoanhThu" Style="{StaticResource itemDoanhThu}" Selected="itemDoanhThu_Selected"/>
+                                            
+                                            
+                                            
+                                        </ListBox>
+                                        <ToggleButton x:Name="btnDangXuat" Grid.Row="1" Click="btnDangXuat_Click">
+                                            <ToggleButton.Resources>
+                                                <BitmapImage x:Key="imgDangXuatTrang" UriSource="/HinhAnh/DangXuatTrang.png"/>
+                                                <BitmapImage x:Key="imgDangXuatTim" UriSource="/HinhAnh/DangXuatTim.png"/>
+                                                <BitmapImage x:Key="imgDangXuatCam" UriSource="/HinhAnh/DangXuatCam.png"/>
+                                            </ToggleButton.Resources>
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
+                                                    <Setter Property="Content" Value="ĐĂNG XUẤT"/>
+                                                    <Setter Property="TextBlock.Text" Value="Đăng xuất"/>
+                                                    <Setter Property="Image.Source" Value="{StaticResource imgDangXuatTrang}"/>
+                                                    <Setter Property="Tag" Value="{StaticResource imgDangXuatTim}"/>
+                                                    <Setter Property="DataContext" Value="{StaticResource imgDangXuatCam}"/>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                        </ToggleButton>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Border Background="#FFE8F0DE" Grid.Row="1" CornerRadius="30 0 10 0">
+                            <Grid x:Name="grManHinh"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

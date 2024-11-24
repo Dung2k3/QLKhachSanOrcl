@@ -1,0 +1,564 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <BooleanToVisibilityConverter x:Key="bool"/>
+    <Style TargetType="TextBox">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Height" Value="24"/>
+    </Style>
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Margin" Value="20 5 5 5"/>
+        <Setter Property="Height" Value="30"/>
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Margin" Value="20 5 5 5"/>
+    </Style>
+    <Style TargetType="ComboBox">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Height" Value="24"/>
+    </Style>
+    <Style TargetType="DatePicker">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Language" Value="vi-VN"/>
+    </Style>
+    <Style TargetType="Border" x:Key="BorderPhanDoan">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="BorderBrush" Value="#FFACA2A2"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style x:Key="btnHinhAnh" TargetType="Button">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="{TemplateBinding Content}" VerticalAlignment="Center" 
+                                   Foreground="{TemplateBinding Foreground}" VerticalContentAlignment="Center"/>
+                            <Image Height="{TemplateBinding Height}" Grid.Column="1"
+                                   Source="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="btnChinhSua" TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Background" Value="#FFAB8AE2"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/VaoSo.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF572476"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="btnXoa" TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Background" Value="#FFF47979"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/ThungRac.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF7C0C0C"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="btnTimKiem" TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="0 0 20 0"/>
+        <Setter Property="Background" Value="#FFB5D6F9"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/TimKiemTrang.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF4D8CE3"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="btnInWord" TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Background" Value="#FF7DC4F3"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/In.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF4884BA"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="btnInExcel" TargetType="Button" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="10 0 20 0"/>
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Background" Value="#FF43983B"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/InExcel.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF206D18"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Button" x:Key="btnThem" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Background" Value="#A4C3A2"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Content" Value="Thêm"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/Them.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#5D7B6F"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Button" x:Key="btnSua" BasedOn="{StaticResource btnHinhAnh}">
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Background" Value="#A4C3A2"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Content" Value="Sửa"/>
+        <Setter Property="Tag">
+            <Setter.Value>
+                <BitmapImage UriSource="/HinhAnh/Sua.png"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#5D7B6F"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="tab" TargetType="TabItem">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Border" BorderThickness="1 1 0 0" CornerRadius="15 15 0 0" Margin="1 0 1 0">
+                        <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center"  
+                                          HorizontalAlignment="Center" ContentSource="Header" Margin="10 2"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#0081A7" />
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="#97BEC6"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="Margin" Value="20 10 20 10"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="ColumnHeaderStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#2D99AE" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RowStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#97BEC6"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#89B449"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CellStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#89B449"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="tbxNoiDungMacDinh" TargetType="TextBox">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="0 4 0 2"/>
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border" BorderBrush="#FF959595" BorderThickness="1"
+                                Background="White" CornerRadius="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="textMacDinh" Margin="10 0 0 0"
+                                   Text="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}" 
+                                   VerticalAlignment="Center" Foreground="#FFC0B8B8" Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="5 0 0 0" 
+                                      Background="Transparent" BorderThickness="0"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="textMacDinh" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="tbxNoiDung" TargetType="TextBox">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="0 4 0 2"/>
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border x:Name="border" BorderBrush="#FF959595" BorderThickness="1"
+                                Background="White" CornerRadius="10"/>
+                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="5 0 0 0" 
+                                      Background="Transparent" BorderThickness="0"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="cbLuaChon" TargetType="{x:Type ComboBox}">
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="#FFC0B8B8"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Height" Value="30"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <Border x:Name="MainBorder" BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" 
+                                CornerRadius="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="textMacDinh" Grid.Column="1" 
+                                           Text="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}"  
+                                           VerticalAlignment="Center" Margin="5 0 0 0" Foreground="#FFC0B8B8"
+                                           Visibility="{Binding Path=SelectedValue.IsEmpty,
+                                                        RelativeSource={RelativeSource TemplatedParent}, 
+                                                        Converter={StaticResource bool}}"/>
+                                <ContentPresenter Grid.Column="1" x:Name="ContentSite" IsHitTestVisible="False" 
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                  VerticalAlignment="Center"/>
+                                <ToggleButton Grid.Column="2" Margin="0" Background="Transparent" Width="20" Height="20" 
+                                              IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, 
+                                                          RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="10">
+                                                <Grid>
+                                                    <Image Source="/HinhAnh/MuiTenLen.png" x:Name="image1"  
+                                                           Height="25" Grid.Column="0" VerticalAlignment="Center" 
+                                                           Visibility="Collapsed"/>
+                                                    <Image Source="/HinhAnh/MuiTenXuong.png" 
+                                                           x:Name="image2" Height="25" 
+                                                           Grid.Column="0" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" TargetName="border" 
+                                                            Value="{Binding BorderBrush,
+                                                                    RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="image1" Property="Visibility" Value="Visible"/>
+                                                    <Setter TargetName="image2" Property="Visibility" Value="Collapsed"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                            </Grid>
+                        </Border>
+                        <Popup x:Name="Popup" MaxHeight="300" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" 
+                               Focusable="False" AllowsTransparency="True" PopupAnimation="Slide" >
+                            <Border Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" 
+                                    x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="Gray" 
+                                    CornerRadius="5">
+                                <ScrollViewer x:Name="DropDownScrollViewer" Background="Transparent" 
+                                              HorizontalScrollBarVisibility="Auto" 
+                                              VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                                    <StackPanel x:Name="ItemsPresenter" IsItemsHost="True" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="Label" x:Key="lbNoiDung">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Margin" Value="20 5 20 5"/>
+        <Setter Property="Padding" Value="0 4 0 2"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Label">
+                    <Grid>
+                        <Border BorderBrush="#FF959595" BorderThickness="1" CornerRadius="10"/>
+                        <TextBlock TextTrimming="CharacterEllipsis" Margin="5 0 0 0" VerticalAlignment="Center"
+                                   Text="{Binding Content,RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <ToolTipService.ToolTip>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Content,RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </ToolTipService.ToolTip>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type CheckBox}" x:Key="MyCheckBox">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="20 9 20 9"/>
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <Grid>
+                        <BulletDecorator>
+                            <BulletDecorator.Bullet>
+                                <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                                    <Border x:Name="Border" Background="White" BorderBrush="{TemplateBinding BorderBrush}" 
+                                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5"/>
+                                    <Path Margin="5" x:Name="Check" Stroke="Red"  StrokeThickness="2" 
+                                          Data="M 0 0 L 10 10 M 0 10 L 10 0" Visibility="Collapsed" />
+                                </Grid>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="5 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                              RecognizesAccessKey="True" />
+                        </BulletDecorator>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#FFDBBCE6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="tbtnKichThuocMenu" TargetType="ToggleButton">
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border Background="Transparent">
+                        <Image x:Name="image" Grid.Column="1" Width="25" Source="{TemplateBinding Image.Source}"
+                               Margin="1" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                            <Setter TargetName="image" Property="Source"
+                                    Value="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="true">
+                            <Setter TargetName="image" Property="Source"
+                                    Value="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="tbtnMenu" TargetType="ToggleButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border x:Name="boderNgoai" Background="#5D7B6F">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Height="35" Width="130" HorizontalAlignment="Left">
+                                <TextBlock Text="{TemplateBinding TextBlock.Text}" FontWeight="Bold" FontSize="15" Foreground="White"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0"/>
+                            </Grid>
+                            <Image x:Name="image" Grid.Column="1" Width="25" Source="{TemplateBinding Image.Source}"
+                                   HorizontalAlignment="Right" Margin="15 0 20 0" VerticalAlignment="Center"/>
+                            <Grid x:Name="grInHoa" Width="0" Height="35" Background="#5D7B6F" HorizontalAlignment="Left">
+                                <TextBlock x:Name="text_InHoa" FontSize="15" Foreground="White" FontWeight="Bold"
+                                           Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" 
+                                           Margin="20 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                </TextBlock>
+                                <Border x:Name="border" Height="30" Width="3" Background="#E97254" CornerRadius="1"
+                                        HorizontalAlignment="Right" Margin="0 0 5 0" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ToggleButton.IsMouseOver"
+                                     Value="true">
+                            <Setter TargetName="boderNgoai" Property="Background" Value="#5D7B6F"/>
+                            <Setter TargetName="image" Property="Source"
+                                    Value="{Binding Tag,RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="true">
+                            <Setter TargetName="boderNgoai" Property="Background" Value="#5D7B6F"/>
+                            <Setter TargetName="border" Property="Background" Value="White" />
+                            <Setter TargetName="text_InHoa" Property="Foreground" Value="#E97254" />
+                            <Setter TargetName="image" Property="Source"
+                                    Value="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ToggleButton.IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grInHoa" Storyboard.TargetProperty="Width"
+                                                         DecelerationRatio="0.6" From="0" To="145" Duration="0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                                <RemoveStoryboard BeginStoryboardName="bsbDung" />
+                            </MultiTrigger.EnterActions>
+
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grInHoa" Storyboard.TargetProperty="Width"
+                                                         DecelerationRatio="0.6" From="145" To="0" Duration="0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                                <RemoveStoryboard BeginStoryboardName="bsbGiaiPhong" />
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ToggleButton.IsChecked" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grInHoa" Storyboard.TargetProperty="Width"
+                                                         From="140" To="145"  Duration="0:0:0.4" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard x:Name="bsbGiaiPhong">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grInHoa" Storyboard.TargetProperty="Width"
+                                                         From="145" To="140" Duration="0:0:0.4" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                                <BeginStoryboard x:Name="bsbDung">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="grInHoa" Storyboard.TargetProperty="Width"
+                                                         From="145" To="0" BeginTime="0:0:0.5" Duration="0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

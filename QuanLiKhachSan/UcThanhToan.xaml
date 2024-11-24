@@ -1,0 +1,140 @@
+﻿<UserControl x:Class="QuanLiKhachSan.UcThanhToan"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLiKhachSan"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Content="Mã bill"/>
+                <Label Content="Ngày tạo"/>
+                <Label Content="Mã đặt phòng"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label x:Name="lbMaBill" Style="{StaticResource lbNoiDung}" />
+                <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                    <DatePicker x:Name="dtpNgayTao"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+                <TextBox x:Name="txtMaDatPhong" Style="{StaticResource tbxNoiDung}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Content="Chi phí phát sinh"/>
+                <Label Content="Tổng phí"/>
+                <Label Content="Mã nhân viên"/>
+            </StackPanel>
+            <StackPanel Grid.Column="3">
+                <TextBox x:Name="txtChiPhiPhatSinh" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                <TextBox x:Name="txtTongPhi" 
+                                 Style="{StaticResource tbxNoiDung}"/>
+                <TextBox x:Name="txtMaNhanVien" Style="{StaticResource tbxNoiDung}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <Label Content="Nội dung phát sinh"/>
+                <Label Content="Phương thức TT "/>
+                <Label Content="Ngày thanh toán"/>
+            </StackPanel>
+            <StackPanel Grid.Column="5">
+                <TextBox x:Name="txtNoiDungPhatSinh" Style="{StaticResource tbxNoiDung}"/>
+                <ComboBox x:Name="cbHinhThucThanhToan" SelectedValuePath="Content" Style="{StaticResource cbLuaChon}">
+                    <ComboBoxItem Content="Tiền mặt"/>
+                    <ComboBoxItem Content="Chuyển khoản"/>
+                </ComboBox>
+                <Border Grid.Column="1" Background="White" BorderThickness="1" 
+                                BorderBrush="#FF959595" CornerRadius="10" Margin="20 5 20 5">
+                    <DatePicker x:Name="dtpNgayThanhToan"
+                                Margin="0" Height="30" Background="Transparent" BorderBrush="Transparent"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnThemBill" Style="{StaticResource btnThem}" Click="btnThemBill_Click"/>
+            <Button x:Name="btnSuaBill" Style="{StaticResource btnSua}" Click="btnSuaBill_Click" Grid.Column="1"/>
+        </Grid>
+        <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Style="{StaticResource cbLuaChon}" SelectedValuePath="Content"
+                      Tag="Lọc theo trạng thái của bill" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="Tất cả"/>
+                <ComboBoxItem Content="Đã thanh toán"/>
+                <ComboBoxItem Content="Chưa thanh toán"/>
+            </ComboBox>
+            <TextBox Grid.Column="1" 
+                             Style="{StaticResource tbxNoiDungMacDinh}"
+                             Tag="Tìm kiếm theo" 
+                             ToolTip="Tìm kiếm theo" 
+                     TextChanged="TextBox_TextChanged"/>
+            <Button Style="{StaticResource btnInExcel}" Grid.Column="2"/>
+        </Grid>
+        <DataGrid x:Name="dtgDanhSach" Grid.Row="4">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Xử lí">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="btnThongTinBill" Click="btnThongTinBill_Click" 
+                                                Style="{StaticResource btnChinhSua}"/>
+                                <Button x:Name="btnXoaBill" 
+                                                Click="btnXoaBill_Click"
+                                                Style="{StaticResource btnXoa}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Mã bill" 
+                                            Binding="{Binding bill_id}"/>
+                <DataGridTextColumn Header="Tên khách đại diện" 
+                                            Binding="{Binding customer_name}"/>
+                <DataGridTextColumn Header="Mã đặt phòng" 
+                                            Binding="{Binding booking_record_id}"/>
+                <DataGridTextColumn Header="Tên nhân viên" 
+                                            Binding="{Binding employee_name }"/>
+                <DataGridTextColumn Header="Tổng phí" 
+                                            Binding="{Binding total_cost }"/>
+                <DataGridTextColumn Header="Phí phát sinh" 
+                                            Binding="{Binding  costs_incurred}"/>
+                <DataGridTextColumn Header="Nội dung phát sinh" 
+                                            Binding="{Binding  content_incurred}"/>
+                <DataGridTextColumn Header="Ngày tạo" 
+                                            Binding="{Binding created_date, StringFormat=dd/MM/yyyy}"/>
+                <DataGridTextColumn Header="Ngày thanh toán" 
+                                            Binding="{Binding paytime, StringFormat=dd/MM/yyyy}"/>
+                <DataGridTextColumn Header="Phương thức thanh toán" 
+                                            Binding="{Binding payment_method }"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
