@@ -1,3 +1,4 @@
+using System.Data.OracleClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Oracle.ManagedDataAccess.Client;
 
 namespace QuanLiKhachSan.DAO
 {
@@ -33,24 +35,27 @@ namespace QuanLiKhachSan.DAO
         public bool Login(string username, string password)
         {
             bool isSuccess = false;
-            string sql = "SELECT dbo.Login(@username,@password)";
-            SqlConnection connAdmin = DBConnection.connAdmin;
+            string sql = "SELECT * FROM HotelManagementSystem.ACCOUNT " +
+                         "WHERE username = :username AND password = :password ";
+
+            OracleConnection connAdmin = DbConnectionOrcl.connAdmin;
             try
             {
                 connAdmin.Open();
-                SqlCommand cmd = new SqlCommand(sql, connAdmin);
-                cmd.Parameters.AddWithValue("username", username);
-                cmd.Parameters.AddWithValue("password", password);
-                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                OracleCommand cmd = new OracleCommand(sql, connAdmin);
+                cmd.Parameters.Add(new OracleParameter("username", username));
+                cmd.Parameters.Add(new OracleParameter("password", password));
+                OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                 DataTable dataTable = new DataTable();
                 adapter.Fill(dataTable);
-                if(dataTable.Rows.Count > 0 && dataTable.Rows[0][0] != DBNull.Value)
+                if (dataTable.Rows.Count > 0 && dataTable.Rows[0][0] != DBNull.Value)
                 {
                     isSuccess = true;
-                    string connStr = dataTable.Rows[0][0].ToString();
-                    DBConnection.conn = new SqlConnection(connStr);
+                    DbConnectionOrcl.conn = DbConnectionOrcl.CreateConnOrcl(username, password);
+                    DBConnection.conn = new SqlConnection();
                 }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

@@ -56,6 +56,8 @@ namespace QuanLiKhachSan
         //Hàm đăng nhập từ việc kiểm tra tài khoản
         private void DangNhap()
         {
+            taiKhoan.TenTaiKhoan = "employee1";
+            taiKhoan.MatKhau = "password1";
             bool isSuccess = accountDao.Login(taiKhoan.TenTaiKhoan, taiKhoan.MatKhau);
             if(isSuccess)
             {
