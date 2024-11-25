@@ -1,4 +1,4 @@
-﻿USE HotelManagementSystem;
+﻿-- USE HotelManagementSystem;
 
 --Code xóa bảng để khỏi xóa database tạo lại quài nè
 -- Drop foreign key constraints
@@ -299,3 +299,5 @@ CREATE TABLE PHONE_NUMBER_OF_EMPLOYEE (
     employee_id NUMBER REFERENCES EMPLOYEE(employee_id),
     PRIMARY KEY (employee_id, phone_number)
 );
+
+

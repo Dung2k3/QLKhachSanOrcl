@@ -8,13 +8,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Oracle.ManagedDataAccess.Client;
+using System.Security.Cryptography;
 
 namespace QuanLiKhachSan.DAO
 {
     class DbConnectionOrcl
     {
+        public static string host = "localhost";
+        public static string port = "1521";
+        public static string service_name = "ORCLPDB";
+        
+        public static OracleConnection CreateConnOrcl(string username, string password)
+        {
+            string connStr = $"User Id={username};Password={password};Data Source=" +
+                       $"(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST={host})(PORT={port})))" +
+                       $"(CONNECT_DATA=(SERVICE_NAME={service_name})))";
+    
+            return new OracleConnection(connStr);
+        }
+
         public static OracleConnection conn;
-        public static OracleConnection connAdmin = new OracleConnection(@"Data Source=MONEY;Initial Catalog=HotelManagementSystem3;Integrated Security=True");
+        public static OracleConnection connAdmin = CreateConnOrcl("HotelCheckLogin", "login");
 
 
         public DbConnectionOrcl()
