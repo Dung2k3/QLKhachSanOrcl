@@ -199,6 +199,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="FProfile.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="FNhanVien2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

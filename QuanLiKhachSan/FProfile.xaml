@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="QuanLiKhachSan.UcProfile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLiKhachSan"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </UserControl.Resources>
+    <TabControl Margin="0" Background="Transparent">
+        <TabItem x:Name="tabTaiKhoan" Style="{StaticResource tab}" Header="Profile" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Profile name"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" >
+                            <TextBox x:Name="txbProfileName" Style="{StaticResource tbxNoiDung}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Sessions per user"/>
+                            <Label Content="Connect time"/>
+                            <Label Content="IDLE Time"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3">
+                            <ComboBox x:Name="cbSession"
+                                  Style="{StaticResource cbLuaChon}"
+                                  SelectedValuePath="Content"
+                                  >
+                                <ComboBoxItem Content="Unlimited"/>
+                                <ComboBoxItem Content="Default"/>
+                                <ComboBoxItem Content="Customize"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cbConnectTime"
+                                  Style="{StaticResource cbLuaChon}"
+                                  SelectedValuePath="Content"
+                                  >
+                                <ComboBoxItem Content="Unlimited"/>
+                                <ComboBoxItem Content="Default"/>
+                                <ComboBoxItem Content="Customize"/>
+                            </ComboBox>
+                            <ComboBox x:Name="cbIDLE"
+                  Style="{StaticResource cbLuaChon}"
+                  SelectedValuePath="Content"
+                  >
+                                <ComboBoxItem Content="Unlimited"/>
+                                <ComboBoxItem Content="Default"/>
+                                <ComboBoxItem Content="Customize"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <Label Content="Enter value"/>
+                            <Label Content="Enter value"/>
+                            <Label Content="Enter value"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="5">
+                            <TextBox x:Name="txbSession" Style="{StaticResource tbxNoiDung}" />
+                            <TextBox x:Name="txbConnectTime" Style="{StaticResource tbxNoiDung}" />
+                            <TextBox x:Name="txbIDLE" Style="{StaticResource tbxNoiDung}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnThemTaiKhoan" Style="{StaticResource btnThem}" Click="btnThemTaiKhoan_Click"/>
+                    <Button x:Name="btnSuaTaiKhoan" Style="{StaticResource btnSua}" Click="btnSuaTaiKhoan_Click"  Grid.Column="1"/>
+                </Grid>
+                <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Tiêu đề cho bảng đầu tiên -->
+                    <TextBlock Grid.Column="0" Text="Profile List" FontSize="16" FontWeight="Bold" 
+                HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <!-- Tiêu đề cho bảng thứ hai -->
+                    <TextBlock Grid.Column="1" Text="User List by Profile" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="dtgDanhSachProfile" Grid.Column="0">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Xử lí">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button x:Name="btnThongTinUser" 
+                                Click="btnThongTinUser_Click"
+                                Style="{StaticResource btnChinhSua}"/>
+                                            <Button x:Name="btnXoaUser" 
+                                Click="btnXoaUser_Click"
+                                Style="{StaticResource btnXoa}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="PROFILE" 
+                            Binding="{Binding PROFILE}" Width="*"/>
+                            <DataGridTextColumn Header="SESSIONS PER USER" 
+                            Binding="{Binding SESSIONS_PER_USER}" Width="*"/>
+                            <DataGridTextColumn Header="CONNECT TIME" 
+                            Binding="{Binding CONNECT_TIME}" Width="*"/>
+                            <DataGridTextColumn Header="IDLE TIME" 
+                            Binding="{Binding IDLE_TIME}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid x:Name="dtgUserProfile" Grid.Column="1">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="USER" 
+                            Binding="{Binding USERNAME}" Width="*"/>
+                            <DataGridTextColumn Header="PROFILE" 
+                            Binding="{Binding PROFILE}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

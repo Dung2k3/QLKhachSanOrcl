@@ -26,6 +26,7 @@ namespace QuanLiKhachSan
         //UcThanhToan ucThanhToan = new UcThanhToan();
         //UcDoanhThu ucDoanhThu = new UcDoanhThu();
         private UcNhanVien2 ucNhanVien = new UcNhanVien2();
+        private UcProfile ucProfile = new UcProfile();
         public fUngDung2()
         {
             InitializeComponent();
@@ -91,9 +92,9 @@ namespace QuanLiKhachSan
 
         private void itemDichVu_Selected(object sender, RoutedEventArgs e)
         {
-            //grManHinh.Children.Clear();
-            //ucDichVu.LayDanhSach();
-            //grManHinh.Children.Add(ucDichVu);
+            grManHinh.Children.Clear();
+            ucProfile.LayDanhSach();
+            grManHinh.Children.Add(ucProfile);
         }
 
         private void itemThanhToan_Selected(object sender, RoutedEventArgs e)
