@@ -9,11 +9,42 @@ using System.Threading.Tasks;
 using System.Windows;
 using Oracle.ManagedDataAccess.Client;
 using QuanLiKhachSan.Class;
+using System.Collections;
 
 namespace QuanLiKhachSan.DAO
 {
     class UserDAO
+
     {
+        public List<string> GetUsers()
+        {
+            string query = "SELECT USERNAME FROM DBA_USERS ORDER BY USERNAME";
+            List<string> users = new List<string>();
+            OracleConnection conn = DbConnectionOrcl.conn;
+
+            try
+            {
+                conn.Open();
+                OracleCommand cmd = new OracleCommand(query, conn);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    users.Add(reader["USERNAME"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error fetching user list: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return users; // Trả về List<string> trực tiếp
+        }
+
         public DataTable LayDanhSach()
         {
             string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
