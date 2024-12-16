@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -200,6 +200,9 @@
 
   <ItemGroup>
     <Compile Update="UcInfor.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="FProfile.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="FNhanVien2.xaml.cs">
