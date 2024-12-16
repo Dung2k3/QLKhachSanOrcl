@@ -28,7 +28,7 @@ namespace QuanLiKhachSan.DAO
         }
 
         public static OracleConnection conn;
-        public static OracleConnection connAdmin = CreateConnOrcl("HotelCheckLogin", "login");
+        //public static OracleConnection connAdmin = CreateConnOrcl("HotelCheckLogin", "login");
 
 
         public DbConnectionOrcl()

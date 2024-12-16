@@ -11,12 +11,16 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace QuanLiKhachSan.DAO
 {
-    class AccountDao
+    class ProfileDAO
     {
         public DataTable LayDanhSach()
         {
-            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile " +
-                "from dba_users ";
+            string sql = "SELECT tablespace_name, username, bytes / 1024 / 1024 AS quota_mb, " +
+                "          blocks, CASE " +
+                "              WHEN max_bytes > 0 THEN max_bytes / 1024 / 1024 " +
+                "              ELSE max_bytes " +
+                "          END  AS max_quota_mb " +
+                "         FROM dba_ts_quotas ";
             DataTable dt = new DataTable();
             OracleConnection conn = DbConnectionOrcl.conn;
             try
@@ -31,6 +35,59 @@ namespace QuanLiKhachSan.DAO
             }
             finally { conn.Close(); }
             return dt;
+        }
+
+        public List<String> ListProfile() 
+        {
+            string sql = "SELECT DISTINCT PROFILE " +
+                        " FROM dba_profiles ";
+            List<string> listTablespaces = new List<string>();
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                OracleCommand cmd = new OracleCommand(sql, conn);
+                using (OracleDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        listTablespaces.Add(reader["PROFILE"].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally { conn.Close(); }
+            return listTablespaces;
+        }
+
+        public List<String> ListDefaultTableSpace()
+        {
+            string sql = "SELECT tablespace_name " +
+                " FROM dba_tablespaces " +
+                " WHERE CONTENTS = 'PERMANENT' ";
+            List<string> listTablespaces = new List<string>();
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                OracleCommand cmd = new OracleCommand(sql, conn);
+                using (OracleDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        listTablespaces.Add(reader["tablespace_name"].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally { conn.Close(); }
+            return listTablespaces;
         }
 
         public bool Login(string username, string password)

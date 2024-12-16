@@ -11,7 +11,7 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace QuanLiKhachSan.DAO
 {
-    class AccountDao
+    class UserDAO
     {
         public DataTable LayDanhSach()
         {

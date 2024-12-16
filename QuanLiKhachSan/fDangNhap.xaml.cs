@@ -56,12 +56,12 @@ namespace QuanLiKhachSan
         //Hàm đăng nhập từ việc kiểm tra tài khoản
         private void DangNhap()
         {
-            taiKhoan.TenTaiKhoan = "employee1";
-            taiKhoan.MatKhau = "password1";
+            taiKhoan.TenTaiKhoan = "adminuser";
+            taiKhoan.MatKhau = "admin";
             bool isSuccess = accountDao.Login(taiKhoan.TenTaiKhoan, taiKhoan.MatKhau);
             if(isSuccess)
             {
-                fUngDung ungDung = new fUngDung();
+                fUngDung2 ungDung = new fUngDung2();
                 ungDung.Show();
                 this.Close();
             }
