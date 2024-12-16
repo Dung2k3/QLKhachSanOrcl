@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="QuanLiKhachSan.UcInfor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLiKhachSan"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <ResourceDictionary Source="MyResourceDictionary.xaml"/>
+    </UserControl.Resources>
+    <TabControl Margin="0" Background="Transparent">
+        <TabItem x:Name="tabUserInfor" Style="{StaticResource tab}" Header="UserInfor" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Username"/>
+                        <Label Content="Account Status"/>
+                        <Label Content="Lock Date"/>
+                        <Label Content="Created Date"/>
+                        <Label Content="Default Tablespace"/>
+                        <Label Content="Temp Tablespace"/>
+                        <Label Content="Profile"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbUsername" 
+                                 Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbAccountStatus" 
+                            Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbLockDate" 
+                            Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbCreatedDate" 
+                            Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbDefaultTablespace" 
+                            Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbTempTablespace" 
+                            Style="{StaticResource lbNoiDung}" />
+                        <Label x:Name="lbProfile" 
+                            Style="{StaticResource lbNoiDung}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <ComboBox x:Name="cbDefaultTablespace5" 
+                                 Style="{StaticResource cbLuaChon}" />
+                        <ComboBox Style="{StaticResource cbLuaChon}" x:Name="cbProfile5">
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Change Password"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <ComboBox x:Name="cbTempTablespace5" Style="{StaticResource cbLuaChon}"/>
+                        <TextBox x:Name="txbPassword5" Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnSuaUser5" Style="{StaticResource btnSua}" Click="btnSuaUser_Click"  Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Oracle.ManagedDataAccess.Client;
+using QuanLiKhachSan.Class;
 
 namespace QuanLiKhachSan.DAO
 {
@@ -27,6 +28,55 @@ namespace QuanLiKhachSan.DAO
             {
                 conn.Open();
                 OracleDataAdapter adapter = new OracleDataAdapter(sql,conn);
+                adapter.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally { conn.Close(); }
+            return dt;
+        }
+        public DataTable LayDanhSachLikeUsername(string username)
+        {
+            string sql = "SELECT tablespace_name, username, bytes / 1024 / 1024 AS quota_mb, " +
+                "          blocks, CASE " +
+                "              WHEN max_bytes > 0 THEN TO_CHAR(max_bytes / 1024 / 1024) " +
+                "              ELSE 'Unlimited' " +
+                "          END  AS max_quota_mb " +
+                "         FROM dba_ts_quotas " +
+               $"         WHERE username LIKE '%{username}%'";
+            DataTable dt = new DataTable();
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
+                adapter.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally { conn.Close(); }
+            return dt;
+        }
+
+        public DataTable LayDanhSachByUsername(string username)
+        {
+            string sql = "SELECT tablespace_name, username, bytes / 1024 / 1024 AS quota_mb, " +
+                "          blocks, CASE " +
+                "              WHEN max_bytes > 0 THEN TO_CHAR(max_bytes / 1024 / 1024) " +
+                "              ELSE 'Unlimited' " +
+                "          END  AS max_quota_mb " +
+                "         FROM dba_ts_quotas " +
+               $"         WHERE username = '{username}'";
+            DataTable dt = new DataTable();
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -91,45 +141,28 @@ namespace QuanLiKhachSan.DAO
             return listTablespaces;
         }
 
-        public bool Login(string username, string password)
+        public void Update(Quota quota)
         {
-            bool isSuccess = false;
-
-            OracleConnection conn = DbConnectionOrcl.CreateConnOrcl(username,password);
+            string size = quota.MaxQuota >= 0 ? quota.MaxQuota.ToString() + "M" : "UNLIMITED";
+            OracleConnection conn = DbConnectionOrcl.conn;
+            OracleCommand cmd = conn.CreateCommand();
+            cmd.CommandText = $"ALTER USER {quota.Username} QUOTA {size} ON {quota.TablespaceName} ";
             try
             {
                 conn.Open();
-                isSuccess = true;
-                DbConnectionOrcl.conn = DbConnectionOrcl.CreateConnOrcl(username, password);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show($"Đã cập nhật quota cho user {quota.Username} tren {quota.TablespaceName}");
             }
-
-            catch (Exception ex)
+            catch (OracleException ex)
             {
-                //MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return isSuccess;
-        }
-
-        public void Update(string username, string password)
-        {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_updateAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
-            try
-            {
-                conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Sửa thành công");
-                }
+                if (ex.Number == 1935)
+                    MessageBox.Show($"Username không hợp lệ");
+                else
+                    MessageBox.Show($"Lỗi khi cập nhật quota cho user {quota.Username} tren {quota.TablespaceName}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
             }
             finally
             {

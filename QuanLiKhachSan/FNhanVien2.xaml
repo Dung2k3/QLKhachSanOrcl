@@ -9,6 +9,63 @@
         <ResourceDictionary Source="MyResourceDictionary.xaml"/>
     </UserControl.Resources>
     <TabControl Margin="0" Background="Transparent">
+        <TabItem x:Name="tabUserInfor" Style="{StaticResource tab}" Header="UserInfor" Width="100">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Username"/>
+                        <Label Content="Account Status"/>
+                        <Label Content="Lock Date"/>
+                        <Label Content="Created Date"/>
+                        <Label Content="Account Status"/>
+                        <Label Content="Default Tablespace"/>
+                        <Label Content="Temp Tablespace"/>
+                        <Label Content="Profile"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <Label x:Name="lbUsername" 
+                                 Style="{StaticResource lbNoiDung}" />
+                        <ComboBox x:Name="cbAccountStatus5" Style="{StaticResource cbLuaChon}">
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <ComboBox x:Name="cbDefaultTablespace5" 
+                                 Style="{StaticResource cbLuaChon}" />
+                        <ComboBox Style="{StaticResource cbLuaChon}" x:Name="cbProfile5">
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Change Password"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5">
+                        <ComboBox x:Name="cbTempTablespace5" Style="{StaticResource cbLuaChon}"/>
+                        <TextBox x:Name="txbPassword5" Style="{StaticResource tbxNoiDung}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnSuaUser5" Style="{StaticResource btnSua}" Click="btnSuaUser_Click"  Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </TabItem>
         <TabItem x:Name="tabNhanVien" Style="{StaticResource tab}" Header="Nhân viên" Width="100">
             <Grid>
                 <Grid.RowDefinitions>
@@ -116,12 +173,12 @@
                                             Binding="{Binding identify_card}"/>
                         <DataGridTextColumn Header="Email" 
                                             Binding="{Binding email}"/>
-                        
+
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
         </TabItem>
-        <TabItem x:Name="tabTaiKhoan" Style="{StaticResource tab}" Header="Account" Width="100">
+        <TabItem x:Name="tabTaiKhoan" Style="{StaticResource tab}" Header="UserAdmin" Width="100">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -161,9 +218,11 @@
                     </StackPanel>
                     <StackPanel Grid.Column="4">
                         <Label Content="Temp Tablespace"/>
+                        <Label Content="Change Password"/>
                     </StackPanel>
                     <StackPanel Grid.Column="5">
                         <ComboBox x:Name="cbTempTablespace" Style="{StaticResource cbLuaChon}"/>
+                        <TextBox x:Name="txbPassword" Style="{StaticResource tbxNoiDung}" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1">
@@ -171,8 +230,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnThemTaiKhoan" Style="{StaticResource btnThem}" Click="btnThemTaiKhoan_Click"/>
-                    <Button x:Name="btnSuaTaiKhoan" Style="{StaticResource btnSua}" Click="btnSuaTaiKhoan_Click"  Grid.Column="1"/>
+                    <Button x:Name="btnThemUser" Style="{StaticResource btnThem}" Click="btnThemUser_Click"/>
+                    <Button x:Name="btnSuaUser" Style="{StaticResource btnSua}" Click="btnSuaUser_Click"  Grid.Column="1"/>
                 </Grid>
                 <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
                 <Grid Grid.Row="3">
@@ -209,6 +268,8 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="USERNAME" 
                                             Binding="{Binding USERNAME}"/>
+                        <DataGridTextColumn Header="PASSWORD" 
+                                            Binding="{Binding PASSWORD}"/>
                         <DataGridTextColumn Header="DEFAULT TABLESPACE" 
                                             Binding="{Binding DEFAULT_TABLESPACE}"/>
                         <DataGridTextColumn Header="TEMPORARY TABLESPACE" 
@@ -237,25 +298,34 @@
                 <Grid Grid.Row="0" x:Name="grThongTinKhachHangDatPhong">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="330*"/>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="330*"/>
                         <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="230*"/>
+                        <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <Label Content="Nhân viên"/>
+                        <Label Content="Username"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <ComboBox x:Name="cbNhanVienCuaSDT" Style="{StaticResource cbLuaChon}"/>
+                        <TextBox x:Name="txbUsername2" Style="{StaticResource tbxNoiDung}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2">
-                        <Label Content="Số điện thoại"/>
+                        <Label Content="Tablespace"/>
                     </StackPanel>
                     <StackPanel Grid.Column="3">
-                        <TextBox x:Name="txtSDT" 
-                                 Style="{StaticResource tbxNoiDung}" />
+                        <ComboBox x:Name="cbTablespace" 
+                                 Style="{StaticResource cbLuaChon}" />
                     </StackPanel>
-                    <Button x:Name="btnThemSdtNhanVien" Style="{StaticResource btnThem}" Click="btnThemSdtNhanVien_Click" Grid.Column="5"/>
+                    <StackPanel Grid.Column="4">
+                        <Label Content="Grant quota"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="5" Grid.ColumnSpan="2">
+                        <TextBox x:Name="txbQuota" Style="{StaticResource tbxNoiDung}"/>
+                    </StackPanel>
+                    <Button x:Name="btnThemQuota" Style="{StaticResource btnThem}" Click="btnThemQuota_Click" Grid.Column="7" HorizontalAlignment="Center" Margin="0,5,0,5" Content="Thêm"/>
                 </Grid>
                 <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
                 <Grid Grid.Row="3">
@@ -264,12 +334,12 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" x:Name="txtLocSdtTheoTenNhanVien"
+                    <TextBox Grid.Column="0" x:Name="txbFilterQuota"
                              Style="{StaticResource tbxNoiDungMacDinh}"
                              ToolTip="Tìm kiếm theo" 
                              Tag="Tìm kiếm theo tên nhân viên"/>
-                    <Button Style="{StaticResource btnTimKiem}" x:Name="btnTimKiemSdtTheoTenNhanVien" 
-                            Click="btnTimKiemSdtTheoTenNhanVien_Click"  Grid.Column="1"/>
+                    <Button Style="{StaticResource btnTimKiem}" x:Name="btnFilterQuota" 
+                            Click="btnFilterQuota_Click"  Grid.Column="1"/>
                 </Grid>
                 <DataGrid x:Name="dtgDanhSachSdtCuaNhanVien" 
                           ItemsSource="{Binding dsKhachDatPhong}" Grid.Row="4">
@@ -278,11 +348,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="btnThongTinSdtNhanVien" 
-                                                Click="btnThongTinSdtNhanVien_Click"
+                                        <Button x:Name="btnThongTinQuota" 
+                                                Click="btnThongTinQuota_Click"
                                                 Style="{StaticResource btnChinhSua}"/>
-                                        <Button x:Name="btnXoaSdtNhanVien" 
-                                                Click="btnXoaSdtNhanVien_Click"
+                                        <Button x:Name="btnXoaQuota" 
+                                                Click="btnXoaQuota_Click"
                                                 Style="{StaticResource btnXoa}"/>
                                     </StackPanel>
                                 </DataTemplate>

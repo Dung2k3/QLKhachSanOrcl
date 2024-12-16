@@ -1,4 +1,5 @@
-using QuanLiKhachSan.DAO;
+﻿using QuanLiKhachSan.DAO;
+using QuanLiKhachSan.Class;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,8 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows;using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -45,19 +45,19 @@ namespace QuanLiKhachSan
             cbTempTablespace.ItemsSource = tablespaceDao.ListTempTableSpace();
             cbDefaultTablespace.ItemsSource = tablespaceDao.ListDefaultTableSpace();
             cbProfile.ItemsSource = profileDao.ListProfile();
-
             cbAccountStatus.ItemsSource = new[] { "OPEN", "LOCKED" }.ToList();
+            cbTablespace.ItemsSource = tablespaceDao.ListDefaultTableSpace();
+            cbTempTablespace.SelectedIndex = 0;
+            cbDefaultTablespace.SelectedIndex = 0;
+            cbProfile.SelectedIndex = 0;
+            cbAccountStatus.SelectedIndex = 0;
+            txbUsername.Text = "";
+            txbPassword.Text = "";
         }
 
         /// <summary>
         /// @return
         /// </summary>
-        public DataTable LayDanhSachNhanVien()
-        {
-            // TODO implement here
-            return employeeDao.LayDanhSach();
-          
-        }
 
         private void btnThongTinNhanVien_Click(object sender, RoutedEventArgs e)
         {
@@ -132,13 +132,18 @@ namespace QuanLiKhachSan
             }
         }
 
-        private void btnSuaTaiKhoan_Click(object sender, RoutedEventArgs e)
+        private void btnSuaUser_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                //string username = txtTenTaiKhoan.Text;
-                //string password = txtMatKhau.Text;
-                //accountDao.Update( username, password);
+                User user = new User();
+                user.Username = txbUsername.Text;
+                user.DefaultTablespace = cbDefaultTablespace.SelectedValue.ToString();
+                user.TemporaryTablespace = cbTempTablespace.SelectedValue.ToString();
+                user.Profile = cbProfile.SelectedValue.ToString();
+                user.AccountStatus = cbAccountStatus.SelectedValue.ToString();
+                user.Password = txbPassword.Text;
+                userDao.Update(user);
                 LayDanhSach();
             }
             catch(Exception ex)
@@ -148,19 +153,18 @@ namespace QuanLiKhachSan
 
         }
 
-        private void btnThemTaiKhoan_Click(object sender, RoutedEventArgs e)
+        private void btnThemUser_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                //string username = txtTenTaiKhoan.Text;
-                //string password = txtMatKhau.Text;
-                //int employeeId = int.Parse(cbNhanVienCuaTaiKhoan.Text.Split("|")[0]);
-                //string roles = cbVaiTro.Text;
-                //if(roles == "Admin")
-                //{
-                    //roles = "sysadmin";
-                //}
-                //accountDao.Insert(username, password, employeeId, roles);
+                User user = new User();
+                user.Username = txbUsername.Text;
+                user.DefaultTablespace = cbDefaultTablespace.SelectedValue.ToString();
+                user.TemporaryTablespace = cbTempTablespace.SelectedValue.ToString();
+                user.Profile = cbProfile.SelectedValue.ToString();
+                user.AccountStatus = cbAccountStatus.SelectedValue.ToString();
+                user.Password = txbPassword.Text;
+                userDao.Insert(user);
                 LayDanhSach();
             }
             catch (Exception ex)
@@ -180,6 +184,8 @@ namespace QuanLiKhachSan
                 cbDefaultTablespace.SelectedValue = drv["DEFAULT_TABLESPACE"];
                 cbProfile.SelectedValue = drv["PROFILE"];
                 cbAccountStatus.SelectedValue = drv["ACCOUNT_STATUS"];
+                txbFilterQuota.Text = drv["USERNAME"].ToString();
+                dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSachByUsername(txbFilterQuota.Text).DefaultView;
             }
             catch (Exception ex)
             {
@@ -189,39 +195,36 @@ namespace QuanLiKhachSan
         private void btnXoaUser_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)dtgDanhSachTaiKhoan.SelectedValue;
-            try
+            string username = drv["USERNAME"].ToString();
+            MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xóa user {username}?", "Xác nhận xóa", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
             {
-                txbUsername.Text = drv["USERNAME"].ToString();
-
-                cbTempTablespace.SelectedValue = drv["TEMPORARY_TABLESPACE"];
-                cbDefaultTablespace.SelectedValue = drv["DEFAULT_TABLESPACE"];
-                cbProfile.SelectedValue = drv["PROFILE"];
-                cbAccountStatus.SelectedValue = drv["ACCOUNT_STATUS"];
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnThemSdtNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            if (cbNhanVienCuaSDT.SelectedValue != null)
-            {
-                string phoneNumber = txtSDT.Text;
-                int employeeId = int.Parse(cbNhanVienCuaSDT.SelectedValue.ToString().Split("|")[0]);
-                phoneDao.Insert(phoneNumber, employeeId);
+                userDao.Delete(username);
                 LayDanhSach();
             }
         }
 
-        private void btnThongTinSdtNhanVien_Click(object sender, RoutedEventArgs e)
+        private void btnThemQuota_Click(object sender, RoutedEventArgs e)
+        {
+
+                Quota quota = new Quota();
+                quota.Username = txbUsername2.Text;
+                quota.TablespaceName = cbTablespace.SelectedValue.ToString();
+                quota.MaxQuota = txbQuota.Text.Equals("")? -1: int.Parse(txbQuota.Text);
+                tablespaceDao.Update(quota);
+                LayDanhSach();
+
+        }
+
+        private void btnThongTinQuota_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)dtgDanhSachSdtCuaNhanVien.SelectedValue;
             try
             {
-                cbNhanVienCuaSDT.SelectedValue = drv["employee_id"].ToString() + "|" + drv["employee_name"].ToString();
-                txtSDT.Text = drv["phone_number"].ToString();
+                txbUsername2.Text = drv["USERNAME"].ToString();
+                cbTablespace.SelectedValue = drv["TABLESPACE_NAME"];
+                txbQuota.Text = drv["MAX_QUOTA_MB"].ToString()== "Unlimited" ? "": drv["MAX_QUOTA_MB"].ToString();
+                //txtSDT.Text = drv["phone_number"].ToString();
             }
             catch (Exception ex)
             {
@@ -229,13 +232,16 @@ namespace QuanLiKhachSan
             }
         }
 
-        private void btnXoaSdtNhanVien_Click(object sender, RoutedEventArgs e)
+        private void btnXoaQuota_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)dtgDanhSachSdtCuaNhanVien.SelectedValue;
-            int employeeId = (int)drv["employee_id"];
-            string phoneNumber = (string)drv["phone_number"];
-            phoneDao.Delete(phoneNumber, employeeId);
+            Quota quota = new Quota();
+            quota.Username = drv["USERNAME"].ToString();
+            quota.TablespaceName = drv["TABLESPACE_NAME"].ToString();
+            quota.MaxQuota = 0;
+            tablespaceDao.Update(quota);
             LayDanhSach();
+    
         }
 
         private void btnTimKiemTheoTenNhanVien_Click(object sender, RoutedEventArgs e)
@@ -244,10 +250,11 @@ namespace QuanLiKhachSan
             dtgDanhSachNhanVien.ItemsSource = employeeDao.TimKiemTheoHoTen(employeeName).DefaultView;
         }
 
-        private void btnTimKiemSdtTheoTenNhanVien_Click(object sender, RoutedEventArgs e)
+        private void btnFilterQuota_Click(object sender, RoutedEventArgs e)
         {
-            string employeeName = txtLocSdtTheoTenNhanVien.Text;
-            dtgDanhSachSdtCuaNhanVien.ItemsSource = phoneDao.SearchByEmployeeName(employeeName).DefaultView;
+            string username = txbFilterQuota.Text;
+            dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSachLikeUsername(username).DefaultView;
+
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Oracle.ManagedDataAccess.Client;
+using QuanLiKhachSan.Class;
 
 namespace QuanLiKhachSan.DAO
 {
@@ -15,7 +16,8 @@ namespace QuanLiKhachSan.DAO
     {
         public DataTable LayDanhSach()
         {
-            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile " +
+            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
+                " CASE WHEN AUTHENTICATION_TYPE = 'PASSWORD' THEN  '****' ELSE ' ' END AS PASSWORD " +
                 "from dba_users ";
             DataTable dt = new DataTable();
             OracleConnection conn = DbConnectionOrcl.conn;
@@ -53,21 +55,17 @@ namespace QuanLiKhachSan.DAO
             return isSuccess;
         }
 
-        public void Update(string username, string password)
+        public void Delete(string username)
         {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_updateAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+            OracleConnection conn = DbConnectionOrcl.conn;
+            OracleCommand cmd = conn.CreateCommand();
+            //cmd.CommandText = "DROP USER " + username ;
+            cmd.CommandText = $"DROP USER \"{username}\" ";
             try
             {
                 conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Sửa thành công");
-                }
+                cmd.ExecuteNonQuery();
+                MessageBox.Show($"Xóa thành công user {username}");
             }
             catch (Exception ex)
             {
@@ -78,27 +76,67 @@ namespace QuanLiKhachSan.DAO
                 conn.Close();
             }
         }
-        public void Insert(string username, string password, int employeeId, string roles)
+
+        public void Update(User user)
         {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_insertAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value =password;
-            cmd.Parameters.Add("@employee_id", SqlDbType.Int).Value = employeeId;
-            cmd.Parameters.Add("@roles", SqlDbType.VarChar).Value = roles;
+            OracleConnection conn = DbConnectionOrcl.conn;
+            OracleCommand cmd = conn.CreateCommand();
+            cmd.CommandText =
+                $"ALTER USER {user.Username} " +
+                $"DEFAULT TABLESPACE {user.DefaultTablespace} " +
+                $"TEMPORARY TABLESPACE {user.TemporaryTablespace} " +                
+                $"PROFILE {user.Profile} " +
+                "ACCOUNT " + (user.AccountStatus.Equals("OPEN")? "UNLOCK" : "LOCK") +
+                (!user.Password.Equals("") ? $" IDENTIFIED BY {user.Password} " : "");
             try
             {
                 conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm thành công");
-                }
+                cmd.ExecuteNonQuery();
+                MessageBox.Show($"Đã cập nhật thông tin cho user {user.Username}");
+            }
+            catch (OracleException ex)
+            {
+                if (ex.Number == 1935)
+                    MessageBox.Show($"Username không hợp lệ");
+                else
+                    MessageBox.Show($"Lỗi khi thay đổi thông tin user: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+        public void Insert(User user)
+        {
+            OracleConnection conn = DbConnectionOrcl.conn;
+            OracleCommand cmd = conn.CreateCommand();
+            cmd.CommandText = 
+                $"CREATE USER {user.Username} " +
+                $"DEFAULT TABLESPACE {user.DefaultTablespace} " +
+                $"TEMPORARY TABLESPACE {user.TemporaryTablespace} " +
+                $"PROFILE {user.Profile} " +
+                "ACCOUNT " + (user.AccountStatus.Equals("OPEN") ? "UNLOCK" : "LOCK") +
+                (!user.Password.Equals("") ? $" IDENTIFIED BY {user.Password} " : "");
+            try
+            {
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                MessageBox.Show($"Đã thêm user {user.Username}");
+            }
+            catch (OracleException ex)
+            {
+                if (ex.Number == 1935)
+                    MessageBox.Show($"Username không hợp lệ");
+                else
+                    MessageBox.Show($"Lỗi khi thêm user: {ex.Message} ----- {ex.ErrorCode}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
             }
             finally
             {
