@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +27,8 @@ namespace QuanLiKhachSan
         //UcDoanhThu ucDoanhThu = new UcDoanhThu();
         private UcNhanVien2 ucNhanVien = new UcNhanVien2();
         private UcProfile ucProfile = new UcProfile();
+        private FRoleManagement ucRole = new FRoleManagement();
+
         public fUngDung2()
         {
             InitializeComponent();
@@ -119,9 +121,9 @@ namespace QuanLiKhachSan
 
         private void itemKhachHang_Selected(object sender, RoutedEventArgs e)
         {
-            //grManHinh.Children.Clear();
-            //ucKhachHang.LayDanhSach();
-            //grManHinh.Children.Add(ucKhachHang);
+            grManHinh.Children.Clear();
+            ucRole.LoadData();
+            grManHinh.Children.Add(ucRole);
         }
     }
 }

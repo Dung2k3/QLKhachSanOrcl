@@ -71,7 +71,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnSuaUser5" Style="{StaticResource btnSua}" Click="btnSuaUser_Click"  Grid.Column="1"/>
+                    <Button x:Name="btnSuaUser5" Style="{StaticResource btnSua}" Grid.Column="1"/>
                 </Grid>
             </Grid>
         </TabItem>
