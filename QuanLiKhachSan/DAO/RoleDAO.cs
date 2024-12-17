@@ -12,13 +12,13 @@ namespace QuanLiKhachSan.DAO
         public List<string> GetRoles()
         {
             string query = "SELECT ROLE FROM DBA_ROLES ORDER BY ROLE";
-            List<string> roles = new List<string>();
+            List<string> roles = new();
             OracleConnection conn = DbConnectionOrcl.conn;
 
             try
             {
                 conn.Open();
-                OracleCommand cmd = new OracleCommand(query, conn);
+                OracleCommand cmd = new(query, conn);
                 OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -35,9 +35,8 @@ namespace QuanLiKhachSan.DAO
                 conn.Close();
             }
 
-            return roles; // Trả về List<string> trực tiếp
+            return roles;
         }
-
 
         public DataTable GetRoleList()
         {
@@ -46,7 +45,7 @@ namespace QuanLiKhachSan.DAO
                                 rp.GRANTEE AS Granted_To_User,
                                 tp.PRIVILEGE AS Privilege_Name,
                                 tp.TABLE_NAME AS Table_Name,
-                                r.AUTHENTICATION_TYPE AS Has_Password
+                                r.AUTHENTICATION_TYPE AS Authentication_Type
                             FROM 
                                 DBA_ROLES r
                             LEFT JOIN 
@@ -61,15 +60,14 @@ namespace QuanLiKhachSan.DAO
         public DataTable GetRoleUserList()
         {
             string query = @"SELECT 
-                        rp.GRANTEE AS User_Name,
-                        rp.GRANTED_ROLE AS Role_Name,
-                        rp.ADMIN_OPTION AS Admin_Option,
-                        rp.DEFAULT_ROLE AS Default_Role
-                    FROM 
-                        DBA_ROLE_PRIVS rp
-                    ORDER BY 
-                        rp.GRANTEE, rp.GRANTED_ROLE";
-
+                                rp.GRANTEE AS User_Name,
+                                rp.GRANTED_ROLE AS Role_Name,
+                                rp.ADMIN_OPTION AS Admin_Option,
+                                rp.DEFAULT_ROLE AS Default_Role
+                            FROM 
+                                DBA_ROLE_PRIVS rp
+                            ORDER BY 
+                                rp.GRANTEE, rp.GRANTED_ROLE";
             return ExecuteQuery(query);
         }
 
@@ -81,62 +79,98 @@ namespace QuanLiKhachSan.DAO
 
         public void AddRole(string roleName, string password = null)
         {
-            roleName = $"\"{roleName}\""; // Escape role name
+            if (string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("Role name cannot be null or empty.");
+
+            roleName = $"\"{roleName}\"";
             string query = string.IsNullOrEmpty(password)
                 ? $"CREATE ROLE {roleName}"
                 : $"CREATE ROLE {roleName} IDENTIFIED BY \"{password}\"";
 
-            ExecuteNonQuery(query, "Role added successfully.");
+            ExecuteNonQuery(query, $"Role {roleName} created successfully.");
         }
 
         public void DeleteRole(string roleName)
         {
+            if (string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("Role name cannot be null or empty.");
+
             string query = $"DROP ROLE \"{roleName}\"";
-            ExecuteNonQuery(query, "Role deleted successfully.");
+            ExecuteNonQuery(query, $"Role {roleName} deleted successfully.");
         }
 
         public void UpdateRole(string roleName, string newPassword = null, bool? isIdentifiedExternally = null, List<string> newPrivileges = null)
         {
-            roleName = $"\"{roleName}\"";
+            if (string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("Role name cannot be null or empty.");
+
+            roleName = $"\"{roleName}\""; 
             List<string> updates = new();
 
-            if (!string.IsNullOrEmpty(newPassword))
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                updates.Add("NOT IDENTIFIED");
+            }
+            else if (!string.IsNullOrEmpty(newPassword))
+            {
                 updates.Add($"IDENTIFIED BY \"{newPassword}\"");
+            }
             else if (isIdentifiedExternally.HasValue && isIdentifiedExternally.Value)
+            {
                 updates.Add("IDENTIFIED EXTERNALLY");
+            }
 
-            foreach (string privilege in newPrivileges ?? new List<string>())
-                GrantPrivilege(roleName, privilege);
+            if (newPrivileges != null)
+            {
+                foreach (string privilege in newPrivileges)
+                    GrantPrivilege(roleName, privilege);
+            }
 
             if (updates.Count > 0)
             {
                 string updateRoleSql = $"ALTER ROLE {roleName} {string.Join(" ", updates)}";
-                ExecuteNonQuery(updateRoleSql);
+                ExecuteNonQuery(updateRoleSql, $"Role {roleName} updated successfully.");
             }
-
-            MessageBox.Show("Role updated successfully.");
         }
 
-        public void AssignRoleToUser(string userId, string roleName)
+
+        public void AssignRoleToUser(string userName, string roleName, bool allowReGrant)
         {
-            string query = $"GRANT \"{roleName}\" TO \"{userId}\"";
-            ExecuteNonQuery(query, "Role assigned to user successfully.");
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("User Name and Role Name cannot be null or empty.");
+
+            string adminOption = allowReGrant ? " WITH ADMIN OPTION" : string.Empty;
+            string query = $"GRANT \"{roleName}\" TO \"{userName}\"{adminOption}";
+            ExecuteNonQuery(query, $"Role {roleName} assigned to user {userName} successfully.");
         }
 
-        public void RevokeRoleFromUser(string userId, string roleName)
+        public void RevokeRoleFromUser(string userName, string roleName, bool revokeOnlyAdminOption)
         {
-            string query = $"REVOKE \"{roleName}\" FROM \"{userId}\"";
-            ExecuteNonQuery(query, "Role revoked from user successfully.");
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentException("User Name and Role Name cannot be null or empty.");
+
+            if (revokeOnlyAdminOption)
+            {
+                string revokeQuery = $"REVOKE \"{roleName}\" FROM \"{userName}\"";
+                ExecuteNonQuery(revokeQuery, $"Role {roleName} revoked from user {userName}.");
+
+                string reGrantQuery = $"GRANT \"{roleName}\" TO \"{userName}\"";
+                ExecuteNonQuery(reGrantQuery, $"Role {roleName} re-granted to user {userName} without admin option.");
+            }
+            else
+            {
+                string query = $"REVOKE \"{roleName}\" FROM \"{userName}\"";
+                ExecuteNonQuery(query, $"Role {roleName} revoked from user {userName}.");
+            }
         }
 
-        public DataTable GetAssignedRoles()
+        private void GrantPrivilege(string roleName, string privilege)
         {
-            string query = @"SELECT 
-                                rp.GRANTEE AS UserId, 
-                                rp.GRANTED_ROLE AS RoleName 
-                            FROM 
-                                DBA_ROLE_PRIVS rp";
-            return ExecuteQuery(query);
+            if (string.IsNullOrWhiteSpace(privilege))
+                throw new ArgumentException("Privilege cannot be null or empty.");
+
+            string query = $"GRANT {privilege} TO {roleName}";
+            ExecuteNonQuery(query, $"Privilege {privilege} granted to role {roleName}.");
         }
 
         private DataTable ExecuteQuery(string query)
@@ -151,7 +185,7 @@ namespace QuanLiKhachSan.DAO
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception($"Error executing query: {ex.Message}");
             }
             finally
             {
