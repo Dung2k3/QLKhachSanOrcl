@@ -71,6 +71,22 @@ namespace QuanLiKhachSan.DAO
             return ExecuteQuery(query);
         }
 
+        public DataTable GetRoleToRoleList()
+        {
+            string query = @"SELECT 
+                        rp.GRANTEE AS Target_Role,
+                        rp.GRANTED_ROLE AS Source_Role,
+                        rp.ADMIN_OPTION AS Admin_Option,
+                        rp.DEFAULT_ROLE AS Default_Role
+                    FROM 
+                        DBA_ROLE_PRIVS rp
+                    WHERE 
+                        rp.GRANTEE IN (SELECT ROLE FROM DBA_ROLES)
+                    ORDER BY 
+                        rp.GRANTEE, rp.GRANTED_ROLE";
+            return ExecuteQuery(query);
+        }
+
         public DataTable GetGrantees()
         {
             string query = "SELECT DISTINCT GRANTEE AS GranteeName FROM DBA_ROLE_PRIVS";
@@ -133,7 +149,6 @@ namespace QuanLiKhachSan.DAO
             }
         }
 
-
         public void AssignRoleToUser(string userName, string roleName, bool allowReGrant)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(roleName))
@@ -142,6 +157,15 @@ namespace QuanLiKhachSan.DAO
             string adminOption = allowReGrant ? " WITH ADMIN OPTION" : string.Empty;
             string query = $"GRANT \"{roleName}\" TO \"{userName}\"{adminOption}";
             ExecuteNonQuery(query, $"Role {roleName} assigned to user {userName} successfully.");
+        }
+        public void AssignRoleToRole(string targetRole, string sourceRole, bool allowReGrant)
+        {
+            if (string.IsNullOrWhiteSpace(targetRole) || string.IsNullOrWhiteSpace(sourceRole))
+                throw new ArgumentException("Source Role and Target Role cannot be null or empty.");
+
+            string adminOption = allowReGrant ? " WITH ADMIN OPTION" : string.Empty;
+            string query = $"GRANT \"{sourceRole}\" TO \"{targetRole}\"{adminOption}";
+            ExecuteNonQuery(query, $"Role {sourceRole} assigned to role {targetRole} successfully.");
         }
 
         public void RevokeRoleFromUser(string userName, string roleName, bool revokeOnlyAdminOption)
@@ -161,6 +185,26 @@ namespace QuanLiKhachSan.DAO
             {
                 string query = $"REVOKE \"{roleName}\" FROM \"{userName}\"";
                 ExecuteNonQuery(query, $"Role {roleName} revoked from user {userName}.");
+            }
+        }
+
+        public void RevokeRoleFromRole(string targetRole, string sourceRole, bool revokeOnlyAdminOption)
+        {
+            if (string.IsNullOrWhiteSpace(targetRole) || string.IsNullOrWhiteSpace(sourceRole))
+                throw new ArgumentException("Source Role and Target Role cannot be null or empty.");
+
+            if (revokeOnlyAdminOption)
+            {
+                string revokeQuery = $"REVOKE \"{sourceRole}\" FROM \"{targetRole}\"";
+                ExecuteNonQuery(revokeQuery, $"Role {sourceRole} revoked from role {targetRole}.");
+
+                string reGrantQuery = $"GRANT \"{sourceRole}\" TO \"{targetRole}\"";
+                ExecuteNonQuery(reGrantQuery, $"Role {sourceRole} re-granted to role {targetRole} without admin option.");
+            }
+            else
+            {
+                string query = $"REVOKE \"{sourceRole}\" FROM \"{targetRole}\"";
+                ExecuteNonQuery(query, $"Role {sourceRole} revoked from role {targetRole}.");
             }
         }
 

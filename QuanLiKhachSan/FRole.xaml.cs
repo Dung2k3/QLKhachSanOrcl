@@ -28,6 +28,8 @@ namespace QuanLiKhachSan
 
                 dtgAssignedRoles.ItemsSource = roleDao.GetRoleUserList().DefaultView;
 
+                dtgAssignedRolesToRoles.ItemsSource = roleDao.GetRoleToRoleList().DefaultView;
+
                 cbUser.ItemsSource = roleDao.GetGrantees()
                                .AsEnumerable()
                                .Select(row => new { UserName = row["GranteeName"].ToString() })
@@ -36,6 +38,14 @@ namespace QuanLiKhachSan
                 cbRole.ItemsSource = roleDao.GetRoles()
                                             .Select(role => new { RoleName = role })
                                             .ToList();
+
+                cbRole1.ItemsSource = roleDao.GetRoles()
+                            .Select(role => new { RoleName = role })
+                            .ToList();
+
+                cbRole2.ItemsSource = roleDao.GetRoles()
+                            .Select(role => new { RoleName = role })
+                            .ToList();
             }
             catch (Exception ex)
             {
@@ -77,6 +87,29 @@ namespace QuanLiKhachSan
 
                 cbUser.SelectedValue = userName; 
                 cbRole.SelectedValue = roleName;
+                checkAllowReGrantPrivilege.IsChecked = adminOption == "YES";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading role-user information: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void btnInfoRoleRole_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataRowView selectedRow = dtgAssignedRolesToRoles.SelectedItem as DataRowView;
+                if (selectedRow == null)
+                {
+                    MessageBox.Show("Please select a valid row.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                string roleName1 = selectedRow["TARGET_ROLE"]?.ToString();
+                string roleName2 = selectedRow["SOURCE_ROLE"]?.ToString();
+                string adminOption = selectedRow["ADMIN_OPTION"]?.ToString();
+
+                cbRole1.SelectedValue = roleName1;
+                cbRole2.SelectedValue = roleName2;
                 checkAllowReGrantPrivilege.IsChecked = adminOption == "YES";
             }
             catch (Exception ex)
@@ -199,34 +232,52 @@ namespace QuanLiKhachSan
                 MessageBox.Show($"Error revoking role: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void cbUser_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void btnAssignRoleToRole_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (cbUser.SelectedValue != null)
+                string role1 = cbRole1.SelectedValue?.ToString();
+                string role2 = cbRole2.SelectedValue?.ToString();
+                bool allowReGrant = checkAllowReGrantPrivilege1.IsChecked ?? false;
+
+                if (string.IsNullOrEmpty(role1) || string.IsNullOrEmpty(role2))
                 {
-                    string selectedUserId = cbUser.SelectedValue.ToString();
+                    MessageBox.Show("Please select both 2 role.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
+
+                roleDao.AssignRoleToRole(role1, role2, allowReGrant);
+                LoadData();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error handling user selection: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error assigning role: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void cbRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private void btnRevokeRoleFromRole_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (cbRole.SelectedValue != null)
+                string role1 = cbRole1.SelectedValue?.ToString();
+                string role2 = cbRole2.SelectedValue?.ToString();
+
+                bool revokeOnlyAdminOption = checkAllowReGrantPrivilege1.IsChecked ?? false;
+
+                if (string.IsNullOrEmpty(role1) || string.IsNullOrEmpty(role2))
                 {
-                    string selectedRoleId = cbRole.SelectedValue.ToString();
+                    MessageBox.Show("Please select both 2 role.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
+
+                roleDao.RevokeRoleFromRole(role1, role2, revokeOnlyAdminOption);
+                LoadData();
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error handling role selection: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error revoking role: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
