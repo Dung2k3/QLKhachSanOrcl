@@ -407,14 +407,14 @@
                     </StackPanel>
                 </Grid>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10" Width="488">
                     <Button x:Name="btnGrantPrivilege" 
                         Content="Gán Quyền" 
                         Style="{StaticResource btnThem}" 
                         Click="btnGrantPrivilege_Click"
                         Margin="5" Width="145"/>
                     <CheckBox x:Name="chkAllowReGrantPrivilege" 
-                          Content="Cho phép cấp lại quyền" 
+                          Content="Cho phép cấp lại quyền (Admin with System)" 
                           VerticalAlignment="Center" 
                           Margin="10,0"/>
                 </StackPanel>

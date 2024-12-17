@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace QuanLiKhachSan.DAO
                 SELECT 
                     grantee AS Username, 
                     CASE 
-                        WHEN privilege IS NOT NULL THEN 'System Privileges'
+                        WHEN table_name IS NULL THEN 'System Privileges'
                         ELSE 'Object Privileges'
                     END AS PrivilegeType,
                     privilege AS SpecificPrivilege,
@@ -91,10 +91,13 @@ namespace QuanLiKhachSan.DAO
             }
         }
         // Methods for granting and revoking privileges
-        public void GrantSystemPrivilege(string username, string privilege, bool withGrantOption)
+        public void GrantSystemPrivilege(string username, string privilege, bool withGrantOption = false)
         {
-            string grantOption = withGrantOption ? " WITH GRANT OPTION" : "";
+
+            string grantOption = withGrantOption ? " WITH ADMIN OPTION" : "";
             string query = $"GRANT {privilege} TO {username}{grantOption}";
+            //MessageBox.Show(query);
+
             ExecuteNonQuery(query);
         }
 
