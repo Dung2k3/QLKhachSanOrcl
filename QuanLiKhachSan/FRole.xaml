@@ -27,18 +27,19 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="113*"/>
                         <ColumnDefinition Width="21*"/>
-                        <ColumnDefinition Width="261*"/>
+                        <ColumnDefinition Width="27*"/>
+                        <ColumnDefinition Width="234*"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="396*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Role Name -->
                     <Label Content="Role Name:" Grid.Column="0" VerticalAlignment="Center" Margin="20,0,5,0"/>
-                    <TextBox x:Name="txtRoleName" Grid.Column="1" Style="{StaticResource tbxNoiDung}" Margin="5,0,5,0" Grid.ColumnSpan="3"/>
+                    <TextBox x:Name="txtRoleName" Grid.Column="1" Style="{StaticResource tbxNoiDung}" Margin="5,0,5,0" Grid.ColumnSpan="4"/>
 
                     <!-- Password -->
-                    <Label Content="Password:" Grid.Column="4" VerticalAlignment="Center" Margin="20,0,5,0"/>
-                    <PasswordBox x:Name="txtPassword" Grid.Column="5" Margin="5,5,5,5"/>
+                    <Label Content="Password:" Grid.Column="5" VerticalAlignment="Center" Margin="20,0,5,0"/>
+                    <PasswordBox x:Name="txtPassword" Grid.Column="6" Margin="5,5,5,5"/>
                 </Grid>
 
                 <!-- Buttons -->
@@ -50,7 +51,7 @@
                 <!-- DataGrid for Roles -->
                 <DataGrid x:Name="dtgRoles" Grid.Row="2" Margin="10,10,10,10" AutoGenerateColumns="False" ItemsSource="{Binding RoleList}" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Xử lí">
+                        <DataGridTemplateColumn Header="   Action   ">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -65,7 +66,7 @@
                         <DataGridTextColumn Header="Granted To" Binding="{Binding GRANTED_TO_USER}" Width="*"/>
                         <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE_NAME}" Width="*"/>
                         <DataGridTextColumn Header="Table Name" Binding="{Binding TABLE_NAME}" Width="*"/>
-                        <DataGridTextColumn Header="Password" Binding="{Binding HAS_PASSWORD}" Width="*"/>
+                        <DataGridTextColumn Header="Password" Binding="{Binding AUTHENTICATION_TYPE}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -99,29 +100,42 @@
                         <!-- Label/Role -->
                         <ColumnDefinition Width="2*"/>
                         <!-- ComboBox/Role -->
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- User -->
                     <Label Content="User:" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <ComboBox x:Name="cbUser" SelectedValuePath="Content" Grid.Column="1" Style="{StaticResource cbLuaChon}" Margin="5"/>
-
+                    <!--<ComboBox x:Name="cbUser" SelectedValuePath="Content" Grid.Column="1" Style="{StaticResource cbLuaChon}" Margin="5"/>-->
+                    <ComboBox x:Name="cbUser" Grid.Column="1" Style="{StaticResource cbLuaChon}" 
+          DisplayMemberPath="UserName" 
+          SelectedValuePath="UserName" 
+          ItemsSource="{Binding Users}" 
+          Margin="5" />
                     <!-- Role -->
                     <Label Content="Role:" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <ComboBox x:Name="cbRole" SelectedValuePath="Content" Grid.Column="3" Style="{StaticResource cbLuaChon}" Margin="5"/>
+                    <!--<ComboBox x:Name="cbRole" SelectedValuePath="Content" Grid.Column="3" Style="{StaticResource cbLuaChon}" Margin="5"/>-->
+                        <ComboBox x:Name="cbRole" Grid.Column="3" Style="{StaticResource cbLuaChon}" 
+          DisplayMemberPath="RoleName" 
+          SelectedValuePath="RoleName" 
+          ItemsSource="{Binding Roles}" 
+          Margin="5" />
+                    <CheckBox x:Name="checkAllowReGrantPrivilege" Grid.Column="4"    Content="Admin Option"    VerticalAlignment="Center"     Margin="10,0"/>
+
                 </Grid>
 
                 <!-- Buttons for Assigning/Revoking Roles -->
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5,0,10" Grid.ColumnSpan="2">
-                    <Button x:Name="btnAssignRole" Content="Assign Role" Style="{StaticResource btnThem}" Click="btnAssignRole_Click" Margin="5"/>
+                    <Button x:Name="btnAssignRole" Content="Assign Role" Style="{StaticResource btnThem}" Click="btnAssignRole_Click" Margin="5" Width="129"/>
+                    <Button x:Name="btnRevokeRole" Content="Revoke Role" Style="{StaticResource btnThem}" Click="btnRevokeRole_Click" Margin="5" Width="139"/>
+
                 </StackPanel>
-                <DataGrid x:Name="dtgAssignedRoles" Grid.Row="2" Margin="10" AutoGenerateColumns="False" ItemsSource="{Binding AssignedRolesList}" Grid.ColumnSpan="2">
+                <DataGrid x:Name="dtgAssignedRoles" Grid.Row="2" Margin="10" AutoGenerateColumns="False" ItemsSource="{Binding AssignedRolesList}" Grid.ColumnSpan="2" >
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Action ">
+                        <DataGridTemplateColumn Header="    Action   ">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="btnInfoRoleUser" Click="btnInfoRoleUser_Click" Style="{StaticResource btnChinhSua}"/>
-                                        <Button x:Name="btnDeleteRoleUser" Style="{StaticResource btnXoa}" Click="btnRevokeRole_Click" Margin="5"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
