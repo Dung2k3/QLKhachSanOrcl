@@ -133,10 +133,10 @@
 
                     <!-- User -->
                     <Label Content="User:" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <ComboBox x:Name="cbUser" Grid.Column="1" Style="{StaticResource cbLuaChon}"  DisplayMemberPath="UserName"  SelectedValuePath="UserName"     ItemsSource="{Binding Users}"     Margin="5" />
+                    <ComboBox x:Name="cbUser" Grid.Column="1" Style="{StaticResource cbLuaChon}"   Margin="5" />
                     <!-- Role -->
                     <Label Content="Role:" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                        <ComboBox x:Name="cbRole" Grid.Column="3" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName"   SelectedValuePath="RoleName"    ItemsSource="{Binding Roles}"      Margin="5" />
+                        <ComboBox x:Name="cbRole" Grid.Column="3" Style="{StaticResource cbLuaChon}"   Margin="5" />
                     <CheckBox x:Name="checkAllowReGrantPrivilege" Grid.Column="4"    Content="Admin Option"    VerticalAlignment="Center"     Margin="10,0"/>
 
                 </Grid>
@@ -200,10 +200,10 @@
 
                     <!-- Role -->
                     <Label Content="Target Role:" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <ComboBox x:Name="cbRole1" Grid.Column="1" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName" SelectedValuePath="RoleName" ItemsSource="{Binding Roles}" Margin="5" />
+                    <ComboBox x:Name="cbRole1" Grid.Column="1" Style="{StaticResource cbLuaChon}" Margin="5" />
                     <!-- Role -->
                     <Label Content="Source Role:" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <ComboBox x:Name="cbRole2" Grid.Column="3" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName" SelectedValuePath="RoleName" ItemsSource="{Binding Roles}" Margin="5" />
+                    <ComboBox x:Name="cbRole2" Grid.Column="3" Style="{StaticResource cbLuaChon}" Margin="5" />
                     <CheckBox x:Name="checkAllowReGrantPrivilege1" Grid.Column="4" Content="Admin Option" VerticalAlignment="Center" Margin="10,0"/>
                 </Grid>
 

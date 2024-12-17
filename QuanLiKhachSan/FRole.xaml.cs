@@ -34,20 +34,14 @@ namespace QuanLiKhachSan
 
                 cbUser.ItemsSource = roleDao.GetGrantees()
                                .AsEnumerable()
-                               .Select(row => new { UserName = row["GranteeName"].ToString() })
+                               .Select(row => row["GranteeName"].ToString() )
                                .ToList();
 
-                cbRole.ItemsSource = roleDao.GetRoles()
-                                            .Select(role => new { RoleName = role })
-                                            .ToList();
+                cbRole.ItemsSource = roleDao.GetRoles();
 
-                cbRole1.ItemsSource = roleDao.GetRoles()
-                            .Select(role => new { RoleName = role })
-                            .ToList();
+                cbRole1.ItemsSource = roleDao.GetRoles();
 
-                cbRole2.ItemsSource = roleDao.GetRoles()
-                            .Select(role => new { RoleName = role })
-                            .ToList();
+                cbRole2.ItemsSource = roleDao.GetRoles();
             }
             catch (Exception ex)
             {
