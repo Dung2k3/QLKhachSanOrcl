@@ -105,20 +105,10 @@
 
                     <!-- User -->
                     <Label Content="User:" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <!--<ComboBox x:Name="cbUser" SelectedValuePath="Content" Grid.Column="1" Style="{StaticResource cbLuaChon}" Margin="5"/>-->
-                    <ComboBox x:Name="cbUser" Grid.Column="1" Style="{StaticResource cbLuaChon}" 
-          DisplayMemberPath="UserName" 
-          SelectedValuePath="UserName" 
-          ItemsSource="{Binding Users}" 
-          Margin="5" />
+                    <ComboBox x:Name="cbUser" Grid.Column="1" Style="{StaticResource cbLuaChon}"  DisplayMemberPath="UserName"  SelectedValuePath="UserName"     ItemsSource="{Binding Users}"     Margin="5" />
                     <!-- Role -->
                     <Label Content="Role:" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                    <!--<ComboBox x:Name="cbRole" SelectedValuePath="Content" Grid.Column="3" Style="{StaticResource cbLuaChon}" Margin="5"/>-->
-                        <ComboBox x:Name="cbRole" Grid.Column="3" Style="{StaticResource cbLuaChon}" 
-          DisplayMemberPath="RoleName" 
-          SelectedValuePath="RoleName" 
-          ItemsSource="{Binding Roles}" 
-          Margin="5" />
+                        <ComboBox x:Name="cbRole" Grid.Column="3" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName"   SelectedValuePath="RoleName"    ItemsSource="{Binding Roles}"      Margin="5" />
                     <CheckBox x:Name="checkAllowReGrantPrivilege" Grid.Column="4"    Content="Admin Option"    VerticalAlignment="Center"     Margin="10,0"/>
 
                 </Grid>
@@ -149,5 +139,70 @@
             </Grid>
         </TabItem>
 
+        <TabItem Style="{StaticResource tab}" Header="Assign Roles To Roles" Width="150">
+            <Grid>
+                <!-- Define Grid Columns and Rows -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <!-- Adjust proportions as needed -->
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- For form -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- For buttons -->
+                    <RowDefinition Height="*"/>
+                    <!-- For DataGrid -->
+                </Grid.RowDefinitions>
+
+                <!-- Form for Assigning/Revoking Roles -->
+                <Grid Grid.Row="0" Margin="10,10,10,5" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Label/User -->
+                        <ColumnDefinition Width="2*"/>
+                        <!-- ComboBox/User -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Label/Role -->
+                        <ColumnDefinition Width="2*"/>
+                        <!-- ComboBox/Role -->
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Role -->
+                    <Label Content="Target Role:" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                    <ComboBox x:Name="cbRole1" Grid.Column="1" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName" SelectedValuePath="RoleName" ItemsSource="{Binding Roles}" Margin="5" />
+                    <!-- Role -->
+                    <Label Content="Source Role:" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                    <ComboBox x:Name="cbRole2" Grid.Column="3" Style="{StaticResource cbLuaChon}" DisplayMemberPath="RoleName" SelectedValuePath="RoleName" ItemsSource="{Binding Roles}" Margin="5" />
+                    <CheckBox x:Name="checkAllowReGrantPrivilege1" Grid.Column="4" Content="Admin Option" VerticalAlignment="Center" Margin="10,0"/>
+                </Grid>
+
+                <!-- Buttons for Assigning/Revoking Roles -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5,0,10" Grid.ColumnSpan="2">
+                    <Button x:Name="btnAssignRole1" Content="Assign Role" Style="{StaticResource btnThem}" Click="btnAssignRoleToRole_Click" Margin="5" Width="129"/>
+                    <Button x:Name="btnRevokeRole1" Content="Revoke Role" Style="{StaticResource btnThem}" Click="btnRevokeRoleFromRole_Click" Margin="5" Width="139"/>
+
+                </StackPanel>
+                <DataGrid x:Name="dtgAssignedRolesToRoles" Grid.Row="2" Margin="10" AutoGenerateColumns="False" ItemsSource="{Binding AssignedRolesToRolesList}" Grid.ColumnSpan="2" >
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="    Action   ">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="btnInfoRoleRole" Click="btnInfoRoleRole_Click" Style="{StaticResource btnChinhSua}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Target Role" Binding="{Binding TARGET_ROLE}" Width="*"/>
+                        <DataGridTextColumn Header="Source Role" Binding="{Binding SOURCE_ROLE}" Width="*"/>
+                        <DataGridTextColumn Header="Admin Option" Binding="{Binding ADMIN_OPTION}" Width="*"/>
+                        <DataGridTextColumn Header="Default Role" Binding="{Binding DEFAULT_ROLE}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
     </TabControl>
 </UserControl>
