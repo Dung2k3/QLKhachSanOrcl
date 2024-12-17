@@ -14,9 +14,9 @@ namespace QuanLiKhachSan.DAO
 {
     class DbConnectionOrcl
     {
-        public static string host = "192.168.1.28";
+        public static string host = "localhost";
         public static string port = "1521";
-        public static string service_name = "ORCLPDB1";
+        public static string service_name = "ORCLPDB";
         
         public static OracleConnection CreateConnOrcl(string username, string password)
         {
