@@ -15,31 +15,84 @@ namespace QuanLiKhachSan.DAO
     {
         public DataTable LayDanhSach()
         {
-            string sql = "SELECT tablespace_name, username, bytes / 1024 / 1024 AS quota_mb, " +
-                "          blocks, CASE " +
-                "              WHEN max_bytes > 0 THEN max_bytes / 1024 / 1024 " +
-                "              ELSE max_bytes " +
-                "          END  AS max_quota_mb " +
-                "         FROM dba_ts_quotas ";
+            string sql = "SELECT p1.PROFILE, " +
+                             "p1.LIMIT AS SESSIONS_PER_USER, " +
+                             "p2.LIMIT AS CONNECT_TIME, " +
+                             "p3.LIMIT AS IDLE_TIME " +
+                             "FROM DBA_PROFILES p1 " +
+                             "LEFT JOIN DBA_PROFILES p2 ON p1.PROFILE = p2.PROFILE AND p2.RESOURCE_NAME = 'CONNECT_TIME' " +
+                             "LEFT JOIN DBA_PROFILES p3 ON p1.PROFILE = p3.PROFILE AND p3.RESOURCE_NAME = 'IDLE_TIME' " +
+                             "WHERE p1.RESOURCE_NAME = 'SESSIONS_PER_USER' " +
+                             "ORDER BY p1.PROFILE";
+
             DataTable dt = new DataTable();
             OracleConnection conn = DbConnectionOrcl.conn;
+
             try
             {
                 conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql,conn);
+                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
                 adapter.Fill(dt);
             }
-            catch (Exception ex)
+            catch (OracleException ex)
             {
-                MessageBox.Show(ex.Message);
+                if (ex.Number == 942 || ex.Number == 1031) // ORA-00942 or ORA-01031
+                {
+                    MessageBox.Show("Error: You do not have permission to perform this operation. Please check your access rights.", "Access Denied");
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected error: " + ex.Message, "System Error");
+                }
             }
-            finally { conn.Close(); }
+            finally
+            {
+                conn.Close();
+            }
+            return dt;
+        }
+        public DataTable LayDanhSachUserTheoProfile(string nameProfile)
+        {
+            string sql = $"SELECT USERNAME, PROFILE FROM DBA_USERS WHERE PROFILE = '{nameProfile}' ORDER BY USERNAME";
+
+
+            DataTable dt = new DataTable();
+            OracleConnection conn = DbConnectionOrcl.conn;
+
+            try
+            {
+                conn.Open();
+                OracleCommand cmd = new OracleCommand(sql, conn);
+
+                // Thêm tham số để truyền giá trị nameProfile
+                cmd.Parameters.Add(new OracleParameter("nameProfile", nameProfile));
+
+                OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                adapter.Fill(dt);
+            }
+            catch (OracleException ex)
+            {
+                // Bắt lỗi khi không đủ quyền hạn hoặc bảng không tồn tại
+                if (ex.Number == 942 || ex.Number == 1031) // ORA-00942 or ORA-01031
+                {
+                    MessageBox.Show("Error: Can't show user by profile. You do not have permission to perform this operation. Please check your access rights.", "Access Denied");
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected error: " + ex.Message, "System Error");
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
             return dt;
         }
 
+
         public List<String> ListProfile() 
         {
-            string sql = "SELECT DISTINCT PROFILE " +
+            string sql = "SELECT * " +
                         " FROM dba_profiles ";
             List<string> listTablespaces = new List<string>();
             OracleConnection conn = DbConnectionOrcl.conn;
@@ -109,58 +162,108 @@ namespace QuanLiKhachSan.DAO
             finally { conn.Close(); }
             return isSuccess;
         }
+        public void CreateNewProfile(string profileName, string sessionsPerUser, string connectTime, string idleTime)
+        {
+            // Tạo câu lệnh CREATE PROFILE
+            string sql = $"CREATE PROFILE {profileName} LIMIT " +
+                         $"SESSIONS_PER_USER {sessionsPerUser} " +
+                         $"CONNECT_TIME {connectTime} " +
+                         $"IDLE_TIME {idleTime}";
 
-        public void Update(string username, string password)
-        {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_updateAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value = password;
+            OracleConnection conn = DbConnectionOrcl.conn;
+
             try
             {
                 conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Sửa thành công");
-                }
+                OracleCommand cmd = new OracleCommand(sql, conn);
+                cmd.ExecuteNonQuery();  // Thực thi câu lệnh CREATE PROFILE
+                MessageBox.Show($"Profile {profileName} create successful.");
             }
-            catch (Exception ex)
+            catch (OracleException ex)
             {
-                MessageBox.Show(ex.Message);
+                // Bắt lỗi khi không đủ quyền hạn hoặc bảng không tồn tại
+                if (ex.Number == 942 || ex.Number == 1031) // ORA-00942 or ORA-01031
+                {
+                    MessageBox.Show("Error: Can't create profile. You do not have permission to perform this operation. Please check your access rights.", "Access Denied");
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected error: " + ex.Message, "System Error");
+                }
             }
             finally
             {
                 conn.Close();
             }
         }
-        public void Insert(string username, string password, int employeeId, string roles)
+        public void AlterProfile(string profileName, string sessionsPerUser, string connectTime, string idleTime)
         {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_insertAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value =password;
-            cmd.Parameters.Add("@employee_id", SqlDbType.Int).Value = employeeId;
-            cmd.Parameters.Add("@roles", SqlDbType.VarChar).Value = roles;
+            // Tạo câu lệnh ALTER PROFILE
+            string sql = $"ALTER PROFILE {profileName} LIMIT " +
+                         $"SESSIONS_PER_USER {sessionsPerUser} " +
+                         $"CONNECT_TIME {connectTime} " +
+                         $"IDLE_TIME {idleTime}";
+
+            OracleConnection conn = DbConnectionOrcl.conn;
+
             try
             {
                 conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm thành công");
-                }
+                OracleCommand cmd = new OracleCommand(sql, conn);
+                cmd.ExecuteNonQuery();  // Thực thi câu lệnh ALTER PROFILE
+                MessageBox.Show($"Profile {profileName} update successful.");
             }
-            catch (Exception ex)
+            catch (OracleException ex)
             {
-                MessageBox.Show(ex.Message);
+                // Bắt lỗi khi không đủ quyền hạn hoặc bảng không tồn tại
+                if (ex.Number == 942 || ex.Number == 1031) // ORA-00942 or ORA-01031
+                {
+                    MessageBox.Show("Error: Can't update profile. You do not have permission to perform this operation. Please check your access rights.", "Access Denied");
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected error: " + ex.Message, "System Error");
+                }
             }
             finally
             {
                 conn.Close();
             }
         }
+        public void DropProfile(string profileName)
+        {
+            // Tạo câu lệnh DROP PROFILE
+            string sql = $"DROP PROFILE {profileName}";
+
+            OracleConnection conn = DbConnectionOrcl.conn;
+
+            try
+            {
+                conn.Open();
+                OracleCommand cmd = new OracleCommand(sql, conn);
+                cmd.ExecuteNonQuery();  // Thực thi câu lệnh DROP PROFILE
+                MessageBox.Show($"Profile {profileName} delete successful.");
+            }
+            catch (OracleException ex)
+            {
+                // Bắt lỗi khi không đủ quyền hạn hoặc bảng không tồn tại
+                if (ex.Number == 942 || ex.Number == 1031) // ORA-00942 or ORA-01031
+                {
+                    MessageBox.Show("Error: Can't drop profile. You do not have permission to perform this operation. Please check your access rights.", "Access Denied");
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected error: " + ex.Message, "System Error");
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+
+
     }
+
 }
