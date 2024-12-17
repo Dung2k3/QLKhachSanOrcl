@@ -22,20 +22,7 @@ namespace QuanLiKhachSan.DAO
                 "              ELSE 'Unlimited' " +
                 "          END  AS max_quota_mb " +
                 "         FROM dba_ts_quotas ";
-            DataTable dt = new DataTable();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql,conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return dt;
+            return DbConnectionOrcl.ExecuteTable(sql);
         }
         public DataTable LayDanhSachLikeUsername(string username)
         {
@@ -46,20 +33,7 @@ namespace QuanLiKhachSan.DAO
                 "          END  AS max_quota_mb " +
                 "         FROM dba_ts_quotas " +
                $"         WHERE username LIKE '%{username}%'";
-            DataTable dt = new DataTable();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return dt;
+            return DbConnectionOrcl.ExecuteTable(sql);
         }
 
         public DataTable LayDanhSachByUsername(string username)
@@ -71,20 +45,7 @@ namespace QuanLiKhachSan.DAO
                 "          END  AS max_quota_mb " +
                 "         FROM dba_ts_quotas " +
                $"         WHERE username = '{username}'";
-            DataTable dt = new DataTable();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return dt;
+            return DbConnectionOrcl.ExecuteTable(sql);
         }
 
         public List<String> ListTempTableSpace() 
@@ -92,26 +53,7 @@ namespace QuanLiKhachSan.DAO
             string sql = "SELECT tablespace_name " +
                 " FROM dba_tablespaces " +
                 " WHERE CONTENTS = 'TEMPORARY' ";
-            List<string> listTablespaces = new List<string>();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleCommand cmd = new OracleCommand(sql, conn);
-                using (OracleDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        listTablespaces.Add(reader["tablespace_name"].ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return listTablespaces;
+            return DbConnectionOrcl.ExecuteListString(sql);
         }
 
         public List<String> ListDefaultTableSpace()
@@ -119,26 +61,7 @@ namespace QuanLiKhachSan.DAO
             string sql = "SELECT tablespace_name " +
                 " FROM dba_tablespaces " +
                 " WHERE CONTENTS = 'PERMANENT' ";
-            List<string> listTablespaces = new List<string>();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleCommand cmd = new OracleCommand(sql, conn);
-                using (OracleDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        listTablespaces.Add(reader["tablespace_name"].ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return listTablespaces;
+            return DbConnectionOrcl.ExecuteListString(sql);
         }
 
         public void Update(Quota quota)
@@ -151,18 +74,20 @@ namespace QuanLiKhachSan.DAO
             {
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                MessageBox.Show($"Đã cập nhật quota cho user {quota.Username} tren {quota.TablespaceName}");
+                MessageBox.Show("Successful");
             }
             catch (OracleException ex)
             {
                 if (ex.Number == 1935)
-                    MessageBox.Show($"Username không hợp lệ");
+                    MessageBox.Show($"Invalid username");
+                else if (ex.Number == 1918)
+                    MessageBox.Show($"Username does not exist");
                 else
-                    MessageBox.Show($"Lỗi khi cập nhật quota cho user {quota.Username} tren {quota.TablespaceName}");
+                    MessageBox.Show($"Error when alter user: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
+                MessageBox.Show($"Error: {ex.Message}");
             }
             finally
             {

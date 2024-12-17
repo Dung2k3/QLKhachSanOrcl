@@ -10,6 +10,7 @@ using System.Windows;
 using Oracle.ManagedDataAccess.Client;
 using QuanLiKhachSan.Class;
 using System.Collections;
+using System.Windows.Documents;
 
 namespace QuanLiKhachSan.DAO
 {
@@ -50,20 +51,55 @@ namespace QuanLiKhachSan.DAO
             string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
                 " CASE WHEN AUTHENTICATION_TYPE = 'PASSWORD' THEN  '****' ELSE ' ' END AS PASSWORD " +
                 "from dba_users ";
-            DataTable dt = new DataTable();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql,conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return dt;
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
+
+        public DataTable LayDanhSachLikeUsername(string username)
+        {
+            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
+                " CASE WHEN AUTHENTICATION_TYPE = 'PASSWORD' THEN  '****' ELSE ' ' END AS PASSWORD " +
+               $"from dba_users WHERE username LIKE '%{username}%' ";
+            
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
+                " CASE WHEN AUTHENTICATION_TYPE = 'PASSWORD' THEN  '****' ELSE ' ' END AS PASSWORD " +
+               $"from dba_users WHERE username = '{username}' ";
+
+            DataTable dt = DbConnectionOrcl.ExecuteTable(sql);
+            DataRow dr = dt.Rows[0];
+            User user = new User();
+            user.Username = username;
+            user.DefaultTablespace = Convert.ToString(dr["DEFAULT_TABLESPACE"]);
+            user.TemporaryTablespace = Convert.ToString(dr["TEMPORARY_TABLESPACE"]);
+            user.LockDate = Convert.ToString(dr["LOCK_DATE"]);
+            user.Created = Convert.ToString(dr["CREATED"]);
+            user.AccountStatus = Convert.ToString(dr["ACCOUNT_STATUS"]);
+            user.Profile = Convert.ToString(dr["PROFILE"]);
+            user.Password = Convert.ToString(dr["PASSWORD"]);
+            return user;
+        }
+
+        public User GetCurrentUser()
+        {
+            string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status " +
+                "FROM USER_USERS ";
+
+            DataTable dt = DbConnectionOrcl.ExecuteTable(sql);
+            DataRow dr = dt.Rows[0];
+            User user = new User();
+            user.Username = Convert.ToString(dr["USERNAME"]);
+            user.DefaultTablespace = Convert.ToString(dr["DEFAULT_TABLESPACE"]);
+            user.TemporaryTablespace = Convert.ToString(dr["TEMPORARY_TABLESPACE"]);
+            user.LockDate = Convert.ToString(dr["LOCK_DATE"]);
+            user.Created = Convert.ToString(dr["CREATED"]);
+            user.AccountStatus = Convert.ToString(dr["ACCOUNT_STATUS"]);
+            //user.Profile = Convert.ToString(dr["PROFILE"]);
+            //user.Password = Convert.ToString(dr["PASSWORD"]);
+            return user;
         }
 
         public bool Login(string username, string password)
@@ -88,24 +124,9 @@ namespace QuanLiKhachSan.DAO
 
         public void Delete(string username)
         {
-            OracleConnection conn = DbConnectionOrcl.conn;
-            OracleCommand cmd = conn.CreateCommand();
-            //cmd.CommandText = "DROP USER " + username ;
-            cmd.CommandText = $"DROP USER \"{username}\" ";
-            try
-            {
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                MessageBox.Show($"Xóa thành công user {username}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            string sql = $"DROP USER \"{username}\" ";
+            string mess = $"Delete user {username} complete";
+            DbConnectionOrcl.ExecuteNonQuery(sql, mess);
         }
 
         public void Update(User user)
@@ -123,18 +144,20 @@ namespace QuanLiKhachSan.DAO
             {
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                MessageBox.Show($"Đã cập nhật thông tin cho user {user.Username}");
+                MessageBox.Show($"Altered user {user.Username}");
             }
             catch (OracleException ex)
             {
                 if (ex.Number == 1935)
-                    MessageBox.Show($"Username không hợp lệ");
+                    MessageBox.Show($"Invalid username");
+                else if (ex.Number == 1918)
+                    MessageBox.Show($"Username does not exist");
                 else
-                    MessageBox.Show($"Lỗi khi thay đổi thông tin user: {ex.Message}");
+                    MessageBox.Show($"Error when alter user: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
+                MessageBox.Show($"Error: {ex.Message}");
             }
             finally
             {
@@ -156,18 +179,20 @@ namespace QuanLiKhachSan.DAO
             {
                 conn.Open();
                 cmd.ExecuteNonQuery();
-                MessageBox.Show($"Đã thêm user {user.Username}");
+                MessageBox.Show($"Added user {user.Username}");
             }
             catch (OracleException ex)
             {
                 if (ex.Number == 1935)
-                    MessageBox.Show($"Username không hợp lệ");
+                    MessageBox.Show($"Invalid username");
+                else if (ex.Number == 1920)
+                    MessageBox.Show($"Username already exists");
                 else
-                    MessageBox.Show($"Lỗi khi thêm user: {ex.Message} ----- {ex.ErrorCode}");
+                    MessageBox.Show($"Error when insert user: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Có lỗi xảy ra: {ex.Message}");
+                MessageBox.Show($"Error:  {ex.Message}");
             }
             finally
             {

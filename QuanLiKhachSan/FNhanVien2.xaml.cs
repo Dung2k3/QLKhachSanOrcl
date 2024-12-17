@@ -31,6 +31,7 @@ namespace QuanLiKhachSan
         public UcNhanVien2()
         {
             InitializeComponent();
+
             InitializeRolePrivilegesTab();
 
         }
@@ -262,6 +263,12 @@ namespace QuanLiKhachSan
         {
             string username = txbFilterQuota.Text;
             dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSachLikeUsername(username).DefaultView;
+
+        }
+        private void btnFilterUser_Click(object sender, RoutedEventArgs e)
+        {
+            string username = txbFilterUser.Text;
+            dtgDanhSachTaiKhoan.ItemsSource = userDao.LayDanhSachLikeUsername(username).DefaultView;
 
         }
 

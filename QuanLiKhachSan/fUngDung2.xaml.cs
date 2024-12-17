@@ -28,6 +28,7 @@ namespace QuanLiKhachSan
         private UcNhanVien2 ucNhanVien = new UcNhanVien2();
         private UcProfile ucProfile = new UcProfile();
         private FRoleManagement ucRole = new FRoleManagement();
+        private UcInfor ucInfor = new UcInfor();
 
         public fUngDung2()
         {
@@ -114,9 +115,9 @@ namespace QuanLiKhachSan
 
         private void itemPhong_Selected(object sender, RoutedEventArgs e)
         {
-            //grManHinh.Children.Clear();
-            //ucPhong.LayDanhSach();
-            //grManHinh.Children.Add(ucPhong);
+            grManHinh.Children.Clear();
+            ucInfor.LayDanhSach();
+            grManHinh.Children.Add(ucInfor);
         }
 
         private void itemKhachHang_Selected(object sender, RoutedEventArgs e)

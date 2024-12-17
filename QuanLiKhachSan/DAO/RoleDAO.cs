@@ -186,5 +186,11 @@ namespace QuanLiKhachSan.DAO
             string query = $"GRANT \"{privilege}\" TO \"{roleName}\"";
             ExecuteNonQuery(query);
         }
+
+        public DataTable DSRoleCurrentUser()
+        {
+            string sql = "SELECT *  FROM USER_ROLE_PRIVS ";
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
     }
 }

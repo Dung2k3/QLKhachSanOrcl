@@ -92,8 +92,7 @@ namespace QuanLiKhachSan.DAO
 
         public List<String> ListProfile() 
         {
-            string sql = "SELECT * " +
-                        " FROM dba_profiles ";
+            string sql = " SELECT distinct PROFILE FROM dba_profiles ";
             List<string> listTablespaces = new List<string>();
             OracleConnection conn = DbConnectionOrcl.conn;
             try
@@ -104,7 +103,7 @@ namespace QuanLiKhachSan.DAO
                 {
                     while (reader.Read())
                     {
-                        listTablespaces.Add(reader["PROFILE"].ToString());
+                        listTablespaces.Add(reader[0].ToString());
                     }
                 }
             }

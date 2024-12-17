@@ -24,14 +24,34 @@ namespace QuanLiKhachSan
     public partial class UcInfor : UserControl
     {
         UserDAO userDao = new UserDAO();
-        NhanVienDAO employeeDao = new NhanVienDAO();
-        PhoneNumberOfEmployeeDao phoneDao = new PhoneNumberOfEmployeeDao();
+        RoleDAO roleDao = new RoleDAO();
+        RolePrivilegesDAO rolePrivilegesDao = new RolePrivilegesDAO();
         TableSpaceDAO tablespaceDao = new TableSpaceDAO();
         ProfileDAO profileDao = new ProfileDAO();
         public UcInfor()
         {
             InitializeComponent();
         }
+        public void LayDanhSach()
+        {
+            User user = userDao.GetCurrentUser();
+            lbUsername.Content = user.Username;
+            lbDefaultTablespace.Content = user.DefaultTablespace;
+            lbTempTablespace.Content = user.TemporaryTablespace;
+            lbLockDate.Content = user.LockDate;
+            lbAccountStatus.Content = user.AccountStatus;
+            lbCreatedDate.Content = user.Created;
+            dtgUserRole.ItemsSource = roleDao.DSRoleCurrentUser().DefaultView;
+            dtgUserPrivileges.ItemsSource = rolePrivilegesDao.DSUserPrivilegesCurrentUser().DefaultView;
+            dtgRolePrivileges.ItemsSource = rolePrivilegesDao.DSRolePrivilegesCurrentUser().DefaultView;
+        }
 
-    }
+        private void btnFilterRolePrivileges_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView drv = (DataRowView)dtgUserRole.SelectedValue;
+            string role = drv["GRANTED_ROLE"].ToString();
+
+            dtgRolePrivileges.ItemsSource = rolePrivilegesDao.DSRolePrivilegesCurrentUserByRole(role).DefaultView;
+        }
+    } 
 }

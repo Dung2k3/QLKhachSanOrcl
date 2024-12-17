@@ -250,7 +250,7 @@ namespace QuanLiKhachSan.DAO
                     @room_id = @room_id;
                 ";
 
-            dbConnection.ThucThi(sqlQuery);
+            //dbConnection.ThucThi(sqlQuery);
 
         }
 
