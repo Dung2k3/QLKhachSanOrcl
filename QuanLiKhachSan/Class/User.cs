@@ -14,13 +14,13 @@ namespace QuanLiKhachSan.Class
         private string defaultTablespace;
         private string temporaryTablespace;
         private string lockDate;
-        private DateTime created;
+        private string created;
         private string accountStatus;
         private string profile;
 
 
 
-        public User(string username, string password, string default_tablespace, string temporary_tablespace, string lock_date, DateTime created, string account_status, string profile)
+        public User(string username, string password, string default_tablespace, string temporary_tablespace, string lock_date, string created, string account_status, string profile)
         {
             this.username = username;
             this.password = password;
@@ -39,6 +39,8 @@ namespace QuanLiKhachSan.Class
         public string Password { get => password; set => password = value; }
         public string DefaultTablespace { get => defaultTablespace; set => defaultTablespace = value; }
         public string TemporaryTablespace { get => temporaryTablespace; set => temporaryTablespace = value; }
+        public string LockDate { get => lockDate; set => lockDate = value; }
+        public string Created { get => created; set => created = value; }
         public string AccountStatus { get => accountStatus; set => accountStatus = value; }
         public string Profile { get => profile; set => profile = value; }
 

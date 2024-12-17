@@ -171,5 +171,52 @@ namespace QuanLiKhachSan.DAO
             // Similar to GetSourceUserRoles, but you might want to filter differently
             return GetSourceUserRoles();
         }
+
+        public DataTable DSUserPrivilegesCurrentUser()
+        {
+            string sql = @"
+                SELECT PRIVILEGE, 'System Privileges' AS PrivilegeType, 
+                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                FROM USER_SYS_PRIVS
+                UNION
+                SELECT PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
+                     TABLE_NAME AS Object, GRANTABLE
+                FROM USER_TAB_PRIVS ";
+
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
+
+        public DataTable DSRolePrivilegesCurrentUser()
+        {
+            string sql = @"
+                SELECT ROLE, PRIVILEGE, 'System Privileges' AS PrivilegeType, 
+                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                FROM ROLE_SYS_PRIVS
+                WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
+                UNION
+                SELECT ROLE, PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
+                     TABLE_NAME AS Object, GRANTABLE
+                FROM ROLE_TAB_PRIVS
+                WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)  ";
+
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
+
+        public DataTable DSRolePrivilegesCurrentUserByRole(string role)
+        {
+            string sql = @"
+                SELECT ROLE, PRIVILEGE, 'System Privileges' AS PrivilegeType, 
+                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                FROM ROLE_SYS_PRIVS
+                WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
+                    AND ROLE = '" + role + @"'
+                UNION
+                SELECT ROLE, PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
+                     TABLE_NAME AS Object, GRANTABLE
+                FROM ROLE_TAB_PRIVS
+                WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS) 
+                AND ROLE = '" + role + "' ";
+            return DbConnectionOrcl.ExecuteTable(sql);
+        }
     }
 }

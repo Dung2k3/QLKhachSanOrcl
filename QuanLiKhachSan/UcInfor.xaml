@@ -8,72 +8,93 @@
     <UserControl.Resources>
         <ResourceDictionary Source="MyResourceDictionary.xaml"/>
     </UserControl.Resources>
-    <TabControl Margin="0" Background="Transparent">
-        <TabItem x:Name="tabUserInfor" Style="{StaticResource tab}" Header="UserInfor" Width="100">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <Label Content="Username"/>
-                        <Label Content="Account Status"/>
-                        <Label Content="Lock Date"/>
-                        <Label Content="Created Date"/>
-                        <Label Content="Default Tablespace"/>
-                        <Label Content="Temp Tablespace"/>
-                        <Label Content="Profile"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Label x:Name="lbUsername" 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Content="Username"/>
+                <Label Content="Account Status"/>
+                <Label Content="Lock Date"/>
+                <Label Content="Created Date"/>
+                <Label Content="Default Tablespace"/>
+                <Label Content="Temp Tablespace"/>
+                <Label Content="Profile"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label x:Name="lbUsername" 
                                  Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbAccountStatus" 
+                <Label x:Name="lbAccountStatus" 
                             Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbLockDate" 
+                <Label x:Name="lbLockDate" 
                             Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbCreatedDate" 
+                <Label x:Name="lbCreatedDate" 
                             Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbDefaultTablespace" 
+                <Label x:Name="lbDefaultTablespace" 
                             Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbTempTablespace" 
+                <Label x:Name="lbTempTablespace" 
                             Style="{StaticResource lbNoiDung}" />
-                        <Label x:Name="lbProfile" 
+                <Label x:Name="lbProfile" 
                             Style="{StaticResource lbNoiDung}" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="3">
-                        <ComboBox x:Name="cbDefaultTablespace5" 
-                                 Style="{StaticResource cbLuaChon}" />
-                        <ComboBox Style="{StaticResource cbLuaChon}" x:Name="cbProfile5">
-                        </ComboBox>
-                    </StackPanel>
-                    <StackPanel Grid.Column="4">
-                        <Label Content="Change Password"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="5">
-                        <ComboBox x:Name="cbTempTablespace5" Style="{StaticResource cbLuaChon}"/>
-                        <TextBox x:Name="txbPassword5" Style="{StaticResource tbxNoiDung}" />
-                    </StackPanel>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="btnSuaUser5" Style="{StaticResource btnSua}" Grid.Column="1"/>
-                </Grid>
-            </Grid>
-        </TabItem>
-    </TabControl>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <DataGrid x:Name="dtgUserRole">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Role" Binding="{Binding GRANTED_ROLE}" Width="*"/>
+                    <DataGridTextColumn Header="Grantable" Binding="{Binding ADMIN_OPTION}" Width="*"/>
+                    <DataGridTextColumn Header="Users" Binding="{Binding ASSIGNEDUSERS}" Width="*"/>
+                    <DataGridTemplateColumn Header="Search" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="btnFilterRolePrivileges"
+                                                Style="{StaticResource btnChinhSua}" Click="btnFilterRolePrivileges_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+            <TabControl Margin="0" Background="Transparent">
+                <TabItem x:Name="tabUserPrivileges" Style="{StaticResource tab}" Header="UserPrivileges" Width="100">
+                    <DataGrid x:Name="dtgUserPrivileges" Height="550" Width="590" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE}"/>
+                            <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
+                            <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                            <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem x:Name="tabRolePrivileges" Style="{StaticResource tab}" Header="RolePrivileges" Width="100">
+                    <DataGrid x:Name="dtgRolePrivileges" Grid.Column="1" Height="550" Width="590">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Role" Binding="{Binding ROLE}"/>
+                            <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE}"/>
+                            <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
+                            <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                            <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </Grid>
 </UserControl>

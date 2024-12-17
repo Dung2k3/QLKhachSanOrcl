@@ -56,8 +56,10 @@ namespace QuanLiKhachSan
         //Hàm đăng nhập từ việc kiểm tra tài khoản
         private void DangNhap()
         {
-            taiKhoan.TenTaiKhoan = "adminuser";
-            taiKhoan.MatKhau = "admin";
+            //taiKhoan.TenTaiKhoan = "adminuser";
+            //taiKhoan.MatKhau = "admin";
+            taiKhoan.TenTaiKhoan = "lbacsys";
+            taiKhoan.MatKhau = "lbacsys";
             bool isSuccess = accountDao.Login(taiKhoan.TenTaiKhoan, taiKhoan.MatKhau);
             if(isSuccess)
             {
