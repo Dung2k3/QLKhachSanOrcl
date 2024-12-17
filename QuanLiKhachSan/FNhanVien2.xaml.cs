@@ -355,19 +355,28 @@ namespace QuanLiKhachSan
         {
             try
             {
-                string targetUserRole = cbTargetUserRole.SelectedItem?.ToString();
-                string privilegeType = cbPrivilegeType.SelectedItem?.ToString();
-                string privilegeAction = cbPrivilegeAction.SelectedItem?.ToString();
-
-                // For System Privileges
-                if (privilegeType == "System Privileges")
+                string targetUserRole = cbTargetUserRole.SelectedValue?.ToString();
+                string privilegeType = (cbPrivilegeType.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                string privilegeAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                //MessageBox.Show(targetUserRole + " " + privilegeAction +  ' ' + privilegeType);
+                //if (string.IsNullOrEmpty(targetUserRole) ||
+                //    string.IsNullOrEmpty(privilegeType) ||
+                //    string.IsNullOrEmpty(privilegeAction))
+                //{
+                //    MessageBox.Show("Please select all required fields.");
+                //    return;
+                //}
+                if (privilegeType.Contains("System", StringComparison.OrdinalIgnoreCase))
                 {
-                    string systemPrivilege = cbSystemPrivileges.SelectedItem?.ToString();
+                    string systemPrivilege = (cbSystemPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                    //MessageBox.Show(privilegeType + " " + privilegeAction + " " + systemPrivilege);
 
-                    if (privilegeAction == "Grant")
+                    if (privilegeAction.Contains("Grant", StringComparison.OrdinalIgnoreCase))
                     {
+
                         rolePrivilegesDao.GrantSystemPrivilege(cbTargetUserRole.Text, systemPrivilege,
-                            chkAllowReGrantPrivilege.IsChecked == true);
+                        chkAllowReGrantPrivilege.IsChecked == true);
+
                     }
                     else // Revoke
                     {
@@ -375,12 +384,13 @@ namespace QuanLiKhachSan
                     }
                 }
                 // For Object Privileges
-                else if (privilegeType == "Object Privileges")
+                else if (privilegeType.Contains("Object", StringComparison.OrdinalIgnoreCase))
                 {
-                    string objectPrivilege = cbObjectPrivileges.SelectedItem?.ToString();
+                    string objectPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
                     string specificObject = txtSpecificObject.Text;
+                    MessageBox.Show(objectPrivilege + " " + specificObject);
 
-                    if (privilegeAction == "Grant")
+                    if (privilegeAction.Contains("Grant", StringComparison.OrdinalIgnoreCase))
                     {
                         rolePrivilegesDao.GrantObjectPrivilege(cbTargetUserRole.Text, specificObject,
                             objectPrivilege, chkAllowReGrantPrivilege.IsChecked == true);
@@ -464,7 +474,7 @@ namespace QuanLiKhachSan
                 // Filter Privilege Management DataGrid
                 DataTable privilegesTable = rolePrivilegesDao.GetPrivileges();
                 DataView privilegesView = privilegesTable.DefaultView;
-                privilegesView.RowFilter = $"Username LIKE '{selectedUserRole}'";
+                privilegesView.RowFilter = $"USERNAME LIKE '{selectedUserRole}'";
                 dtgPrivilegeManagement.ItemsSource = privilegesView;
 
                 // Filter Role Management DataGrid
@@ -476,7 +486,7 @@ namespace QuanLiKhachSan
                 // Filter User Information DataGrid
                 DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
                 DataView userInfoView = userInfoTable.DefaultView;
-                userInfoView.RowFilter = $"Username LIKE '{selectedUserRole}' OR Roles LIKE '%{selectedUserRole}%'";
+                userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
                 dtgUserInformation.ItemsSource = userInfoView;
 
                 // Profile Management can be filtered similarly
