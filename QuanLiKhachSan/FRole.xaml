@@ -49,28 +49,56 @@
                 </StackPanel>
 
                 <!-- DataGrid for Roles -->
-                <DataGrid x:Name="dtgRoles" Grid.Row="2" Margin="10,10,10,10" AutoGenerateColumns="False" ItemsSource="{Binding RoleList}" Grid.ColumnSpan="2">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="   Action   ">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="btnInfoRole" Click="btnInfoRole_Click" Style="{StaticResource btnChinhSua}"/>
-                                        <Button x:Name="btnDeleteRole" Style="{StaticResource btnXoa}" Click="btnDeleteRole_Click" Margin="5"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="350"/>
+                        <ColumnDefinition Width="20"/>
+                        <!-- Cột trống để tạo khoảng cách -->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <DataGridTextColumn Header="Role Name" Binding="{Binding ROLE_NAME}" Width="*"/>
-                        <DataGridTextColumn Header="Granted To" Binding="{Binding GRANTED_TO_USER}" Width="*"/>
-                        <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE_NAME}" Width="*"/>
-                        <DataGridTextColumn Header="Table Name" Binding="{Binding TABLE_NAME}" Width="*"/>
-                        <DataGridTextColumn Header="Password" Binding="{Binding AUTHENTICATION_TYPE}" Width="*"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                    <!-- DataGrid đầu tiên -->
+                    <DataGrid x:Name="dtgRolesBasic" Grid.Column="0" Margin="0" AutoGenerateColumns="False" ItemsSource="{Binding RoleListBasic}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="   Action   ">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button x:Name="btnInfoRole" Click="btnInfoRole_Click" Style="{StaticResource btnChinhSua}"/>
+                                            <Button x:Name="btnDeleteRole" Style="{StaticResource btnXoa}" Click="btnDeleteRole_Click" Margin="5"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Role Name" Binding="{Binding ROLE_NAME}" Width="150"/>
+                            <DataGridTextColumn Header="Password" Binding="{Binding AUTHENTICATION_TYPE}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- DataGrid thứ hai -->
+                    <DataGrid x:Name="dtgRoles" Grid.Column="2" Margin="0" AutoGenerateColumns="False" ItemsSource="{Binding RoleList}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="   Action   ">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button x:Name="btnRevokeRole1" Style="{StaticResource btnXoa}" Click="btnRevokeRole1_Click" Margin="5"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Role Name" Binding="{Binding ROLE_NAME}" Width="*"/>
+                            <DataGridTextColumn Header="Granted To" Binding="{Binding GRANTED_TO_USER}" Width="*"/>
+                            <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE_NAME}" Width="*"/>
+                            <DataGridTextColumn Header="Table Name" Binding="{Binding TABLE_NAME}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
             </Grid>
         </TabItem>
+
 
         <TabItem Style="{StaticResource tab}" Header="Assign Roles To Users" Width="150">
             <Grid>

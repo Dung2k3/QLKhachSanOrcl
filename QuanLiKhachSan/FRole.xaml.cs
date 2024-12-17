@@ -24,7 +24,9 @@ namespace QuanLiKhachSan
         {
             try
             {
-                dtgRoles.ItemsSource = roleDao.GetRoleList().DefaultView;
+                dtgRolesBasic.ItemsSource = roleDao.GetRoleListBasic().DefaultView;
+
+                dtgRoles.ItemsSource = null;
 
                 dtgAssignedRoles.ItemsSource = roleDao.GetRoleUserList().DefaultView;
 
@@ -54,12 +56,15 @@ namespace QuanLiKhachSan
         }
         private void btnInfoRole_Click(object sender, RoutedEventArgs e)
         {
+            string role;
             try
             {
-                DataRowView drv = (DataRowView)dtgRoles.SelectedItem;
+                DataRowView drv = (DataRowView)dtgRolesBasic.SelectedItem;
                 if (drv != null)
                 {
                     txtRoleName.Text = drv["Role_Name"].ToString();
+                    role = drv["Role_Name"].ToString();
+                    dtgRoles.ItemsSource = roleDao.GetRoleList(role).DefaultView;
                 }
                 else
                 {
@@ -165,7 +170,7 @@ namespace QuanLiKhachSan
         {
             try
             {
-                DataRowView drv = (DataRowView)dtgRoles.SelectedItem;
+                DataRowView drv = (DataRowView)dtgRolesBasic.SelectedItem;
                 if (drv != null)
                 {
                     string rolename = drv["Role_Name"].ToString();
@@ -232,6 +237,28 @@ namespace QuanLiKhachSan
                 MessageBox.Show($"Error revoking role: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void btnRevokeRole1_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataRowView drv = (DataRowView)dtgRoles.SelectedItem;
+                if (drv != null)
+                {
+                    string user = drv["GRANTED_TO_USER"].ToString();
+                    string role = drv["ROLE_NAME"].ToString();
+                    roleDao.RevokeRoleFromUser(user, role, false);
+                    dtgRoles.ItemsSource = roleDao.GetRoleList(role).DefaultView;
+                }
+                else
+                {
+                    MessageBox.Show("Please select before revoke.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void btnAssignRoleToRole_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -273,7 +300,6 @@ namespace QuanLiKhachSan
 
                 roleDao.RevokeRoleFromRole(role1, role2, revokeOnlyAdminOption);
                 LoadData();
-
             }
             catch (Exception ex)
             {

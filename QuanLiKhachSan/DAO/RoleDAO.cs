@@ -38,22 +38,33 @@ namespace QuanLiKhachSan.DAO
             return roles;
         }
 
-        public DataTable GetRoleList()
+        public DataTable GetRoleList(string rolename)
         {
             string query = @"SELECT 
-                                r.ROLE AS Role_Name,
-                                rp.GRANTEE AS Granted_To_User,
-                                tp.PRIVILEGE AS Privilege_Name,
-                                tp.TABLE_NAME AS Table_Name,
-                                r.AUTHENTICATION_TYPE AS Authentication_Type
+                        r.ROLE AS Role_Name,
+                        rp.GRANTEE AS Granted_To_User,
+                        tp.PRIVILEGE AS Privilege_Name,
+                        tp.TABLE_NAME AS Table_Name
+                    FROM 
+                        DBA_ROLES r
+                    LEFT JOIN 
+                        DBA_ROLE_PRIVS rp ON r.ROLE = rp.GRANTED_ROLE
+                    LEFT JOIN 
+                        DBA_TAB_PRIVS tp ON r.ROLE = tp.GRANTEE
+                    WHERE 
+                        r.ROLE = '" + rolename.Replace("'", "''") + @"'
+                    ORDER BY 
+                        r.ROLE, rp.GRANTEE, tp.PRIVILEGE";
+
+            return ExecuteQuery(query);
+        }
+
+        public DataTable GetRoleListBasic()
+        {
+            string query = @"SELECT 
+                                ROLE AS Role_Name, AUTHENTICATION_TYPE AS Authentication_Type
                             FROM 
-                                DBA_ROLES r
-                            LEFT JOIN 
-                                DBA_ROLE_PRIVS rp ON r.ROLE = rp.GRANTED_ROLE
-                            LEFT JOIN 
-                                DBA_TAB_PRIVS tp ON r.ROLE = tp.GRANTEE
-                            ORDER BY 
-                                r.ROLE, rp.GRANTEE, tp.PRIVILEGE";
+                                DBA_ROLES";
             return ExecuteQuery(query);
         }
 
@@ -258,13 +269,6 @@ namespace QuanLiKhachSan.DAO
                 conn.Close();
             }
         }
-
-        private void GrantPrivilege(string roleName, string privilege)
-        {
-            string query = $"GRANT \"{privilege}\" TO \"{roleName}\"";
-            ExecuteNonQuery(query);
-        }
-
         public DataTable DSRoleCurrentUser()
         {
             string sql = "SELECT *  FROM USER_ROLE_PRIVS ";
