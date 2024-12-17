@@ -29,6 +29,7 @@ namespace QuanLiKhachSan
         private UcProfile ucProfile = new UcProfile();
         private FRoleManagement ucRole = new FRoleManagement();
         private UcInfor ucInfor = new UcInfor();
+        private UcPrivilege ucPrivilege = new UcPrivilege();
 
         public fUngDung2()
         {
@@ -109,8 +110,9 @@ namespace QuanLiKhachSan
 
         private void itemDoanhThu_Selected(object sender, RoutedEventArgs e)
         {
-            //grManHinh.Children.Clear();
-            //grManHinh.Children.Add(ucDoanhThu);
+            grManHinh.Children.Clear();
+            ucPrivilege.LayDanhSach();
+            grManHinh.Children.Add(ucPrivilege);
         }
 
         private void itemPhong_Selected(object sender, RoutedEventArgs e)
