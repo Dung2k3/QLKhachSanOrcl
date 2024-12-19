@@ -1,3 +1,5 @@
+using QuanLiKhachSan.Class;
+using QuanLiKhachSan.DAO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,13 @@ namespace QuanLiKhachSan
         public fUngDung2()
         {
             InitializeComponent();
+            UserPrivilege up = DbConnectionOrcl.userPrivilege;
+            if (!up.CreateUser && !up.AlterUser && !up.DropUser && !up.SelectUser && !up.SelectQuota)
+                itemDichVu.IsEnabled = false;
+            if (!up.CreateProfile && !up.AlterProfile && !up.DropProfile && !up.SelectProfile)
+                itemKhachHang.IsEnabled = false;
+            if (!up.CreateRole && !up.AlterAnyRole && !up.DropAnyRole && !up.GrantAnyRole && !up.SelectRole)
+                itemThanhToan.IsEnabled = false;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -91,7 +100,6 @@ namespace QuanLiKhachSan
 
         private void itemDichVu_Selected(object sender, RoutedEventArgs e)
         {
-
             grManHinh.Children.Clear();
             ucNhanVien.LayDanhSach();
             grManHinh.Children.Add(ucNhanVien);

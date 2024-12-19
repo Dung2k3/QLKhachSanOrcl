@@ -13,6 +13,7 @@ namespace QuanLiKhachSan
     {
         TaiKhoan taiKhoan = new TaiKhoan();
         AccountDao accountDao = new AccountDao();
+        RolePrivilegesDAO rolePrivilegesDAO = new RolePrivilegesDAO();
         public fDangNhap()
         {
             InitializeComponent();
@@ -58,11 +59,12 @@ namespace QuanLiKhachSan
         {
             taiKhoan.TenTaiKhoan = "adminuser";
             taiKhoan.MatKhau = "admin";
-            //taiKhoan.TenTaiKhoan = "lbacsys";
-            //taiKhoan.MatKhau = "lbacsys";
+            taiKhoan.TenTaiKhoan = "lbacsys";
+            taiKhoan.MatKhau = "lbacsys";
             bool isSuccess = accountDao.Login(taiKhoan.TenTaiKhoan, taiKhoan.MatKhau);
             if(isSuccess)
             {
+                rolePrivilegesDAO.DSCheckPrivilegesCurrentUserByRole();
                 fUngDung2 ungDung = new fUngDung2();
                 ungDung.Show();
                 this.Close();
@@ -83,5 +85,6 @@ namespace QuanLiKhachSan
             if (txtMatKhau.Visibility == Visibility.Visible)
                 pswMatKhau.Password = taiKhoan.MatKhau;
         }
+
     }
 }

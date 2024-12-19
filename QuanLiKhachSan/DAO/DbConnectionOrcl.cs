@@ -17,7 +17,7 @@ namespace QuanLiKhachSan.DAO
         public static string host = "localhost";
         public static string port = "1521";
         public static string service_name = "ORCLPDB";
-        
+        public static UserPrivilege userPrivilege = new UserPrivilege();
         public static OracleConnection CreateConnOrcl(string username, string password)
         {
             string connStr = $"User Id={username};Password={password};Data Source=" +
@@ -117,7 +117,7 @@ namespace QuanLiKhachSan.DAO
                     MessageBox.Show($"Invalid username", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 else if (ex.Number == 1920)
                     MessageBox.Show($"Username already exists", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                else if (ex.Number == 942 || ex.Number == 1031)
+                else if (ex.Number == 942 || ex.Number == 1031 || ex.Number == 1924)
                     MessageBox.Show("Error: You do not have permission to perform this operation. Please check your access rights.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
                     MessageBox.Show($"Error when insert user: {ex.Message} -- {ex.Number}");
