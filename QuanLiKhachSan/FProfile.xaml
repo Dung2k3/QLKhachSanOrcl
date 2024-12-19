@@ -80,10 +80,12 @@
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="150"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnThemTaiKhoan" Style="{StaticResource btnThem}" Click="btnThemTaiKhoan_Click"/>
-                    <Button x:Name="btnSuaTaiKhoan" Style="{StaticResource btnSua}" Click="btnSuaTaiKhoan_Click"  Grid.Column="1"/>
+                    <Button x:Name="btnThemTaiKhoan" Style="{StaticResource btnThem}"  Content="Create" Click="btnThemTaiKhoan_Click"/>
+                    <Button x:Name="btnSuaTaiKhoan" Style="{StaticResource btnSua}" Content="Update" Click="btnSuaTaiKhoan_Click"  Grid.Column="1"/>
+                    <Button x:Name="btnXoaTaiKhoan" Style="{StaticResource btnSua}" Content="Delete" Click="btnXoaTaiKhoan_Click"  Grid.Column="2"/>
                 </Grid>
                 <Border Grid.Row="2" Style="{StaticResource BorderPhanDoan}"/>
                 <Grid Grid.Row="3">

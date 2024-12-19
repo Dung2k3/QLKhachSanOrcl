@@ -34,12 +34,10 @@ namespace QuanLiKhachSan
 
         public void LayDanhSach()
         {
-            dtgDanhSachProfile.ItemsSource = profileDao.LayDanhSach().DefaultView;
+            if(DbConnectionOrcl.userPrivilege.SelectProfile)
+                dtgDanhSachProfile.ItemsSource = profileDao.LayDanhSach().DefaultView;
         }
 
-        /// <summary>
-        /// @return
-        /// </summary>
         private void btnSuaTaiKhoan_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -223,6 +221,24 @@ namespace QuanLiKhachSan
             }
         }
 
+        private void btnXoaTaiKhoan_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string profilename = txbProfileName.Text;
+                if (profilename.Equals(""))
+                {
+                    MessageBox.Show("Unvalid Profile Name");
+                    return;
+                }
+                profileDao.DropProfile(profilename);
+                LayDanhSach();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         private void btnXoaUser_Click(object sender, RoutedEventArgs e)
         {
             DataRowView drv = (DataRowView)dtgDanhSachProfile.SelectedValue;

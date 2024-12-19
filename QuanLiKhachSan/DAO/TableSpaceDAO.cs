@@ -67,59 +67,9 @@ namespace QuanLiKhachSan.DAO
         public void Update(Quota quota)
         {
             string size = quota.MaxQuota >= 0 ? quota.MaxQuota.ToString() + "M" : "UNLIMITED";
-            OracleConnection conn = DbConnectionOrcl.conn;
-            OracleCommand cmd = conn.CreateCommand();
-            cmd.CommandText = $"ALTER USER {quota.Username} QUOTA {size} ON {quota.TablespaceName} ";
-            try
-            {
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                MessageBox.Show("Successful");
-            }
-            catch (OracleException ex)
-            {
-                if (ex.Number == 1935)
-                    MessageBox.Show($"Invalid username");
-                else if (ex.Number == 1918)
-                    MessageBox.Show($"Username does not exist");
-                else
-                    MessageBox.Show($"Error when alter user: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
-            finally
-            {
-                conn.Close();
-            }
-        }
-        public void Insert(string username, string password, int employeeId, string roles)
-        {
-            SqlConnection conn = DBConnection.conn;
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "proc_insertAccount";
-            cmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username;
-            cmd.Parameters.Add("@password", SqlDbType.VarChar).Value =password;
-            cmd.Parameters.Add("@employee_id", SqlDbType.Int).Value = employeeId;
-            cmd.Parameters.Add("@roles", SqlDbType.VarChar).Value = roles;
-            try
-            {
-                conn.Open();
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm thành công");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            string sql = $"ALTER USER {quota.Username} QUOTA {size} ON {quota.TablespaceName} ";
+            string mess = $"Update quota user {quota.Username} complete";
+            DbConnectionOrcl.ExecuteNonQuery(sql, mess);
         }
     }
 }

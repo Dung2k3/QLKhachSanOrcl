@@ -122,9 +122,10 @@
                               AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="User/Role" Binding="{Binding USERNAME}"/>
-                        <DataGridTextColumn Header="Loại Quyền" Binding="{Binding PRIVILEGETYPE}"/>
-                        <DataGridTextColumn Header="Quyền Cụ Thể" Binding="{Binding SPECIFICPRIVILEGE}"/>
-                        <DataGridTextColumn Header="Đối Tượng" Binding="{Binding OBJECT}"/>
+                        <DataGridTextColumn Header="PRIVILEGETYPE" Binding="{Binding PRIVILEGETYPE}"/>
+                        <DataGridTextColumn Header="SPECIFICPRIVILEGE" Binding="{Binding SPECIFICPRIVILEGE}"/>
+                        <DataGridTextColumn Header="OBJECT" Binding="{Binding OBJECT}"/>
+                        <DataGridTextColumn Header="GRANTABLE" Binding="{Binding GRANTABLE}"/>
                         <DataGridTemplateColumn Header="Thao Tác">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

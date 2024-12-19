@@ -1,5 +1,44 @@
-select username,default_tablespace, temporary_tablespace, lock_date, created, account_status, profile 
-from dba_users;
+create VIEW CUSTOM_DBA_USERS AS
+SELECT USERNAME, ACCOUNT_STATUS, CREATED
+FROM DBA_USERS;
 
-
-
+SELECT 
+    privilege_list.privilege AS PRIVILEGE,
+    CASE 
+        WHEN user_privileges.privilege IS NOT NULL THEN 'TRUE'
+        ELSE 'FALSE'
+    END AS HAS_PRIVILEGE
+FROM ( 
+    SELECT 'CREATE PROFILE' AS privilege FROM dual UNION ALL
+    SELECT 'ALTER PROFILE' FROM dual UNION ALL
+    SELECT 'DROP PROFILE' FROM dual UNION ALL
+    SELECT 'CREATE ROLE' FROM dual UNION ALL
+    SELECT 'ALTER ANY ROLE' FROM dual UNION ALL
+    SELECT 'DROP ANY ROLE' FROM dual UNION ALL
+    SELECT 'GRANT ANY ROLE' FROM dual UNION ALL
+    SELECT 'CREATE SESSION' FROM dual UNION ALL
+    SELECT 'SELECT ANY TABLE' FROM dual UNION ALL
+    SELECT 'CREATE USER' FROM dual UNION ALL
+    SELECT 'ALTER USER' FROM dual UNION ALL
+    SELECT 'DROP USER' FROM dual 
+) privilege_list
+LEFT JOIN (   
+    SELECT PRIVILEGE, null AS Object
+    FROM USER_SYS_PRIVS
+    UNION
+    SELECT PRIVILEGE, TABLE_NAME AS Object
+    FROM USER_TAB_PRIVS 
+    UNION
+    SELECT PRIVILEGE, null AS Object
+    FROM ROLE_SYS_PRIVS
+    WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
+    UNION
+    SELECT PRIVILEGE, TABLE_NAME AS Object
+    FROM ROLE_TAB_PRIVS
+    WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)  
+    ) user_privileges
+    ON privilege_list.privilege = user_privileges.privilege;
+    
+    
+    
+REVOKE SELECT ON sys.DBA_PRIVS FROM LBACSYS
