@@ -41,7 +41,7 @@
                     </Border.RenderTransform>
                     <TextBlock VerticalAlignment="Center" Foreground="White" 
                            FontSize="20" Margin="20 0 0 0" HorizontalAlignment="Left"
-                           Text="C Ô N G   C Ụ"/>
+                           Text="U S E R"/>
                 </Border>
             </Grid>
             <Grid x:Name="grQuanLi">
@@ -74,7 +74,7 @@
                         <SkewTransform AngleX="-22" />
                     </Border.RenderTransform>
                     <TextBlock Foreground="White" FontSize="20" Margin="20 0 0 0" 
-                           HorizontalAlignment="Left" Text="Q U Ả N    L Í"
+                           HorizontalAlignment="Left" Text="M A N A G E M E N T"
                            VerticalAlignment="Center"/>
 
                 </Border>
@@ -111,7 +111,7 @@
                     </Border.RenderTransform>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center"  
                            FontSize="20" Foreground="White" Margin="20 0 0 0"
-                           Text="K H Á C H   S Ạ N"/>
+                           Text="A P P"/>
                 </Border>
             </Grid>
             <Border x:Name="borderDangNhap" Width="35" Background="#5D7B6F"
@@ -139,11 +139,11 @@
                            VerticalAlignment="Bottom" Margin="0 0 0 10" />
                     <TextBlock FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center"
                                FontWeight="Bold" Foreground="White" TextAlignment="Center" 
-                               TextWrapping="Wrap" Height="185" Width="14" Margin="0">
-                        <Run Text="ĐĂNG" />
+                               TextWrapping="Wrap" Height="260" Width="14" Margin="0">
+                        <Run Text="ACCOUNT" />
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="NHẬP" />
+                        <Run Text="LOGIN" />
                     </TextBlock>
 
                     <Border Panel.ZIndex="1" BorderBrush="#5D7B6F" BorderThickness="0 5 0 5" 
@@ -180,7 +180,7 @@
                     </Border.RenderTransform>
                     <TextBlock VerticalAlignment="Center" Foreground="White" 
                            FontSize="20" Margin="0 0 20 0" HorizontalAlignment="Right"
-                           Text="C H O   B Ạ N"/>
+                           Text="F O R  Y O U"/>
                 </Border>
             </Grid>
             <Grid x:Name="grCuaMoi">
@@ -212,7 +212,7 @@
                     </Border.RenderTransform>
                     <TextBlock VerticalAlignment="Center" Foreground="White" 
                            FontSize="20" Margin="0 0 20 0" HorizontalAlignment="Right"
-                           Text="T U Y Ệ T   V Ờ I"/>
+                           Text="C H O I C E"/>
                 </Border>
             </Grid>
             <Grid x:Name="grNiemTin">
@@ -243,7 +243,7 @@
                     </Border.RenderTransform>
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right"
                            Foreground="White" FontSize="20" Margin="0 0 20 0"
-                           Text="L Ự A   C H Ọ N"/>
+                           Text="G R E A T"/>
                 </Border>
             </Grid>
             <Border x:Name="borderTilteBox" VerticalAlignment="Top" 
@@ -359,8 +359,8 @@
                     </Grid.ColumnDefinitions>
                     <Grid>
                         <StackPanel>
-                            <Label Foreground="White" Content="Tên tài khoản"/>
-                            <Label Foreground="White" Content="Mật khẩu"/>
+                            <Label Foreground="White" Content="Username"/>
+                            <Label Foreground="White" Content="Password"/>
                         </StackPanel>
                     </Grid>
                     <StackPanel Grid.Column="1">
@@ -408,7 +408,7 @@
                             </Grid>
                         </Border>
                         <Button x:Name="btnDangNhap" Margin="0 30 0 0" Width="150" Height="30" 
-                                Content="Đăng Nhập" Click="btnDangNhap_Click">
+                                Content="Login" Click="btnDangNhap_Click">
                             <Button.Resources>
                                 <BitmapImage x:Key="imgDangNhapTim" UriSource="/HinhAnh/DangNhapTim.png"/>
                                 <BitmapImage x:Key="imgDangNhapDen" UriSource="/HinhAnh/DangNhapDen.png"/>

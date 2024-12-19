@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HinhAnh\AccountsCam.png" />
+    <None Remove="HinhAnh\AccountsTim.png" />
+    <None Remove="HinhAnh\AccountsTrang.png" />
     <None Remove="HinhAnh\AnManHinh.png" />
     <None Remove="HinhAnh\AnManHinhCam.png" />
     <None Remove="HinhAnh\AnManHinhTrang.png" />
@@ -61,11 +64,23 @@
     <None Remove="HinhAnh\NhanVienCam.png" />
     <None Remove="HinhAnh\NhanVienTim.png" />
     <None Remove="HinhAnh\NhanVienTrang.png" />
+    <None Remove="HinhAnh\PersonalInfoCam.png" />
+    <None Remove="HinhAnh\PersonalInfoTim.png" />
+    <None Remove="HinhAnh\PersonalInfoTrang.png" />
     <None Remove="HinhAnh\PhongCam.png" />
     <None Remove="HinhAnh\PhongTim.png" />
     <None Remove="HinhAnh\PhongTo.png" />
     <None Remove="HinhAnh\PhongToCam.png" />
     <None Remove="HinhAnh\PhongTrang.png" />
+    <None Remove="HinhAnh\PrivilegesCam.png" />
+    <None Remove="HinhAnh\PrivilegesTim.png" />
+    <None Remove="HinhAnh\PrivilegesTrang.png" />
+    <None Remove="HinhAnh\ProfilesCam.png" />
+    <None Remove="HinhAnh\ProfilesTim.png" />
+    <None Remove="HinhAnh\ProfilesTrang.png" />
+    <None Remove="HinhAnh\RolesCam.png" />
+    <None Remove="HinhAnh\RolesTim.png" />
+    <None Remove="HinhAnh\RolesTrang.png" />
     <None Remove="HinhAnh\SoHoKhau.png" />
     <None Remove="HinhAnh\SoLuong.png" />
     <None Remove="HinhAnh\Sua.png" />
@@ -90,6 +105,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="HinhAnh\PrivilegesCam.png" />
+    <Resource Include="HinhAnh\PrivilegesTim.png" />
+    <Resource Include="HinhAnh\PrivilegesTrang.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\PersonalInfoTim.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="HinhAnh\AccountsTrang.png" />
     <Resource Include="HinhAnh\AnMatKhau.png" />
     <Resource Include="HinhAnh\DichVuCam.png" />
     <Resource Include="HinhAnh\DichVuTim.png" />
@@ -98,7 +124,17 @@
     <Resource Include="HinhAnh\KhachHangCam.png" />
     <Resource Include="HinhAnh\KhachHangTim.png" />
     <Resource Include="HinhAnh\KhachHangTrang.png" />
+    <Resource Include="HinhAnh\PersonalInfoCam.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="HinhAnh\PersonalInfoTrang.png" />
     <Resource Include="HinhAnh\PhongTim.png" />
+    <Resource Include="HinhAnh\ProfilesCam.png" />
+    <Resource Include="HinhAnh\ProfilesTim.png" />
+    <Resource Include="HinhAnh\ProfilesTrang.png" />
+    <Resource Include="HinhAnh\RolesCam.png" />
+    <Resource Include="HinhAnh\RolesTim.png" />
+    <Resource Include="HinhAnh\RolesTrang.png" />
     <Resource Include="HinhAnh\ThanhToanCam.png" />
     <Resource Include="HinhAnh\ThanhToanTim.png" />
     <Resource Include="HinhAnh\ThanhToanTrang.png" />
@@ -136,6 +172,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="HinhAnh\AccountsCam.png" />
+    <Resource Include="HinhAnh\AccountsTim.png" />
     <Resource Include="HinhAnh\AnManHinh.png" />
     <Resource Include="HinhAnh\AnManHinhTrang.png" />
     <Resource Include="HinhAnh\NhanVienCam.png" />
@@ -199,6 +237,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="UcUserInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="UCPrivilege.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -219,6 +265,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

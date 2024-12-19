@@ -152,6 +152,10 @@
                                                 <BitmapImage x:Key="imgPhongCam" UriSource="/HinhAnh/PhongCam.png"/>
                                                 <BitmapImage x:Key="imgPhongTrang" UriSource="/HinhAnh/PhongTrang.png"/>
                                                 <BitmapImage x:Key="imgPhongTim" UriSource="/HinhAnh/PhongTim.png"/>
+
+                                                <BitmapImage x:Key="imgPersonalInfoCam" UriSource="/HinhAnh/PersonalInfoCam.png"/>
+                                                <BitmapImage x:Key="imgPersonalInfoTrang" UriSource="/HinhAnh/PersonalInfoTrang.png"/>
+                                                <BitmapImage x:Key="imgPersonalInfoTim" UriSource="/HinhAnh/PersonalInfoTim.png"/>
                                                 <Style x:Key="itemPhong" TargetType="ListBoxItem">
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -159,11 +163,11 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="PHÒNG"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Phòng"/>
-                                                                            <Setter Property="Image.Source" Value="{StaticResource imgPhongTrang}"/>
-                                                                            <Setter Property="Tag" Value="{StaticResource imgPhongTim}"/>
-                                                                            <Setter Property="DataContext" Value="{StaticResource imgPhongCam}"/>
+                                                                            <Setter Property="Content" Value="PERSONAL INFO"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Personal info"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgPersonalInfoTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgPersonalInfoTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgPersonalInfoCam}"/>
                                                                         </Style>
                                                                     </ToggleButton.Style>
                                                                 </ToggleButton>
@@ -181,8 +185,8 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="NHÂN VIÊN"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Nhân viên"/>
+                                                                            <Setter Property="Content" Value="USER INFO"/>
+                                                                            <Setter Property="TextBlock.Text" Value="User info"/>
                                                                             <Setter Property="Image.Source" Value="{StaticResource imgNhanVienTrang}"/>
                                                                             <Setter Property="Tag" Value="{StaticResource imgNhanVienTim}"/>
                                                                             <Setter Property="DataContext" Value="{StaticResource imgNhanVienCam}"/>
@@ -193,9 +197,9 @@
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
-                                                <BitmapImage x:Key="imgDichVuCam" UriSource="/HinhAnh/DichVuCam.png"/>
-                                                <BitmapImage x:Key="imgDichVuTrang" UriSource="/HinhAnh/DichVuTrang.png"/>
-                                                <BitmapImage x:Key="imgDichVuTim" UriSource="/HinhAnh/DichVuTim.png"/>
+                                                <BitmapImage x:Key="imgAccountsCam" UriSource="/HinhAnh/AccountsCam.png"/>
+                                                <BitmapImage x:Key="imgAccountsTim" UriSource="/HinhAnh/AccountsTim.png"/>
+                                                <BitmapImage x:Key="imgAccountsTrang" UriSource="/HinhAnh/AccountsTrang.png"/>
                                                 <Style x:Key="itemDichVu" TargetType="ListBoxItem">
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -203,11 +207,11 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="DỊCH VỤ"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Dịch vụ"/>
-                                                                            <Setter Property="Image.Source" Value="{StaticResource imgDichVuTrang}"/>
-                                                                            <Setter Property="Tag" Value="{StaticResource imgDichVuTim}"/>
-                                                                            <Setter Property="DataContext" Value="{StaticResource imgDichVuCam}"/>
+                                                                            <Setter Property="Content" Value="ACCOUNTS"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Accounts"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgAccountsTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgAccountsTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgAccountsCam}"/>
                                                                         </Style>
                                                                     </ToggleButton.Style>
                                                                 </ToggleButton>
@@ -215,9 +219,9 @@
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
-                                                <BitmapImage x:Key="imgThanhToanCam" UriSource="/HinhAnh/ThanhToanCam.png"/>
-                                                <BitmapImage x:Key="imgThanhToanTrang" UriSource="/HinhAnh/ThanhToanTrang.png"/>
-                                                <BitmapImage x:Key="imgThanhToanTim" UriSource="/HinhAnh/ThanhToanTim.png"/>
+                                                <BitmapImage x:Key="imgRolesCam" UriSource="/HinhAnh/RolesCam.png"/>
+                                                <BitmapImage x:Key="imgRolesTrang" UriSource="/HinhAnh/RolesTrang.png"/>
+                                                <BitmapImage x:Key="imgRolesTim" UriSource="/HinhAnh/RolesTim.png"/>
                                                 <Style x:Key="itemThanhToan" TargetType="ListBoxItem">
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -225,11 +229,11 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="THANH TOÁN"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Thanh toán"/>
-                                                                            <Setter Property="Image.Source" Value="{StaticResource imgThanhToanTrang}"/>
-                                                                            <Setter Property="Tag" Value="{StaticResource imgThanhToanTim}"/>
-                                                                            <Setter Property="DataContext" Value="{StaticResource imgThanhToanCam}"/>
+                                                                            <Setter Property="Content" Value="ROLES"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Roles"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgRolesTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgRolesTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgRolesCam}"/>
                                                                         </Style>
                                                                     </ToggleButton.Style>
                                                                 </ToggleButton>
@@ -237,9 +241,9 @@
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
-                                                <BitmapImage x:Key="imgDoanhThuCam" UriSource="/HinhAnh/DoanhThuCam.png"/>
-                                                <BitmapImage x:Key="imgDoanhThuTrang" UriSource="/HinhAnh/DoanhThuTrang.png"/>
-                                                <BitmapImage x:Key="imgDoanhThuTim" UriSource="/HinhAnh/DoanhThuTim.png"/>
+                                                <BitmapImage x:Key="imgPrivilegesCam" UriSource="/HinhAnh/PrivilegesCam.png"/>
+                                                <BitmapImage x:Key="imgPrivilegesTim" UriSource="/HinhAnh/PrivilegesTim.png"/>
+                                                <BitmapImage x:Key="imgPrivilegesTrang" UriSource="/HinhAnh/PrivilegesTrang.png"/>
                                                 <Style x:Key="itemDoanhThu" TargetType="ListBoxItem">
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -247,11 +251,11 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="DOANH THU"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Doanh thu"/>
-                                                                            <Setter Property="Image.Source" Value="{StaticResource imgDoanhThuTrang}"/>
-                                                                            <Setter Property="Tag" Value="{StaticResource imgDoanhThuTim}"/>
-                                                                            <Setter Property="DataContext" Value="{StaticResource imgDoanhThuCam}"/>
+                                                                            <Setter Property="Content" Value="PRIVILEGES"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Privileges"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgPrivilegesTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgPrivilegesTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgPrivilegesCam}"/>
                                                                         </Style>
                                                                     </ToggleButton.Style>
                                                                 </ToggleButton>
@@ -259,9 +263,9 @@
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
-                                                <BitmapImage x:Key="imgKhachHangCam" UriSource="/HinhAnh/KhachHangCam.png"/>
-                                                <BitmapImage x:Key="imgKhachHangTrang" UriSource="/HinhAnh/KhachHangTrang.png"/>
-                                                <BitmapImage x:Key="imgKhachHangTim" UriSource="/HinhAnh/KhachHangTim.png"/>
+                                                <BitmapImage x:Key="imgProfilesCam" UriSource="/HinhAnh/ProfilesCam.png"/>
+                                                <BitmapImage x:Key="imgProfilesTrang" UriSource="/HinhAnh/ProfilesTrang.png"/>
+                                                <BitmapImage x:Key="imgProfilesTim" UriSource="/HinhAnh/ProfilesTim.png"/>
                                                 <Style x:Key="itemKhachHang" TargetType="ListBoxItem">
                                                     <Setter Property="Template">
                                                         <Setter.Value>
@@ -269,11 +273,11 @@
                                                                 <ToggleButton IsChecked="{Binding IsSelected,RelativeSource={RelativeSource TemplatedParent}}">
                                                                     <ToggleButton.Style>
                                                                         <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                                            <Setter Property="Content" Value="KHÁCH HÀNG"/>
-                                                                            <Setter Property="TextBlock.Text" Value="Khách hàng"/>
-                                                                            <Setter Property="Image.Source" Value="{StaticResource imgKhachHangTrang}"/>
-                                                                            <Setter Property="Tag" Value="{StaticResource imgKhachHangTim}"/>
-                                                                            <Setter Property="DataContext" Value="{StaticResource imgKhachHangCam}"/>
+                                                                            <Setter Property="Content" Value="PROFILES"/>
+                                                                            <Setter Property="TextBlock.Text" Value="Profiles"/>
+                                                                            <Setter Property="Image.Source" Value="{StaticResource imgProfilesTrang}"/>
+                                                                            <Setter Property="Tag" Value="{StaticResource imgProfilesTim}"/>
+                                                                            <Setter Property="DataContext" Value="{StaticResource imgProfilesCam}"/>
                                                                         </Style>
                                                                     </ToggleButton.Style>
                                                                 </ToggleButton>
@@ -301,8 +305,8 @@
                                             </ToggleButton.Resources>
                                             <ToggleButton.Style>
                                                 <Style TargetType="ToggleButton" BasedOn="{StaticResource tbtnMenu}">
-                                                    <Setter Property="Content" Value="ĐĂNG XUẤT"/>
-                                                    <Setter Property="TextBlock.Text" Value="Đăng xuất"/>
+                                                    <Setter Property="Content" Value="LOGOUT"/>
+                                                    <Setter Property="TextBlock.Text" Value="Logout"/>
                                                     <Setter Property="Image.Source" Value="{StaticResource imgDangXuatTrang}"/>
                                                     <Setter Property="Tag" Value="{StaticResource imgDangXuatTim}"/>
                                                     <Setter Property="DataContext" Value="{StaticResource imgDangXuatCam}"/>

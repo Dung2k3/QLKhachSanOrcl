@@ -19,12 +19,7 @@ namespace QuanLiKhachSan
     /// </summary>
     public partial class fUngDung2 : Window
     {
-        //private FPhong ucPhong = new FPhong();
-        //private UcNhanVien ucNhanVien = new UcNhanVien();
-        //UcDichVu ucDichVu = new UcDichVu();
-        //FKhachHang ucKhachHang = new FKhachHang();
-        //UcThanhToan ucThanhToan = new UcThanhToan();
-        //UcDoanhThu ucDoanhThu = new UcDoanhThu();
+        private UcUserInfo ucUserInfo = new UcUserInfo();
         private UcNhanVien2 ucNhanVien = new UcNhanVien2();
         private UcProfile ucProfile = new UcProfile();
         private FRoleManagement ucRole = new FRoleManagement();
@@ -90,22 +85,23 @@ namespace QuanLiKhachSan
         private void itemNhanVien_Selected(object sender, RoutedEventArgs e)
         {
             grManHinh.Children.Clear();
-            ucNhanVien.LayDanhSach();
-            grManHinh.Children.Add(ucNhanVien);
+            ucUserInfo.LayDanhSach();
+            grManHinh.Children.Add(ucUserInfo);
         }
 
         private void itemDichVu_Selected(object sender, RoutedEventArgs e)
         {
+
             grManHinh.Children.Clear();
-            ucProfile.LayDanhSach();
-            grManHinh.Children.Add(ucProfile);
+            ucNhanVien.LayDanhSach();
+            grManHinh.Children.Add(ucNhanVien);
         }
 
         private void itemThanhToan_Selected(object sender, RoutedEventArgs e)
         {
-            //grManHinh.Children.Clear();
-            //ucThanhToan.LayDanhSach();
-            //grManHinh.Children.Add(ucThanhToan);
+            grManHinh.Children.Clear();
+            ucRole.LoadData();
+            grManHinh.Children.Add(ucRole);
         }
 
         private void itemDoanhThu_Selected(object sender, RoutedEventArgs e)
@@ -124,9 +120,10 @@ namespace QuanLiKhachSan
 
         private void itemKhachHang_Selected(object sender, RoutedEventArgs e)
         {
+
             grManHinh.Children.Clear();
-            ucRole.LoadData();
-            grManHinh.Children.Add(ucRole);
+            ucProfile.LayDanhSach();
+            grManHinh.Children.Add(ucProfile);
         }
     }
 }
