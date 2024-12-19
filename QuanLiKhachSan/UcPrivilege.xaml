@@ -32,7 +32,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="5">
-                <Label Content="Loại Quyền"/>
+                <Label Content="Privilege Type"/>
                 <ComboBox x:Name="cbPrivilegeType" 
                               Style="{StaticResource cbLuaChon}" 
                               Width="248"
@@ -43,7 +43,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2" Margin="5">
-                <Label Content="Thao Tác"/>
+                <Label Content="Privilege Action"/>
                 <ComboBox x:Name="cbPrivilegeAction" 
                               Style="{StaticResource cbLuaChon}" 
                               Width="242" SelectionChanged="cbPrivilegeAction_SelectionChanged">
@@ -62,7 +62,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="5">
-                <Label Content="Quyền Hệ Thống"/>
+                <Label Content="System Privileges"/>
                 <ComboBox x:Name="cbSystemPrivileges" 
                               Style="{StaticResource cbLuaChon}" 
                               Width="180">
@@ -86,7 +86,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="5">
-                <Label Content="Quyền Đối Tượng (Object)"/>
+                <Label Content="Object Privileges"/>
                 <ComboBox x:Name="cbObjectPrivileges" 
                               Style="{StaticResource cbLuaChon}" 
                               Width="180" SelectionChanged="cbObjectPrivileges_SelectionChanged">
@@ -98,7 +98,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2" Margin="5">
-                <Label Content="Đối Tượng Cụ Thể"/>
+                <Label Content="Specific Object"/>
                 <TextBox x:Name="txtSpecificObject" 
                              Style="{StaticResource tbxNoiDung}" 
                              Width="180" 
@@ -115,28 +115,28 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10" Width="488">
             <Button x:Name="btnGrantPrivilege" 
-                        Content="Gán Quyền" 
+                        Content="GRANT/REVOKE" 
                         Style="{StaticResource btnThem}" 
                         Click="btnGrantPrivilege_Click"
                         Margin="5" Width="145"/>
             <CheckBox x:Name="chkAllowReGrantPrivilege" 
-                          Content="Cho phép cấp lại quyền (Admin with System)" 
+                          Content="Grantable" 
                           VerticalAlignment="Center" 
                           Margin="10,0"/>
         </StackPanel>
 
         <TabControl Grid.Row="3" Margin="10">
-            <TabItem Header="Quản Lý Quyền">
+            <TabItem x:Name="tabPrivilegeManagement" Header="Privilege Management" Style="{StaticResource tab}" Width="130">
                 <DataGrid x:Name="dtgPrivilegeManagement" 
                               AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="User/Role" Binding="{Binding USERNAME}"/>
-                        <DataGridTextColumn Header="PRIVILEGETYPE" Binding="{Binding PRIVILEGETYPE}"/>
-                        <DataGridTextColumn Header="SPECIFICPRIVILEGE" Binding="{Binding SPECIFICPRIVILEGE}"/>
-                        <DataGridTextColumn Header="OBJECT" Binding="{Binding OBJECT}"/>
-                        <DataGridTextColumn Header="Cột" Binding="{Binding COLUMN_NAME}"/>
-                        <DataGridTextColumn Header="GRANTABLE" Binding="{Binding GRANTABLE}"/>
-                        <DataGridTemplateColumn Header="Thao Tác">
+                        <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
+                        <DataGridTextColumn Header="Privilege" Binding="{Binding SPECIFICPRIVILEGE}"/>
+                        <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                        <DataGridTextColumn Header="Column" Binding="{Binding COLUMN_NAME}"/>
+                        <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
+                        <DataGridTemplateColumn Header="Action">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="Thu Hồi" 
@@ -149,38 +149,16 @@
                 </DataGrid>
             </TabItem>
 
-            <TabItem Header="Quản Lý Role">
+            <TabItem x:Name="tabRoleManagement" Header="Personal Privileges" Width="130" Style="{StaticResource tab}">
                 <DataGrid x:Name="dtgRoleManagement" 
                               AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Role" Binding="{Binding ROLENAME}"/>
-                        <DataGridTextColumn Header="Quyền" Binding="{Binding PRIVILEGE}"/>
-                        <DataGridTextColumn Header="Users" Binding="{Binding ASSIGNEDUSERS}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
-
-            <TabItem Header="Quản Lý Profile">
-                <DataGrid x:Name="dtgProfileManagement" 
-                              AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Profile" Binding="{Binding PROFILENAME}"/>
-                        <DataGridTextColumn Header="Tài Nguyên" Binding="{Binding RESOURCES}"/>
-                        <DataGridTextColumn Header="Users" Binding="{Binding ASSIGNEDUSERS}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
-
-            <TabItem Header="Thông Tin User">
-                <DataGrid x:Name="dtgUserInformation" 
-                              AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Username" Binding="{Binding USERNAME}"/>
-                        <DataGridTextColumn Header="Trạng Thái" Binding="{Binding ACCOUNTSTATUS}"/>
-                        <DataGridTextColumn Header="Ngày Tạo" Binding="{Binding CREATEDDATE}"/>
-                        <DataGridTextColumn Header="Tablespace" Binding="{Binding TABLESPACES}"/>
-                        <DataGridTextColumn Header="Profile" Binding="{Binding PROFILE}"/>
-                        <DataGridTextColumn Header="Roles" Binding="{Binding ROLES}"/>
+                        <DataGridTextColumn Header="User/Role" Binding="{Binding USERNAME}"/>
+                        <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
+                        <DataGridTextColumn Header="Privilege" Binding="{Binding SPECIFICPRIVILEGE}"/>
+                        <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                        <DataGridTextColumn Header="Column" Binding="{Binding COLUMN_NAME}"/>
+                        <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>

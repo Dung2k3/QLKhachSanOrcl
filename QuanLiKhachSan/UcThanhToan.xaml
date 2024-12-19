@@ -100,7 +100,7 @@
         </Grid>
         <DataGrid x:Name="dtgDanhSach" Grid.Row="4">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Xử lí">
+                <DataGridTemplateColumn Header="Action">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

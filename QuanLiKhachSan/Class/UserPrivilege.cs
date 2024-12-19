@@ -30,6 +30,8 @@ namespace QuanLiKhachSan.Class
         public bool SelectProfile { get; set; } = false;
         public bool SelectRole{ get; set; } = false;
         public bool SelectPrivs { get; set; } = false;
+        public bool SelectUserDetail{ get; set; } = false;
+
 
     }
 }

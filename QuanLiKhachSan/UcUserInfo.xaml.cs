@@ -16,7 +16,6 @@ namespace QuanLiKhachSan
         public UcUserInfo()
         {
             InitializeComponent();
-            LayDanhSach();
         }
 
         public void LayDanhSach()

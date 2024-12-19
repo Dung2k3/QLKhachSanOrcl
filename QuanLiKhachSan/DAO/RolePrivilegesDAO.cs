@@ -17,9 +17,10 @@ namespace QuanLiKhachSan.DAO
         {
             string query = @"
             SELECT COUNT(*) 
-            FROM dba_sys_privs 
+            FROM sys.DBA_PRIVS 
             WHERE grantee = :username 
-            AND privilege = :privilege";
+            AND privilege = :privilege
+            AND PRIVILEGE_TYPE = 'System Privileges'";
 
             OracleConnection conn = DbConnectionOrcl.conn;
             try
@@ -52,11 +53,11 @@ namespace QuanLiKhachSan.DAO
 
             if (!string.IsNullOrEmpty(column))
             {
-                query = $"SELECT COUNT(*) FROM dba_col_privs WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}' AND column_name = '{column}'";
+                query = $"SELECT COUNT(*) FROM sys.DBA_PRIVS WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}' AND column_name = '{column}'";
             }
             else
             {
-                query = $"SELECT COUNT(*) FROM dba_tab_privs WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}'";
+                query = $"SELECT COUNT(*) FROM sys.DBA_PRIVS WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}'";
             }
 
             OracleConnection conn = DbConnectionOrcl.conn;
@@ -110,59 +111,11 @@ namespace QuanLiKhachSan.DAO
                 table_name AS Object,
                 column_name AS Column_name,
                 grantable
-            FROM (
-                SELECT 
-                    grantee, 
-                    'System Privileges' as privilege_type,
-                    privilege,
-                    NULL as table_name,
-                    NULL as column_name,
-                    admin_option as grantable
-                FROM dba_sys_privs
-                UNION ALL
-                SELECT 
-                    grantee,
-                    'Object Privileges' as privilege_type,
-                    privilege,
-                    table_name,
-                    NULL as column_name,
-                    grantable
-                FROM dba_tab_privs
-                UNION ALL
-                SELECT 
-                    grantee,
-                    'Column Privileges' as privilege_type,
-                    privilege,
-                    table_name,
-                    column_name,
-                    grantable
-                FROM dba_col_privs
+            FROM sys.DBA_PRIVS ";
 
-            )";
-
-            return ExecuteQuery(query);
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
-        private DataTable ExecuteQuery(string query)
-        {
-            DataTable dt = new();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new(query, conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                conn.Close();
-            }
-            return dt;
-        }
         public DataTable GetRoles()
         {
             string query = @"
@@ -181,27 +134,7 @@ namespace QuanLiKhachSan.DAO
 
             return DbConnectionOrcl.ExecuteTable(query);
         }
-        private void ExecuteNonQuery(string sql, string successMessage = null)
-        {
-            OracleConnection conn = DbConnectionOrcl.conn;
-            OracleCommand cmd = new(sql, conn);
-            try
-            {
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                if (!string.IsNullOrEmpty(successMessage))
-                    MessageBox.Show(successMessage, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                conn.Close();
-            }
-        }
-        // Methods for granting and revoking privileges
+
         public void GrantSystemPrivilege(string username, string privilege, bool withGrantOption = false)
         {
             if (IsSystemPrivilegeRestricted(privilege))
@@ -215,13 +148,8 @@ namespace QuanLiKhachSan.DAO
 
             string grantOption = withGrantOption ? " WITH ADMIN OPTION" : "";
             string query = $"GRANT {privilege} TO {username}{grantOption}";
-            //MessageBox.Show(query);
-            try { ExecuteNonQuery(query); }
-            catch (Exception ex) {
-                return;
-
-            }
-            MessageBox.Show("Privilege operation completed successfully.");
+            if(DbConnectionOrcl.ExecuteNonQuery(query))
+                MessageBox.Show("Privilege operation completed successfully.");
 
         }
 
@@ -236,13 +164,8 @@ namespace QuanLiKhachSan.DAO
                 }
             }
             string query = $"REVOKE {privilege} FROM {username}";
-            try { ExecuteNonQuery(query); }
-            catch (Exception ex)
-            {
-                return;
-
-            }
-            MessageBox.Show("Privilege operation completed successfully.");
+            if (DbConnectionOrcl.ExecuteNonQuery(query))
+                MessageBox.Show("Privilege operation completed successfully.");
         }
 
         public void GrantObjectPrivilege(string username, string objectName, string privilege, bool withGrantOption, string column = null)
@@ -260,13 +183,9 @@ namespace QuanLiKhachSan.DAO
             string grantOption = withGrantOption ? " WITH GRANT OPTION" : "";
             string columnSpec = !string.IsNullOrEmpty(column) ? $"({column})" : "";
             string query = $"GRANT {privilege}{columnSpec} ON {objectName} TO {username}{grantOption}";
-            try { ExecuteNonQuery(query); }
-            catch (Exception ex)
-            {
-                return;
-
-            }
-            MessageBox.Show("Privilege operation completed successfully.");
+            MessageBox.Show(query);
+            if (DbConnectionOrcl.ExecuteNonQuery(query))
+                MessageBox.Show("Privilege operation completed successfully.");
         }
 
         public void RevokeObjectPrivilege(string username, string objectName, string privilege, string column = null)
@@ -283,57 +202,18 @@ namespace QuanLiKhachSan.DAO
 
             string columnSpec = !string.IsNullOrEmpty(column) ? $"({column})" : "";
             string query = $"REVOKE {privilege}{columnSpec} ON {objectName} FROM {username}";
-            try { ExecuteNonQuery(query); }
-            catch (Exception ex)
-            {
-                return;
-
-            }
-            MessageBox.Show("Privilege operation completed successfully.");
+            if (DbConnectionOrcl.ExecuteNonQuery(query))
+                MessageBox.Show("Privilege operation completed successfully.");
         }
-
-        /* Other methods for additional functionality
-        public DataTable GetProfiles()
-        {
-            string query = @"
-               SELECT 
-                    p.profile AS ProfileName, 
-                    p.resource_name AS Resources,
-                    LISTAGG(u.username, ', ') WITHIN GROUP (ORDER BY u.username) AS AssignedUsers
-                FROM dba_profiles p
-                JOIN dba_users u ON u.profile = p.profile
-                GROUP BY p.profile, p.resource_name";
-
-            return DbConnectionOrcl.ExecuteTable(query);
-        }
-
-        public DataTable GetUserInformation()
-        {
-            string query = @"
-                SELECT 
-                    username AS Username,
-                    account_status AS AccountStatus,
-                    created AS CreatedDate,
-                    default_tablespace || ', ' || temporary_tablespace AS Tablespaces,
-                    profile AS Profile,
-                    LISTAGG(granted_role, ', ') WITHIN GROUP (ORDER BY granted_role) AS Roles
-                FROM dba_users
-                LEFT JOIN dba_role_privs ON dba_users.username = dba_role_privs.grantee
-                GROUP BY 
-                    username, account_status, created, 
-                    default_tablespace, temporary_tablespace, profile";
-
-            return DbConnectionOrcl.ExecuteTable(query);
-        }
-        */
         // Methods to populate ComboBoxes
         public string[] GetSourceUserRoles()
         {
             // Retrieve users and roles for source selection
             string query = @"
-                SELECT username FROM sys.user_profiles
+                SELECT username FROM sys.user_profiles                
                 UNION
-                SELECT role FROM sys.list_roles";
+                SELECT role FROM sys.list_roles
+                ORDER BY username";
 
             DataTable dt = DbConnectionOrcl.ExecuteTable(query);
             return dt.AsEnumerable()
@@ -351,12 +231,16 @@ namespace QuanLiKhachSan.DAO
         {
             string sql = @"
                 SELECT PRIVILEGE, 'System Privileges' AS PrivilegeType, 
-                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                     null AS Object, ADMIN_OPTION AS GRANTABLE, NULL AS COLUMN_NAME
                 FROM USER_SYS_PRIVS
                 UNION
                 SELECT PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
-                     TABLE_NAME AS Object, GRANTABLE
-                FROM USER_TAB_PRIVS ";
+                     TABLE_NAME AS Object, GRANTABLE, NULL AS COLUMN_NAME
+                FROM USER_TAB_PRIVS 
+                UNION
+                SELECT PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
+                     TABLE_NAME AS Object, GRANTABLE, COLUMN_NAME
+                FROM USER_COL_PRIVS ";
 
             return DbConnectionOrcl.ExecuteTable(sql);
         }
@@ -365,22 +249,26 @@ namespace QuanLiKhachSan.DAO
         {
             string sql = @"
                 SELECT ROLE AS USERNAME, PRIVILEGE AS SpecificPrivilege, 'System Privileges' AS PrivilegeType, 
-                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                     null AS Object, ADMIN_OPTION AS GRANTABLE, NULL AS COLUMN_NAME
                 FROM ROLE_SYS_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
                 UNION
                 SELECT ROLE AS USERNAME, PRIVILEGE  AS SpecificPrivilege, 'Object Privileges' AS PrivilegeType, 
-                     TABLE_NAME AS Object, GRANTABLE
+                     TABLE_NAME AS Object, GRANTABLE, COLUMN_NAME
                 FROM ROLE_TAB_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)  
                 UNION
                 SELECT USERNAME,  PRIVILEGE  AS SpecificPrivilege, 'System Privileges' AS PrivilegeType, 
-                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                     null AS Object, ADMIN_OPTION AS GRANTABLE, NULL AS COLUMN_NAME
                 FROM USER_SYS_PRIVS
                 UNION
                 SELECT GRANTEE AS USERNAME, PRIVILEGE  AS SpecificPrivilege, 'Object Privileges' AS PrivilegeType, 
-                     TABLE_NAME AS Object, GRANTABLE
-                FROM USER_TAB_PRIVS ";
+                     TABLE_NAME AS Object, GRANTABLE, NULL AS COLUMN_NAME
+                FROM USER_TAB_PRIVS 
+                UNION
+                SELECT GRANTEE AS USERNAME, PRIVILEGE  AS SpecificPrivilege, 'Object Privileges' AS PrivilegeType, 
+                     TABLE_NAME AS Object, GRANTABLE, COLUMN_NAME
+                FROM USER_COL_PRIVS ";
 
             return DbConnectionOrcl.ExecuteTable(sql);
         }
@@ -389,12 +277,12 @@ namespace QuanLiKhachSan.DAO
         {
             string sql = @"
                 SELECT ROLE, PRIVILEGE, 'System Privileges' AS PrivilegeType, 
-                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                     null AS Object, ADMIN_OPTION AS GRANTABLE, NULL AS COLUMN_NAME
                 FROM ROLE_SYS_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
                 UNION
                 SELECT ROLE, PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
-                     TABLE_NAME AS Object, GRANTABLE
+                     TABLE_NAME AS Object, GRANTABLE, COLUMN_NAME
                 FROM ROLE_TAB_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)  ";
 
@@ -405,13 +293,13 @@ namespace QuanLiKhachSan.DAO
         {
             string sql = @"
                 SELECT ROLE, PRIVILEGE, 'System Privileges' AS PrivilegeType, 
-                     null AS Object, ADMIN_OPTION AS GRANTABLE
+                     null AS Object, ADMIN_OPTION AS GRANTABLE, NULL AS COLUMN_NAME
                 FROM ROLE_SYS_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS)
                     AND ROLE = '" + role + @"'
                 UNION
                 SELECT ROLE, PRIVILEGE, 'Object Privileges' AS PrivilegeType, 
-                     TABLE_NAME AS Object, GRANTABLE
+                     TABLE_NAME AS Object, GRANTABLE, COLUMN_NAME
                 FROM ROLE_TAB_PRIVS
                 WHERE ROLE IN (SELECT GRANTED_ROLE FROM USER_ROLE_PRIVS) 
                 AND ROLE = '" + role + "' ";
@@ -444,7 +332,8 @@ namespace QuanLiKhachSan.DAO
                     SELECT 14, 'SELECT ON DBA_TS_QUOTAS', 'TABLE_NAME' FROM dual UNION ALL
                     SELECT 15, 'SELECT ON DBA_PROFILES', 'TABLE_NAME' FROM dual UNION ALL
                     SELECT 16, 'SELECT ON DBA_ROLES', 'TABLE_NAME' FROM dual UNION ALL
-                    SELECT 17, 'SELECT ON DBA_PRIVS', 'TABLE_NAME' FROM dual 
+                    SELECT 17, 'SELECT ON DBA_PRIVS', 'TABLE_NAME' FROM dual UNION ALL
+                    SELECT 18, 'SELECT ON USER_DETAILS', 'TABLE_NAME' FROM dual 
             ) privilege_list
             LEFT JOIN (   
                 SELECT PRIVILEGE
@@ -482,7 +371,8 @@ namespace QuanLiKhachSan.DAO
                 SelectQuota = listHasPrivilege[13].Equals("TRUE"),
                 SelectProfile = listHasPrivilege[14].Equals("TRUE"),
                 SelectRole = listHasPrivilege[15].Equals("TRUE"),
-                SelectPrivs= listHasPrivilege[16].Equals("TRUE")
+                SelectPrivs= listHasPrivilege[16].Equals("TRUE"),
+                SelectUserDetail = listHasPrivilege[17].Equals("TRUE")
             };
         }
     }

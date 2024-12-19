@@ -38,6 +38,8 @@ namespace QuanLiKhachSan
                 itemKhachHang.IsEnabled = false;
             if (!up.CreateRole && !up.AlterAnyRole && !up.DropAnyRole && !up.GrantAnyRole && !up.SelectRole)
                 itemThanhToan.IsEnabled = false;
+            if (!up.SelectUserDetail)
+                itemNhanVien.IsEnabled = false;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
