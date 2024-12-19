@@ -59,8 +59,8 @@ namespace QuanLiKhachSan
         {
             taiKhoan.TenTaiKhoan = "adminuser";
             taiKhoan.MatKhau = "admin";
-            taiKhoan.TenTaiKhoan = "lbacsys";
-            taiKhoan.MatKhau = "lbacsys";
+            //taiKhoan.TenTaiKhoan = "lbacsys";
+            //taiKhoan.MatKhau = "lbacsys";
             bool isSuccess = accountDao.Login(taiKhoan.TenTaiKhoan, taiKhoan.MatKhau);
             if(isSuccess)
             {
