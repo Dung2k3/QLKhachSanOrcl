@@ -72,52 +72,49 @@ namespace QuanLiKhachSan
                 string targetUserRole = cbTargetUserRole.SelectedValue?.ToString();
                 string privilegeType = (cbPrivilegeType.SelectedItem as ComboBoxItem)?.Content?.ToString();
                 string privilegeAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
-                //MessageBox.Show(targetUserRole + " " + privilegeAction +  ' ' + privilegeType);
-                //if (string.IsNullOrEmpty(targetUserRole) ||
-                //    string.IsNullOrEmpty(privilegeType) ||
-                //    string.IsNullOrEmpty(privilegeAction))
-                //{
-                //    MessageBox.Show("Please select all required fields.");
-                //    return;
-                //}
+
                 if (privilegeType.Contains("System", StringComparison.OrdinalIgnoreCase))
                 {
                     string systemPrivilege = (cbSystemPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
-                    //MessageBox.Show(privilegeType + " " + privilegeAction + " " + systemPrivilege);
 
                     if (privilegeAction.Contains("Grant", StringComparison.OrdinalIgnoreCase))
                     {
-
                         rolePrivilegesDao.GrantSystemPrivilege(cbTargetUserRole.Text, systemPrivilege,
-                        chkAllowReGrantPrivilege.IsChecked == true);
-
+                            chkAllowReGrantPrivilege.IsChecked == true);
                     }
-                    else // Revoke
+                    else
                     {
                         rolePrivilegesDao.RevokeSystemPrivilege(cbTargetUserRole.Text, systemPrivilege);
                     }
                 }
-                // For Object Privileges
                 else if (privilegeType.Contains("Object", StringComparison.OrdinalIgnoreCase))
                 {
                     string objectPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
                     string specificObject = txtSpecificObject.Text;
-                    MessageBox.Show(objectPrivilege + " " + specificObject);
+                    string columnName = txtColumnName.Text.Trim();
 
                     if (privilegeAction.Contains("Grant", StringComparison.OrdinalIgnoreCase))
                     {
-                        rolePrivilegesDao.GrantObjectPrivilege(cbTargetUserRole.Text, specificObject,
-                            objectPrivilege, chkAllowReGrantPrivilege.IsChecked == true);
+                        rolePrivilegesDao.GrantObjectPrivilege(
+                            cbTargetUserRole.Text,
+                            specificObject,
+                            objectPrivilege,
+                            chkAllowReGrantPrivilege.IsChecked == true,
+                            string.IsNullOrEmpty(columnName) ? null : columnName
+                        );
                     }
-                    else // Revoke
+                    else
                     {
-                        rolePrivilegesDao.RevokeObjectPrivilege(cbTargetUserRole.Text, specificObject, objectPrivilege);
+                        rolePrivilegesDao.RevokeObjectPrivilege(
+                            cbTargetUserRole.Text,
+                            specificObject,
+                            objectPrivilege,
+                            string.IsNullOrEmpty(columnName) ? null : columnName
+                        );
                     }
                 }
 
-                // Refresh DataGrids after operation
                 PopulateRolePrivilegesTabs();
-                MessageBox.Show("Privilege operation completed successfully.");
             }
             catch (Exception ex)
             {
@@ -125,7 +122,6 @@ namespace QuanLiKhachSan
             }
         }
 
-        // Event handler for Revoking Individual Privileges
         private void btnRevokePrivilege_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -139,18 +135,25 @@ namespace QuanLiKhachSan
                     string specificPrivilege = selectedPrivilege["SpecificPrivilege"].ToString();
                     string obj = selectedPrivilege["Object"].ToString();
 
+                    string objectName = obj;
+                    string columnName = null;
+                    if (obj.Contains("."))
+                    {
+                        var parts = obj.Split('.');
+                        objectName = parts[0];
+                        columnName = parts[1];
+                    }
+
                     if (privilegeType == "System Privileges")
                     {
                         rolePrivilegesDao.RevokeSystemPrivilege(username, specificPrivilege);
                     }
-                    else // Object Privileges
+                    else // Object or Column Privileges
                     {
-                        rolePrivilegesDao.RevokeObjectPrivilege(username, obj, specificPrivilege);
+                        rolePrivilegesDao.RevokeObjectPrivilege(username, objectName, specificPrivilege, columnName);
                     }
 
-                    // Refresh DataGrids
                     PopulateRolePrivilegesTabs();
-                    MessageBox.Show("Privilege revoked successfully.");
                 }
             }
             catch (Exception ex)
@@ -158,19 +161,105 @@ namespace QuanLiKhachSan
                 MessageBox.Show($"Error revoking privilege: {ex.Message}");
             }
         }
-
-        // Additional helper methods for Role & Privileges tab
         private void InitializeRolePrivilegesTab()
         {
-            // Populate combo boxes with initial data
             cbPrivilegeType.SelectedIndex = 0;
             cbPrivilegeAction.SelectedIndex = 0;
             var userRoles = rolePrivilegesDao.GetTargetUserRoles().ToList();
-            userRoles.Insert(0, "All"); // Add "All" as the first item
+            userRoles.Insert(0, "All");
             cbTargetUserRole.ItemsSource = userRoles;
-            cbTargetUserRole.SelectedIndex = 0; // Default to "All"
-            // Initial population of DataGrids
+            cbTargetUserRole.SelectedIndex = 0;
             PopulateRolePrivilegesTabs();
+        }
+        private void cbPrivilegeType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbSystemPrivileges == null || cbObjectPrivileges == null ||
+                txtSpecificObject == null || txtColumnName == null) return;
+
+            string selectedType = (cbPrivilegeType.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if (selectedType == "System Privileges")
+            {
+                cbSystemPrivileges.IsEnabled = true;
+                cbSystemPrivileges.Background = Brushes.White;
+
+                cbObjectPrivileges.IsEnabled = false;
+                cbObjectPrivileges.Background = Brushes.Gray;
+                txtSpecificObject.IsEnabled = false;
+                txtSpecificObject.Visibility = Visibility.Hidden;
+                txtColumnName.IsEnabled = false;
+                txtColumnName.Visibility = Visibility.Collapsed;
+
+                cbObjectPrivileges.SelectedIndex = -1;
+                txtSpecificObject.Text = "";
+                txtColumnName.Text = "";
+            }
+            else
+            {
+                cbSystemPrivileges.IsEnabled = false;
+                cbSystemPrivileges.Background = Brushes.Gray;
+
+                cbObjectPrivileges.IsEnabled = true;
+                cbObjectPrivileges.Background = Brushes.White;
+                txtSpecificObject.IsEnabled = true;
+                txtSpecificObject.Visibility = Visibility.Visible;
+
+                // Only show column name if INSERT or UPDATE is selected
+                var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+                if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+                {
+                    txtColumnName.IsEnabled = true;
+                    txtColumnName.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    txtColumnName.IsEnabled = false;
+                    txtColumnName.Visibility = Visibility.Collapsed;
+                    txtColumnName.Text = "";
+                }
+
+                cbSystemPrivileges.SelectedIndex = -1;
+            }
+        }
+        private void cbObjectPrivileges_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (txtColumnName == null) return;
+
+            var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+            {
+                txtColumnName.IsEnabled = true;
+                txtColumnName.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtColumnName.IsEnabled = false;
+                txtColumnName.Visibility = Visibility.Collapsed;
+                txtColumnName.Text = ""; // Clear the text when hidden
+            }
+        }
+        private void cbPrivilegeAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (txtColumnName == null || cbObjectPrivileges == null) return;
+
+            var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if ((selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE") && selectedAction == "Grant")
+            {
+                txtColumnName.IsEnabled = true;
+                txtColumnName.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtColumnName.IsEnabled = false;
+                txtColumnName.Visibility = Visibility.Collapsed;
+                txtColumnName.Text = "";
+            }
         }
         private void cbTargetUserRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -178,40 +267,37 @@ namespace QuanLiKhachSan
 
             if (string.IsNullOrEmpty(selectedUserRole) || selectedUserRole.Equals("All"))
             {
-                // If no user/role selected, show all data
                 PopulateRolePrivilegesTabs();
                 return;
             }
             try
             {
-                // Filter Privilege Management DataGrid
                 DataTable privilegesTable = rolePrivilegesDao.GetPrivileges();
                 DataView privilegesView = privilegesTable.DefaultView;
                 privilegesView.RowFilter = $"USERNAME LIKE '{selectedUserRole}'";
                 dtgPrivilegeManagement.ItemsSource = privilegesView;
 
-                // Filter Role Management DataGrid
-                //DataTable rolesTable = rolePrivilegesDao.GetRoles();
-                //DataView rolesView = rolesTable.DefaultView;
-                //rolesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                //dtgRoleManagement.ItemsSource = rolesView;
+                DataTable rolesTable = rolePrivilegesDao.GetRoles();
+                DataView rolesView = rolesTable.DefaultView;
+                rolesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
+                dtgRoleManagement.ItemsSource = rolesView;
 
-                // Filter User Information DataGrid
-                //DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
-                //DataView userInfoView = userInfoTable.DefaultView;
-                //userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
-                //dtgUserInformation.ItemsSource = userInfoView;
+                DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
+                DataView userInfoView = userInfoTable.DefaultView;
+                userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
+                dtgUserInformation.ItemsSource = userInfoView;
 
-                // Profile Management can be filtered similarly
-                //DataTable profilesTable = rolePrivilegesDao.GetProfiles();
-                //DataView profilesView = profilesTable.DefaultView;
-                //profilesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                //dtgProfileManagement.ItemsSource = profilesView;
+                DataTable profilesTable = rolePrivilegesDao.GetProfiles();
+                DataView profilesView = profilesTable.DefaultView;
+                profilesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
+                dtgProfileManagement.ItemsSource = profilesView;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error filtering Role & Privileges tabs: {ex.Message}");
             }
         }
+
+
     }
 }

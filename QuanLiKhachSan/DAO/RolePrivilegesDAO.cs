@@ -13,22 +13,136 @@ namespace QuanLiKhachSan.DAO
     public class RolePrivilegesDAO
     {
         private DbConnectionOrcl dbConnection = new DbConnectionOrcl();
+        private bool DoesSystemPrivilegeExist(string username, string privilege)
+        {
+            string query = @"
+            SELECT COUNT(*) 
+            FROM dba_sys_privs 
+            WHERE grantee = :username 
+            AND privilege = :privilege";
+
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.Parameters.Add(":username", OracleDbType.Varchar2).Value = username;
+                    cmd.Parameters.Add(":privilege", OracleDbType.Varchar2).Value = privilege;
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error checking system privilege: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        // Helper method to check if object privilege exists
+        private bool DoesObjectPrivilegeExist(string username, string objectName, string privilege, string column = null)
+        {
+            string query;
+
+
+            if (!string.IsNullOrEmpty(column))
+            {
+                query = $"SELECT COUNT(*) FROM dba_col_privs WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}' AND column_name = '{column}'";
+            }
+            else
+            {
+                query = $"SELECT COUNT(*) FROM dba_tab_privs WHERE grantee = '{username}' AND table_name = '{objectName}' AND privilege = '{privilege}'";
+            }
+
+            OracleConnection conn = DbConnectionOrcl.conn;
+            try
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.Parameters.Add(":username", OracleDbType.Varchar2).Value = username;
+                    cmd.Parameters.Add(":objectName", OracleDbType.Varchar2).Value = objectName;
+                    cmd.Parameters.Add(":privilege", OracleDbType.Varchar2).Value = privilege;
+                    if (!string.IsNullOrEmpty(column))
+                    {
+                        cmd.Parameters.Add(":column", OracleDbType.Varchar2).Value = column;
+                    }
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error checking object privilege: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        private bool IsSystemPrivilegeRestricted(string privilege)
+        {
+            string[] restrictedPrivileges = new[]
+            {
+            "CREATE PROFILE", "ALTER PROFILE", "DROP PROFILE",
+            "CREATE ROLE", "ALTER ANY ROLE", "DROP ANY ROLE", "GRANT ANY ROLE",
+            "CREATE SESSION", "SELECT ANY TABLE",
+            "CREATE USER", "ALTER USER", "DROP USER"
+        };
+
+            return restrictedPrivileges.Contains(privilege);
+        }
 
         public DataTable GetPrivileges()
         {
             string query = @"
+            SELECT 
+                grantee AS USERNAME, 
+                privilege_type AS PrivilegeType,
+                privilege AS SpecificPrivilege,
+                table_name AS Object,
+                column_name AS Column_name,
+                grantable
+            FROM (
                 SELECT 
-                    grantee AS Username, 
-                    CASE 
-                        WHEN table_name IS NULL THEN 'System Privileges'
-                        ELSE 'Object Privileges'
-                    END AS PrivilegeType,
-                    privilege AS SpecificPrivilege,
-                    table_name AS Object, GRANTABLE
-                FROM sys.dba_privs";
+                    grantee, 
+                    'System Privileges' as privilege_type,
+                    privilege,
+                    NULL as table_name,
+                    NULL as column_name,
+                    admin_option as grantable
+                FROM dba_sys_privs
+                UNION ALL
+                SELECT 
+                    grantee,
+                    'Object Privileges' as privilege_type,
+                    privilege,
+                    table_name,
+                    NULL as column_name,
+                    grantable
+                FROM dba_tab_privs
+                UNION ALL
+                SELECT 
+                    grantee,
+                    'Column Privileges' as privilege_type,
+                    privilege,
+                    table_name,
+                    column_name,
+                    grantable
+                FROM dba_col_privs
 
-            return DbConnectionOrcl.ExecuteTable(query);
+            )";
+
+            return ExecuteQuery(query);
         }
+
         private DataTable ExecuteQuery(string query)
         {
             DataTable dt = new();
@@ -90,31 +204,92 @@ namespace QuanLiKhachSan.DAO
         // Methods for granting and revoking privileges
         public void GrantSystemPrivilege(string username, string privilege, bool withGrantOption = false)
         {
+            if (IsSystemPrivilegeRestricted(privilege))
+            {
+                if (DoesSystemPrivilegeExist(username, privilege))
+                {
+                    MessageBox.Show($"The system privilege {privilege} already exists for {username}");
+                    return;
+                }
+            }
 
             string grantOption = withGrantOption ? " WITH ADMIN OPTION" : "";
             string query = $"GRANT {privilege} TO {username}{grantOption}";
             //MessageBox.Show(query);
+            try { ExecuteNonQuery(query); }
+            catch (Exception ex) {
+                return;
 
-            DbConnectionOrcl.ExecuteNonQuery(query);
+            }
+            MessageBox.Show("Privilege operation completed successfully.");
+
         }
 
         public void RevokeSystemPrivilege(string username, string privilege)
         {
+            if (IsSystemPrivilegeRestricted(privilege))
+            {
+                if (!DoesSystemPrivilegeExist(username, privilege))
+                {
+                    MessageBox.Show($"The system privilege {privilege} does not exists for {username}");
+                    return;
+                }
+            }
             string query = $"REVOKE {privilege} FROM {username}";
-            DbConnectionOrcl.ExecuteNonQuery(query);
+            try { ExecuteNonQuery(query); }
+            catch (Exception ex)
+            {
+                return;
+
+            }
+            MessageBox.Show("Privilege operation completed successfully.");
         }
 
-        public void GrantObjectPrivilege(string username, string objectName, string privilege, bool withGrantOption)
+        public void GrantObjectPrivilege(string username, string objectName, string privilege, bool withGrantOption, string column = null)
         {
+            if (privilege.Equals("SELECT", StringComparison.OrdinalIgnoreCase))
+            {
+                if (DoesObjectPrivilegeExist(username, objectName, privilege, column))
+                {
+                    MessageBox.Show($"The object privilege {privilege} already exists for {username} on {objectName}" +
+                        (column != null ? $".{column}" : ""));
+                    return;
+                }
+            }
+
             string grantOption = withGrantOption ? " WITH GRANT OPTION" : "";
-            string query = $"GRANT {privilege} ON {objectName} TO {username}{grantOption}";
-            DbConnectionOrcl.ExecuteNonQuery(query);
+            string columnSpec = !string.IsNullOrEmpty(column) ? $"({column})" : "";
+            string query = $"GRANT {privilege}{columnSpec} ON {objectName} TO {username}{grantOption}";
+            try { ExecuteNonQuery(query); }
+            catch (Exception ex)
+            {
+                return;
+
+            }
+            MessageBox.Show("Privilege operation completed successfully.");
         }
 
-        public void RevokeObjectPrivilege(string username, string objectName, string privilege)
+        public void RevokeObjectPrivilege(string username, string objectName, string privilege, string column = null)
         {
-            string query = $"REVOKE {privilege} ON {objectName} FROM {username}";
-            DbConnectionOrcl.ExecuteNonQuery(query);
+            if (privilege.Equals("SELECT", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!DoesObjectPrivilegeExist(username, objectName, privilege, column))
+                {
+                    MessageBox.Show($"The object privilege {privilege} does not exist for {username} on {objectName}" +
+                        (column != null ? $".{column}" : ""));
+                    return;
+                }
+            }
+
+            string columnSpec = !string.IsNullOrEmpty(column) ? $"({column})" : "";
+            string query = $"REVOKE {privilege}{columnSpec} ON {objectName} FROM {username}";
+            try { ExecuteNonQuery(query); }
+            catch (Exception ex)
+            {
+                return;
+
+            }
+            MessageBox.Show("Privilege operation completed successfully.");
         }
 
         /* Other methods for additional functionality
