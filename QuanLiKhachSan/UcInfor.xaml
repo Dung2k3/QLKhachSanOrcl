@@ -79,6 +79,7 @@
                             <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE}"/>
                             <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
                             <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                            <DataGridTextColumn Header="Column" Binding="{Binding COLUMN_NAME}"/>
                             <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -90,6 +91,7 @@
                             <DataGridTextColumn Header="Privilege" Binding="{Binding PRIVILEGE}"/>
                             <DataGridTextColumn Header="Privilege Type" Binding="{Binding PRIVILEGETYPE}"/>
                             <DataGridTextColumn Header="Object" Binding="{Binding OBJECT}"/>
+                            <DataGridTextColumn Header="Column" Binding="{Binding COLUMN_NAME}"/>
                             <DataGridTextColumn Header="Grantable" Binding="{Binding GRANTABLE}"/>
                         </DataGrid.Columns>
                     </DataGrid>

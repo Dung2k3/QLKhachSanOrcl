@@ -100,7 +100,7 @@ namespace QuanLiKhachSan.DAO
             return listStr;
         }
 
-        public static void ExecuteNonQuery(string sql, string successMessage = null)
+        public static bool ExecuteNonQuery(string sql, string successMessage = null)
         {
             OracleConnection conn = DbConnectionOrcl.conn;
             OracleCommand cmd = new(sql, conn);
@@ -121,57 +121,18 @@ namespace QuanLiKhachSan.DAO
                     MessageBox.Show("Error: You do not have permission to perform this operation. Please check your access rights.", "Access Denied", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
                     MessageBox.Show($"Error when insert user: {ex.Message} -- {ex.Number}");
+                return false;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
             finally
             {
                 conn.Close();
             }
-        }
-
-        /// <summary>
-        /// @param sql
-        /// </summary>
-        public void ThucThi(string sql)
-        {
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleCommand cmd = new OracleCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-            finally { conn.Close(); }
-        }
-
-        /// <summary>
-        /// @param sql
-        /// </summary>
-        public DataTable LayDanhSach(string sql)
-        {
-            DataTable dt = new DataTable();
-            OracleConnection conn = DbConnectionOrcl.conn;
-            try
-            {
-                conn.Open();
-                OracleDataAdapter adapter = new OracleDataAdapter(sql, conn);
-                adapter.Fill(dt);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return dt;
+            return true;
         }
 
     }

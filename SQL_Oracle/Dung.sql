@@ -8,11 +8,32 @@ CREATE OR REPLACE VIEW list_roles AS
 SELECT ROLE FROM DBA_ROLES;
 
 CREATE OR REPLACE VIEW dba_privs AS 
-(SELECT grantee, privilege, NULL AS table_name,ADMIN_OPTION AS GRANTABLE
+(SELECT 
+    grantee, 
+    'System Privileges' as privilege_type,
+    privilege,
+    NULL as table_name,
+    NULL as column_name,
+    admin_option as grantable
 FROM dba_sys_privs
-UNION
-SELECT grantee, privilege, table_name, GRANTABLE
-FROM dba_tab_privs);
+UNION ALL
+SELECT 
+    grantee,
+    'Object Privileges' as privilege_type,
+    privilege,
+    table_name,
+    NULL as column_name,
+    grantable
+FROM dba_tab_privs
+UNION ALL
+SELECT 
+    grantee,
+    'Column Privileges' as privilege_type,
+    privilege,
+    table_name,
+    column_name,
+    grantable
+FROM dba_col_privs);
 
 GRANT SELECT ON user_profiles TO PUBLIC;
 GRANT SELECT ON list_profiles TO PUBLIC;

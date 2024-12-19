@@ -43,25 +43,13 @@ namespace QuanLiKhachSan
         // Method to populate DataGrids in Role & Privileges tab
         private void PopulateRolePrivilegesTabs()
         {
-            try
-            {
-                if(DbConnectionOrcl.userPrivilege.SelectPrivs)
-                    dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.GetPrivileges().DefaultView;
-                else
-                    dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.DSUserAndRolePrivilegesCurrentUser().DefaultView;
-                //dtgRoleManagement.ItemsSource = rolePrivilegesDao.GetRoles().DefaultView;
 
-                //dtgProfileManagement.ItemsSource = rolePrivilegesDao.GetProfiles().DefaultView;
+            if(DbConnectionOrcl.userPrivilege.SelectPrivs)
+                dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.GetPrivileges().DefaultView;
+            else
+                tabPrivilegeManagement.Visibility = Visibility.Collapsed;
+            dtgRoleManagement.ItemsSource = rolePrivilegesDao.DSUserAndRolePrivilegesCurrentUser().DefaultView;
 
-                //dtgUserInformation.ItemsSource = rolePrivilegesDao.GetUserInformation().DefaultView;
-
-                //cbTargetUserRole.ItemsSource = rolePrivilegesDao.GetTargetUserRoles();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error populating Role & Privileges tabs: {ex.Message}");
-            }
         }
 
         // Event handler for Granting Privileges
@@ -208,7 +196,7 @@ namespace QuanLiKhachSan
                 var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
                 var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-                if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+                if (selectedPrivilege == "SELECT" || selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
                 {
                     txtColumnName.IsEnabled = true;
                     txtColumnName.Visibility = Visibility.Visible;
@@ -230,7 +218,7 @@ namespace QuanLiKhachSan
             var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
             var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-            if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+            if (selectedPrivilege == "SELECT" || selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
             {
                 txtColumnName.IsEnabled = true;
                 txtColumnName.Visibility = Visibility.Visible;
@@ -276,21 +264,6 @@ namespace QuanLiKhachSan
                 DataView privilegesView = privilegesTable.DefaultView;
                 privilegesView.RowFilter = $"USERNAME LIKE '{selectedUserRole}'";
                 dtgPrivilegeManagement.ItemsSource = privilegesView;
-
-                DataTable rolesTable = rolePrivilegesDao.GetRoles();
-                DataView rolesView = rolesTable.DefaultView;
-                rolesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                dtgRoleManagement.ItemsSource = rolesView;
-
-                DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
-                DataView userInfoView = userInfoTable.DefaultView;
-                userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
-                dtgUserInformation.ItemsSource = userInfoView;
-
-                DataTable profilesTable = rolePrivilegesDao.GetProfiles();
-                DataView profilesView = profilesTable.DefaultView;
-                profilesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                dtgProfileManagement.ItemsSource = profilesView;
             }
             catch (Exception ex)
             {
