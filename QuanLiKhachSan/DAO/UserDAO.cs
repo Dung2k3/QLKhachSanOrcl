@@ -59,7 +59,7 @@ namespace QuanLiKhachSan.DAO
             string sql = "select username,default_tablespace, temporary_tablespace, lock_date , created, account_status, profile, " +
                 " CASE WHEN AUTHENTICATION_TYPE = 'PASSWORD' THEN  '****' ELSE ' ' END AS PASSWORD " +
                $"from dba_users WHERE username LIKE '%{username}%' ";
-            
+
             return DbConnectionOrcl.ExecuteTable(sql);
         }
 
@@ -106,7 +106,7 @@ namespace QuanLiKhachSan.DAO
         {
             bool isSuccess = false;
 
-            OracleConnection conn = DbConnectionOrcl.CreateConnOrcl(username,password);
+            OracleConnection conn = DbConnectionOrcl.CreateConnOrcl(username, password);
             try
             {
                 conn.Open();
@@ -131,73 +131,27 @@ namespace QuanLiKhachSan.DAO
 
         public void Update(User user)
         {
-            OracleConnection conn = DbConnectionOrcl.conn;
-            OracleCommand cmd = conn.CreateCommand();
-            cmd.CommandText =
+            string sql =
                 $"ALTER USER {user.Username} " +
                 $"DEFAULT TABLESPACE {user.DefaultTablespace} " +
-                $"TEMPORARY TABLESPACE {user.TemporaryTablespace} " +                
+                $"TEMPORARY TABLESPACE {user.TemporaryTablespace} " +
                 $"PROFILE {user.Profile} " +
-                "ACCOUNT " + (user.AccountStatus.Equals("OPEN")? "UNLOCK" : "LOCK") +
+                "ACCOUNT " + (user.AccountStatus.Equals("OPEN") ? "UNLOCK" : "LOCK") +
                 (!user.Password.Equals("") ? $" IDENTIFIED BY {user.Password} " : "");
-            try
-            {
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                MessageBox.Show($"Altered user {user.Username}");
-            }
-            catch (OracleException ex)
-            {
-                if (ex.Number == 1935)
-                    MessageBox.Show($"Invalid username");
-                else if (ex.Number == 1918)
-                    MessageBox.Show($"Username does not exist");
-                else
-                    MessageBox.Show($"Error when alter user: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
-            finally
-            {
-                conn.Close();
-            }
+            string mess = $"Update user {user.Username} complete";
+            DbConnectionOrcl.ExecuteNonQuery(sql, mess);
         }
         public void Insert(User user)
         {
-            OracleConnection conn = DbConnectionOrcl.conn;
-            OracleCommand cmd = conn.CreateCommand();
-            cmd.CommandText = 
+            string sql =
                 $"CREATE USER {user.Username} " +
                 $"DEFAULT TABLESPACE {user.DefaultTablespace} " +
                 $"TEMPORARY TABLESPACE {user.TemporaryTablespace} " +
                 $"PROFILE {user.Profile} " +
                 "ACCOUNT " + (user.AccountStatus.Equals("OPEN") ? "UNLOCK" : "LOCK") +
                 (!user.Password.Equals("") ? $" IDENTIFIED BY {user.Password} " : "");
-            try
-            {
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                MessageBox.Show($"Added user {user.Username}");
-            }
-            catch (OracleException ex)
-            {
-                if (ex.Number == 1935)
-                    MessageBox.Show($"Invalid username");
-                else if (ex.Number == 1920)
-                    MessageBox.Show($"Username already exists");
-                else
-                    MessageBox.Show($"Error when insert user: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error:  {ex.Message}");
-            }
-            finally
-            {
-                conn.Close();
-            }
+            string mess = $"Insert user {user.Username} complete";
+            DbConnectionOrcl.ExecuteNonQuery(sql, mess);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace QuanLiKhachSan.DAO
         }
         public DataTable LayDanhSachUserTheoProfile(string nameProfile)
         {
-            string sql = $"SELECT USERNAME, PROFILE FROM DBA_USERS WHERE PROFILE = '{nameProfile}' ORDER BY USERNAME";
+            string sql = $"SELECT USERNAME, PROFILE FROM sys.user_profiles WHERE PROFILE = '{nameProfile}' ORDER BY USERNAME";
 
 
             DataTable dt = new DataTable();
@@ -92,7 +92,7 @@ namespace QuanLiKhachSan.DAO
 
         public List<String> ListProfile() 
         {
-            string sql = " SELECT distinct PROFILE FROM dba_profiles ";
+            string sql = " SELECT * FROM sys.list_profiles ";
             List<string> listTablespaces = new List<string>();
             OracleConnection conn = DbConnectionOrcl.conn;
             try
@@ -142,25 +142,6 @@ namespace QuanLiKhachSan.DAO
             return listTablespaces;
         }
 
-        public bool Login(string username, string password)
-        {
-            bool isSuccess = false;
-
-            OracleConnection conn = DbConnectionOrcl.CreateConnOrcl(username,password);
-            try
-            {
-                conn.Open();
-                isSuccess = true;
-                DbConnectionOrcl.conn = DbConnectionOrcl.CreateConnOrcl(username, password);
-            }
-
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message);
-            }
-            finally { conn.Close(); }
-            return isSuccess;
-        }
         public void CreateNewProfile(string profileName, string sessionsPerUser, string connectTime, string idleTime)
         {
             // Tạo câu lệnh CREATE PROFILE

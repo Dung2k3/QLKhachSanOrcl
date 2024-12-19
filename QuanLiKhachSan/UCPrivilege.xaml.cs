@@ -45,15 +45,17 @@ namespace QuanLiKhachSan
         {
             try
             {
-                dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.GetPrivileges().DefaultView;
+                if(DbConnectionOrcl.userPrivilege.SelectPrivs)
+                    dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.GetPrivileges().DefaultView;
+                else
+                    dtgPrivilegeManagement.ItemsSource = rolePrivilegesDao.DSUserAndRolePrivilegesCurrentUser().DefaultView;
+                //dtgRoleManagement.ItemsSource = rolePrivilegesDao.GetRoles().DefaultView;
 
-                dtgRoleManagement.ItemsSource = rolePrivilegesDao.GetRoles().DefaultView;
+                //dtgProfileManagement.ItemsSource = rolePrivilegesDao.GetProfiles().DefaultView;
 
-                dtgProfileManagement.ItemsSource = rolePrivilegesDao.GetProfiles().DefaultView;
+                //dtgUserInformation.ItemsSource = rolePrivilegesDao.GetUserInformation().DefaultView;
 
-                dtgUserInformation.ItemsSource = rolePrivilegesDao.GetUserInformation().DefaultView;
-
-                cbTargetUserRole.ItemsSource = rolePrivilegesDao.GetTargetUserRoles();
+                //cbTargetUserRole.ItemsSource = rolePrivilegesDao.GetTargetUserRoles();
 
             }
             catch (Exception ex)
@@ -174,13 +176,12 @@ namespace QuanLiKhachSan
         {
             string selectedUserRole = cbTargetUserRole.SelectedItem?.ToString();
 
-            if (string.IsNullOrEmpty(selectedUserRole))
+            if (string.IsNullOrEmpty(selectedUserRole) || selectedUserRole.Equals("All"))
             {
                 // If no user/role selected, show all data
                 PopulateRolePrivilegesTabs();
                 return;
             }
-
             try
             {
                 // Filter Privilege Management DataGrid
@@ -190,22 +191,22 @@ namespace QuanLiKhachSan
                 dtgPrivilegeManagement.ItemsSource = privilegesView;
 
                 // Filter Role Management DataGrid
-                DataTable rolesTable = rolePrivilegesDao.GetRoles();
-                DataView rolesView = rolesTable.DefaultView;
-                rolesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                dtgRoleManagement.ItemsSource = rolesView;
+                //DataTable rolesTable = rolePrivilegesDao.GetRoles();
+                //DataView rolesView = rolesTable.DefaultView;
+                //rolesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
+                //dtgRoleManagement.ItemsSource = rolesView;
 
                 // Filter User Information DataGrid
-                DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
-                DataView userInfoView = userInfoTable.DefaultView;
-                userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
-                dtgUserInformation.ItemsSource = userInfoView;
+                //DataTable userInfoTable = rolePrivilegesDao.GetUserInformation();
+                //DataView userInfoView = userInfoTable.DefaultView;
+                //userInfoView.RowFilter = $"USERNAME LIKE '{selectedUserRole}' OR ROLES = '{selectedUserRole}'";
+                //dtgUserInformation.ItemsSource = userInfoView;
 
                 // Profile Management can be filtered similarly
-                DataTable profilesTable = rolePrivilegesDao.GetProfiles();
-                DataView profilesView = profilesTable.DefaultView;
-                profilesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
-                dtgProfileManagement.ItemsSource = profilesView;
+                //DataTable profilesTable = rolePrivilegesDao.GetProfiles();
+                //DataView profilesView = profilesTable.DefaultView;
+                //profilesView.RowFilter = $"AssignedUsers LIKE '%{selectedUserRole}%'";
+                //dtgProfileManagement.ItemsSource = profilesView;
             }
             catch (Exception ex)
             {

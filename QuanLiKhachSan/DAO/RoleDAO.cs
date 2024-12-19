@@ -11,7 +11,7 @@ namespace QuanLiKhachSan.DAO
     {
         public List<string> GetRoles()
         {
-            string query = "SELECT ROLE FROM DBA_ROLES ORDER BY ROLE";
+            string query = "SELECT ROLE FROM sys.list_roles ORDER BY ROLE";
             List<string> roles = new();
             OracleConnection conn = DbConnectionOrcl.conn;
 
@@ -56,7 +56,7 @@ namespace QuanLiKhachSan.DAO
                     ORDER BY 
                         r.ROLE, rp.GRANTEE, tp.PRIVILEGE";
 
-            return ExecuteQuery(query);
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
         public DataTable GetRoleListBasic()
@@ -65,7 +65,7 @@ namespace QuanLiKhachSan.DAO
                                 ROLE AS Role_Name, AUTHENTICATION_TYPE AS Authentication_Type
                             FROM 
                                 DBA_ROLES";
-            return ExecuteQuery(query);
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
         public DataTable GetRoleUserList()
@@ -79,7 +79,7 @@ namespace QuanLiKhachSan.DAO
                                 DBA_ROLE_PRIVS rp
                             ORDER BY 
                                 rp.GRANTEE, rp.GRANTED_ROLE";
-            return ExecuteQuery(query);
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
         public DataTable GetRoleToRoleList()
@@ -95,13 +95,13 @@ namespace QuanLiKhachSan.DAO
                         rp.GRANTEE IN (SELECT ROLE FROM DBA_ROLES)
                     ORDER BY 
                         rp.GRANTEE, rp.GRANTED_ROLE";
-            return ExecuteQuery(query);
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
         public DataTable GetGrantees()
         {
-            string query = "SELECT DISTINCT GRANTEE AS GranteeName FROM DBA_ROLE_PRIVS";
-            return ExecuteQuery(query);
+            string query = "SELECT DISTINCT USERNAME AS GranteeName FROM sys.user_profiles";
+            return DbConnectionOrcl.ExecuteTable(query);
         }
 
         public void AddRole(string roleName, string password = null)
@@ -114,7 +114,7 @@ namespace QuanLiKhachSan.DAO
                 ? $"CREATE ROLE {roleName}"
                 : $"CREATE ROLE {roleName} IDENTIFIED BY \"{password}\"";
 
-            ExecuteNonQuery(query, $"Role {roleName} created successfully.");
+            DbConnectionOrcl.ExecuteNonQuery(query, $"Role {roleName} created successfully.");
         }
 
         public void DeleteRole(string roleName)
@@ -123,7 +123,7 @@ namespace QuanLiKhachSan.DAO
                 throw new ArgumentException("Role name cannot be null or empty.");
 
             string query = $"DROP ROLE \"{roleName}\"";
-            ExecuteNonQuery(query, $"Role {roleName} deleted successfully.");
+            DbConnectionOrcl.ExecuteNonQuery(query, $"Role {roleName} deleted successfully.");
         }
 
         public void UpdateRole(string roleName, string newPassword = null, bool? isIdentifiedExternally = null, List<string> newPrivileges = null)
@@ -156,7 +156,7 @@ namespace QuanLiKhachSan.DAO
             if (updates.Count > 0)
             {
                 string updateRoleSql = $"ALTER ROLE {roleName} {string.Join(" ", updates)}";
-                ExecuteNonQuery(updateRoleSql, $"Role {roleName} updated successfully.");
+                DbConnectionOrcl.ExecuteNonQuery(updateRoleSql, $"Role {roleName} updated successfully.");
             }
         }
 
@@ -167,7 +167,7 @@ namespace QuanLiKhachSan.DAO
 
             string adminOption = allowReGrant ? " WITH ADMIN OPTION" : string.Empty;
             string query = $"GRANT \"{roleName}\" TO \"{userName}\"{adminOption}";
-            ExecuteNonQuery(query, $"Role {roleName} assigned to user {userName} successfully.");
+            DbConnectionOrcl.ExecuteNonQuery(query, $"Role {roleName} assigned to user {userName} successfully.");
         }
         public void AssignRoleToRole(string targetRole, string sourceRole, bool allowReGrant)
         {
@@ -176,7 +176,7 @@ namespace QuanLiKhachSan.DAO
 
             string adminOption = allowReGrant ? " WITH ADMIN OPTION" : string.Empty;
             string query = $"GRANT \"{sourceRole}\" TO \"{targetRole}\"{adminOption}";
-            ExecuteNonQuery(query, $"Role {sourceRole} assigned to role {targetRole} successfully.");
+            DbConnectionOrcl.ExecuteNonQuery(query, $"Role {sourceRole} assigned to role {targetRole} successfully.");
         }
 
         public void RevokeRoleFromUser(string userName, string roleName, bool revokeOnlyAdminOption)
@@ -187,15 +187,15 @@ namespace QuanLiKhachSan.DAO
             if (revokeOnlyAdminOption)
             {
                 string revokeQuery = $"REVOKE \"{roleName}\" FROM \"{userName}\"";
-                ExecuteNonQuery(revokeQuery, $"Role {roleName} revoked from user {userName}.");
+                DbConnectionOrcl.ExecuteNonQuery(revokeQuery, $"Role {roleName} revoked from user {userName}.");
 
                 string reGrantQuery = $"GRANT \"{roleName}\" TO \"{userName}\"";
-                ExecuteNonQuery(reGrantQuery, $"Role {roleName} re-granted to user {userName} without admin option.");
+                DbConnectionOrcl.ExecuteNonQuery(reGrantQuery, $"Role {roleName} re-granted to user {userName} without admin option.");
             }
             else
             {
                 string query = $"REVOKE \"{roleName}\" FROM \"{userName}\"";
-                ExecuteNonQuery(query, $"Role {roleName} revoked from user {userName}.");
+                DbConnectionOrcl.ExecuteNonQuery(query, $"Role {roleName} revoked from user {userName}.");
             }
         }
 
@@ -207,15 +207,15 @@ namespace QuanLiKhachSan.DAO
             if (revokeOnlyAdminOption)
             {
                 string revokeQuery = $"REVOKE \"{sourceRole}\" FROM \"{targetRole}\"";
-                ExecuteNonQuery(revokeQuery, $"Role {sourceRole} revoked from role {targetRole}.");
+                DbConnectionOrcl.ExecuteNonQuery(revokeQuery, $"Role {sourceRole} revoked from role {targetRole}.");
 
                 string reGrantQuery = $"GRANT \"{sourceRole}\" TO \"{targetRole}\"";
-                ExecuteNonQuery(reGrantQuery, $"Role {sourceRole} re-granted to role {targetRole} without admin option.");
+                DbConnectionOrcl.ExecuteNonQuery(reGrantQuery, $"Role {sourceRole} re-granted to role {targetRole} without admin option.");
             }
             else
             {
                 string query = $"REVOKE \"{sourceRole}\" FROM \"{targetRole}\"";
-                ExecuteNonQuery(query, $"Role {sourceRole} revoked from role {targetRole}.");
+                DbConnectionOrcl.ExecuteNonQuery(query, $"Role {sourceRole} revoked from role {targetRole}.");
             }
         }
 
@@ -225,7 +225,7 @@ namespace QuanLiKhachSan.DAO
                 throw new ArgumentException("Privilege cannot be null or empty.");
 
             string query = $"GRANT {privilege} TO {roleName}";
-            ExecuteNonQuery(query, $"Privilege {privilege} granted to role {roleName}.");
+            DbConnectionOrcl.ExecuteNonQuery(query, $"Privilege {privilege} granted to role {roleName}.");
         }
 
         private DataTable ExecuteQuery(string query)

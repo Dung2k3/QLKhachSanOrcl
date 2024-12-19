@@ -24,8 +24,6 @@ namespace QuanLiKhachSan
     public partial class UcNhanVien2 : UserControl
     {
         UserDAO userDao = new UserDAO();
-        NhanVienDAO employeeDao = new NhanVienDAO();
-        PhoneNumberOfEmployeeDao phoneDao = new PhoneNumberOfEmployeeDao();
         TableSpaceDAO tablespaceDao = new TableSpaceDAO();
         ProfileDAO profileDao = new ProfileDAO();
         public UcNhanVien2()
@@ -36,109 +34,28 @@ namespace QuanLiKhachSan
 
         public void LayDanhSach()
         {
-            //dtgDanhSachNhanVien.ItemsSource = this.LayDanhSachNhanVien().DefaultView;
-            dtgDanhSachTaiKhoan.ItemsSource = userDao.LayDanhSach().DefaultView;
-            dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSach().DefaultView;
-            //DataTable tb = employeeDao.LayDanhSachTenNhanVien();
-            //List<string> list = tb.AsEnumerable()
-            //                      .Select(x => x.Field<int>("employee_id").ToString() + "|" + x.Field<string>("employee_name"))
-            //                      .ToList<string>();
-            cbTempTablespace.ItemsSource = tablespaceDao.ListTempTableSpace();
-            cbDefaultTablespace.ItemsSource = tablespaceDao.ListDefaultTableSpace();
+            UserPrivilege up = DbConnectionOrcl.userPrivilege;
+
+            if (up.SelectUser)
+            {
+                dtgDanhSachTaiKhoan.ItemsSource = userDao.LayDanhSach().DefaultView;
+            }
+            if (up.SelectQuota)
+            {
+                dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSach().DefaultView;
+            }
             cbProfile.ItemsSource = profileDao.ListProfile();
-            cbAccountStatus.ItemsSource = new[] { "OPEN", "LOCKED" }.ToList();
             cbTablespace.ItemsSource = tablespaceDao.ListDefaultTableSpace();
             cbTempTablespace.SelectedIndex = 0;
-            cbDefaultTablespace.SelectedIndex = 0;
-            cbProfile.SelectedIndex = 0;
             cbAccountStatus.SelectedIndex = 0;
+            cbAccountStatus.ItemsSource = new[] { "OPEN", "LOCKED" }.ToList();
             txbUsername.Text = "";
             txbPassword.Text = "";
+            cbTempTablespace.ItemsSource = tablespaceDao.ListTempTableSpace();
+            cbDefaultTablespace.ItemsSource = tablespaceDao.ListDefaultTableSpace();
+            cbDefaultTablespace.SelectedIndex = 0;
+            cbProfile.SelectedIndex = 0;
         }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public DataTable LayDanhSachNhanVien()
-        {
-            // TODO implement here
-            return employeeDao.LayDanhSach();
-
-        }
-
-        private void btnThongTinNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            DataRowView drv = (DataRowView)dtgDanhSachNhanVien.SelectedValue;
-            try
-            {
-                lbMaNhanVien.Content = drv["employee_id"].ToString();
-                txtTenNhanVien.Text = drv["employee_name"].ToString();
-                cbGioiTinh.SelectedValue = drv["gender"].ToString();
-                dtpNgaySinh.SelectedDate = DateTime.Parse(drv["birthday"].ToString());
-                txtIdentifyCard.Text = drv["identify_card"].ToString();
-                txtDiaChi.Text = drv["address"].ToString();
-                txtEmail.Text = drv["email"].ToString();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnXoaNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            DataRowView drv = (DataRowView)dtgDanhSachNhanVien.SelectedValue;
-            try
-            {
-                int employeeId = int.Parse(drv["employee_id"].ToString());
-                employeeDao.Delete(employeeId);
-                LayDanhSach();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnThemNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string employeeName = txtTenNhanVien.Text;
-                string gender = cbGioiTinh.Text;
-                DateTime? birthday = dtpNgaySinh.SelectedDate;
-                string identifyCard = txtIdentifyCard.Text;
-                string address = txtDiaChi.Text;
-                string email = txtEmail.Text;
-                employeeDao.Insert(employeeName, gender, birthday, identifyCard, address, email);
-                LayDanhSach();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnSuaNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                int employeeId = int.Parse((string)lbMaNhanVien.Content);
-                string employeeName = txtTenNhanVien.Text;
-                string gender = cbGioiTinh.Text;
-                DateTime? birthday = dtpNgaySinh.SelectedDate;
-                string identifyCard = txtIdentifyCard.Text;
-                string address = txtDiaChi.Text;
-                string email = txtEmail.Text;
-                employeeDao.Update(employeeId, employeeName, gender, birthday, identifyCard, address, email);
-                LayDanhSach();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         private void btnSuaUser_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -192,7 +109,10 @@ namespace QuanLiKhachSan
                 cbProfile.SelectedValue = drv["PROFILE"];
                 cbAccountStatus.SelectedValue = drv["ACCOUNT_STATUS"];
                 txbFilterQuota.Text = drv["USERNAME"].ToString();
-                dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSachByUsername(txbFilterQuota.Text).DefaultView;
+                if (DbConnectionOrcl.userPrivilege.SelectQuota)
+                {
+                    dtgDanhSachSdtCuaNhanVien.ItemsSource = tablespaceDao.LayDanhSachByUsername(txbFilterQuota.Text).DefaultView;
+                }
             }
             catch (Exception ex)
             {
@@ -203,7 +123,23 @@ namespace QuanLiKhachSan
         {
             DataRowView drv = (DataRowView)dtgDanhSachTaiKhoan.SelectedValue;
             string username = drv["USERNAME"].ToString();
-            MessageBoxResult result = MessageBox.Show($"Bạn có chắc muốn xóa user {username}?", "Xác nhận xóa", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete user {username}?", "Confirm delete", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                userDao.Delete(username);
+                LayDanhSach();
+            }
+        }
+
+        private void btnXoaUser2_Click(object sender, RoutedEventArgs e)
+        {
+            if (txbUsername.Text.Equals(""))
+            {
+                MessageBox.Show("Invalid Username", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            string username = txbUsername.Text;
+            MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete user {username}?", "Confirm delete", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
                 userDao.Delete(username);
@@ -213,13 +149,22 @@ namespace QuanLiKhachSan
 
         private void btnThemQuota_Click(object sender, RoutedEventArgs e)
         {
-
-                Quota quota = new Quota();
-                quota.Username = txbUsername2.Text;
-                quota.TablespaceName = cbTablespace.SelectedValue.ToString();
-                quota.MaxQuota = txbQuota.Text.Equals("")? -1: int.Parse(txbQuota.Text);
-                tablespaceDao.Update(quota);
-                LayDanhSach();
+            if (txbUsername2.Text.Equals(""))
+            {
+                MessageBox.Show("Invalid Username", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (cbTablespace.SelectedValue == null)
+            {
+                MessageBox.Show("Invalid Tablespace", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            Quota quota = new Quota();
+            quota.Username = txbUsername2.Text;
+            quota.TablespaceName = cbTablespace.SelectedValue.ToString();
+            quota.MaxQuota = txbQuota.Text.Equals("") ? -1 : int.Parse(txbQuota.Text);
+            tablespaceDao.Update(quota);
+            LayDanhSach();
 
         }
 
@@ -250,13 +195,6 @@ namespace QuanLiKhachSan
             LayDanhSach();
     
         }
-
-        private void btnTimKiemTheoTenNhanVien_Click(object sender, RoutedEventArgs e)
-        {
-            string employeeName = txtLocTheoTenNhanVien.Text;
-            dtgDanhSachNhanVien.ItemsSource = employeeDao.TimKiemTheoHoTen(employeeName).DefaultView;
-        }
-
         private void btnFilterQuota_Click(object sender, RoutedEventArgs e)
         {
             string username = txbFilterQuota.Text;
@@ -268,60 +206,6 @@ namespace QuanLiKhachSan
             string username = txbFilterUser.Text;
             dtgDanhSachTaiKhoan.ItemsSource = userDao.LayDanhSachLikeUsername(username).DefaultView;
 
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraTen()
-        {
-            // TODO implement here
-            return false;
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraNgaySinh()
-        {
-            // TODO implement here
-            return false;
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraGioiTinh()
-        {
-            // TODO implement here
-            return false;
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraDiaChi()
-        {
-            // TODO implement here
-            return false;
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraCCCD()
-        {
-            // TODO implement here
-            return false;
-        }
-
-        /// <summary>
-        /// @return
-        /// </summary>
-        public Boolean KiemTraEmail()
-        {
-            // TODO implement here
-            return false;
         }
     }
 }

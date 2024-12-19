@@ -1,3 +1,4 @@
+using QuanLiKhachSan.Class;
 using QuanLiKhachSan.DAO;
 using System;
 using System.Data;
@@ -17,20 +18,22 @@ namespace QuanLiKhachSan
         public FRoleManagement()
         {
             InitializeComponent();
-            LoadData();
         }
 
         public void LoadData()
         {
             try
             {
-                dtgRolesBasic.ItemsSource = roleDao.GetRoleListBasic().DefaultView;
+                UserPrivilege up = DbConnectionOrcl.userPrivilege;
+                if (up.SelectRole)
+                {
+                    dtgRolesBasic.ItemsSource = roleDao.GetRoleListBasic().DefaultView;
 
+                    dtgAssignedRoles.ItemsSource = roleDao.GetRoleUserList().DefaultView;
+
+                    dtgAssignedRolesToRoles.ItemsSource = roleDao.GetRoleToRoleList().DefaultView;
+                }
                 dtgRoles.ItemsSource = null;
-
-                dtgAssignedRoles.ItemsSource = roleDao.GetRoleUserList().DefaultView;
-
-                dtgAssignedRolesToRoles.ItemsSource = roleDao.GetRoleToRoleList().DefaultView;
 
                 cbUser.ItemsSource = roleDao.GetGrantees()
                                .AsEnumerable()
