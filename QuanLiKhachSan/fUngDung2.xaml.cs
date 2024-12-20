@@ -40,6 +40,10 @@ namespace QuanLiKhachSan
                 itemThanhToan.IsEnabled = false;
             if (!up.SelectUserDetail)
                 itemNhanVien.IsEnabled = false;
+
+            grManHinh.Children.Clear();
+            ucInfor.LayDanhSach();
+            grManHinh.Children.Add(ucInfor);
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -82,7 +86,7 @@ namespace QuanLiKhachSan
 
         private void btnDangXuat_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn đăng xuất?", "xác nhận đăng xuất", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to log out?", "Confirm logout", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
                 fDangNhap dangNhap = new fDangNhap();

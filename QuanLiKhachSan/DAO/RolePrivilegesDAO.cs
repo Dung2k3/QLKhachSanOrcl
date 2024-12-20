@@ -183,7 +183,6 @@ namespace QuanLiKhachSan.DAO
             string grantOption = withGrantOption ? " WITH GRANT OPTION" : "";
             string columnSpec = !string.IsNullOrEmpty(column) ? $"({column})" : "";
             string query = $"GRANT {privilege}{columnSpec} ON {objectName} TO {username}{grantOption}";
-            MessageBox.Show(query);
             if (DbConnectionOrcl.ExecuteNonQuery(query))
                 MessageBox.Show("Privilege operation completed successfully.");
         }

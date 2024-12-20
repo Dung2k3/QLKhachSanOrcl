@@ -109,7 +109,7 @@
                     </Grid.ColumnDefinitions>
                     <DataGrid x:Name="dtgDanhSachProfile" Grid.Column="0">
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Xử lí">
+                            <DataGridTemplateColumn Header="Actions">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
