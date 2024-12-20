@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
+using System.Transactions;
 using System.Windows;
 using Oracle.ManagedDataAccess.Client;
 
@@ -26,6 +28,8 @@ namespace QuanLiKhachSan.DAO
                 cmd.Parameters.Add(new OracleParameter("phoneNumber", phoneNumber));
                 cmd.Parameters.Add(new OracleParameter("email", email));
                 cmd.ExecuteNonQuery();
+                OracleTransaction transaction = conn.BeginTransaction();
+                transaction.Commit();
                 MessageBox.Show("User detail inserted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -49,20 +53,25 @@ namespace QuanLiKhachSan.DAO
                                 PHONE_NUMBER = :phoneNumber,
                                 EMAIL = :email,
                                 UPDATED_DATE = SYSDATE
-                            WHERE USERNAME = :username";
-
+                            WHERE USERNAME = '" + username +"'";
+            MessageBox.Show(username);
             OracleConnection conn = DbConnectionOrcl.conn;
             try
             {
                 conn.Open();
+                OracleTransaction transaction = conn.BeginTransaction();
                 OracleCommand cmd = new(query, conn);
-                cmd.Parameters.Add(new OracleParameter("username", username));
                 cmd.Parameters.Add(new OracleParameter("fullName", fullName));
                 cmd.Parameters.Add(new OracleParameter("address", address));
                 cmd.Parameters.Add(new OracleParameter("phoneNumber", phoneNumber));
                 cmd.Parameters.Add(new OracleParameter("email", email));
-                cmd.ExecuteNonQuery();
-                MessageBox.Show("User detail updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                cmd.Transaction = transaction;
+                if(cmd.ExecuteNonQuery() > 0)
+                    MessageBox.Show("User detail updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    MessageBox.Show("User detail updated fail.", "Fail", MessageBoxButton.OK, MessageBoxImage.Information);
+                OracleCommand cmd2 = new("commit", conn);
+                cmd2.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -85,9 +94,12 @@ namespace QuanLiKhachSan.DAO
             try
             {
                 conn.Open();
+                OracleTransaction transaction = conn.BeginTransaction();
                 OracleCommand cmd = new(query, conn);
                 cmd.Parameters.Add(new OracleParameter("username", username));
                 cmd.ExecuteNonQuery();
+                cmd.Transaction = transaction;
+                transaction.Commit();
                 MessageBox.Show("User detail deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)

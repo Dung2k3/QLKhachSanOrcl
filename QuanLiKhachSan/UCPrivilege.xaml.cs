@@ -196,7 +196,7 @@ namespace QuanLiKhachSan
                 var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
                 var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-                if (selectedPrivilege == "SELECT" || selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+                if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
                 {
                     txtColumnName.IsEnabled = true;
                     txtColumnName.Visibility = Visibility.Visible;
@@ -218,7 +218,7 @@ namespace QuanLiKhachSan
             var selectedPrivilege = (cbObjectPrivileges.SelectedItem as ComboBoxItem)?.Content?.ToString();
             var selectedAction = (cbPrivilegeAction.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-            if (selectedPrivilege == "SELECT" || selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
+            if (selectedPrivilege == "INSERT" || selectedPrivilege == "UPDATE" && selectedAction == "Grant")
             {
                 txtColumnName.IsEnabled = true;
                 txtColumnName.Visibility = Visibility.Visible;
